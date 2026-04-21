@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #ff6b2b;
+  --navy: #0b1c3a;
+  --background: #f8fafc;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --white: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-navy: var(--navy);
+  --color-primary: var(--primary);
+  --color-text: var(--text);
+  --font-sans: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--primary) 20%, transparent);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+:where(a, button, input, select, textarea):focus-visible {
+  outline-color: var(--primary);
+}
