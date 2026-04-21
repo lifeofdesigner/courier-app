@@ -202,7 +202,7 @@ Admin role protection:
 
 - Supabase Auth remains the identity source.
 - `public.users.role` controls application authorization.
-- Unauthenticated admin route access redirects to `/login?next=/admin`.
+- Unauthenticated admin route access redirects to `/admin/login`.
 - Signed-in non-admin users redirect to `/dashboard`.
 - Admin Server Actions reject non-admin mutation attempts with safe messages.
 
@@ -451,6 +451,50 @@ action. Logged-out visitors see `Sign in`, authenticated customers see
 `My Account`, and authenticated admins see `Admin`. Account state is resolved
 server-side from Supabase Auth plus the `public.users.role` profile field.
 
+## Separate Auth Entry and Developer Bootstrap Patch
+
+Customer and admin access now use separate entry routes:
+
+- `/login` is the customer login route. Successful sign-in redirects to a safe
+  `next` path when present, otherwise `/dashboard`.
+- `/admin/login` is the admin login route. Successful sign-in checks
+  `public.users.role` and redirects only admins to `/admin`; non-admin accounts
+  receive a safe error and are not granted admin entry.
+
+The private developer bootstrap tool is available at
+`/developer/bootstrap-users` only when server-side protection passes. It is not
+linked from public or admin navigation. The page requires the bootstrap feature
+flag, a configured secret, Supabase service-role configuration, and a
+server-validated signed HTTP-only access cookie before user creation is allowed.
+
+Required developer bootstrap environment variables:
+
+```bash
+DEV_BOOTSTRAP_ENABLED=true
+DEV_BOOTSTRAP_SECRET=
+DEV_BOOTSTRAP_LOCAL_ONLY=true
+SUPABASE_SERVICE_ROLE_KEY=
+```
+
+`DEV_BOOTSTRAP_LOCAL_ONLY` is optional but recommended for local-only setup
+work. Keep `DEV_BOOTSTRAP_ENABLED` disabled in production unless the bootstrap
+tool is intentionally needed, and never expose `SUPABASE_SERVICE_ROLE_KEY` in
+browser code.
+
+Bootstrap-created users are created server-side with
+`serviceRoleClient.auth.admin.createUser()`, email-confirmed for local testing,
+and then assigned `customer` or `admin` in `public.users`.
+
+This focused patch ends with lint, build, commit, and push to GitHub:
+
+```bash
+npm run lint
+npm run build
+git add .
+git commit -m "Patch: separate customer admin login and developer bootstrap"
+git push origin main
+```
+
 ## Routes
 
 Public:
@@ -474,6 +518,7 @@ Public:
 Auth:
 
 - `/login`
+- `/admin/login`
 - `/sign-up`
 - `/forgot-password`
 
@@ -494,6 +539,10 @@ Admin:
 - `/admin/users`
 - `/admin/cms`
 - `/admin/settings`
+
+Developer:
+
+- `/developer/bootstrap-users`
 
 ## Getting Started
 

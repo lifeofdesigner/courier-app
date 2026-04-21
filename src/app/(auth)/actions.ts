@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { getSiteUrl } from "@/lib/env";
+import { getUserProfileById } from "@/lib/queries/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { AuthActionState } from "@/types/auth";
 
@@ -41,8 +42,16 @@ function getString(formData: FormData, key: string) {
   return typeof value === "string" ? value : "";
 }
 
-function sanitizeNextPath(nextPath: string | undefined) {
+function sanitizeCustomerNextPath(nextPath: string | undefined) {
   if (!nextPath || !nextPath.startsWith("/") || nextPath.startsWith("//")) {
+    return "/dashboard";
+  }
+
+  if (nextPath === "/admin" || nextPath.startsWith("/admin/")) {
+    return "/dashboard";
+  }
+
+  if (nextPath === "/developer" || nextPath.startsWith("/developer/")) {
     return "/dashboard";
   }
 
@@ -98,7 +107,65 @@ export async function loginAction(
     };
   }
 
-  redirect(sanitizeNextPath(parsed.data.next));
+  redirect(sanitizeCustomerNextPath(parsed.data.next));
+}
+
+export async function adminLoginAction(
+  _previousState: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const parsed = loginSchema.safeParse({
+    email: getString(formData, "email"),
+    password: getString(formData, "password"),
+  });
+
+  if (!parsed.success) {
+    return validationState(parsed.error);
+  }
+
+  const supabase = await createSupabaseServerClient();
+
+  if (!supabase) {
+    return missingSupabaseState();
+  }
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email: parsed.data.email,
+    password: parsed.data.password,
+  });
+
+  if (error) {
+    return {
+      success: false,
+      message:
+        "We could not sign you in with those admin credentials. Check the details, then try again.",
+    };
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return {
+      success: false,
+      message: "We could not verify this admin session. Please try again.",
+    };
+  }
+
+  const profile = await getUserProfileById(supabase, user.id);
+
+  if (profile?.role !== "admin") {
+    await supabase.auth.signOut();
+
+    return {
+      success: false,
+      message:
+        "This account does not have admin access. Use customer sign-in for dashboard access.",
+    };
+  }
+
+  redirect("/admin");
 }
 
 export async function signUpAction(

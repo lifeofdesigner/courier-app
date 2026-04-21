@@ -5,6 +5,11 @@ export interface AuthActionState {
   redirectTo?: string;
 }
 
+export interface BootstrapAccessActionState {
+  success: boolean;
+  message: string;
+}
+
 export interface AppUserProfile {
   id: string;
   fullName: string | null;

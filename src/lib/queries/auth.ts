@@ -1,4 +1,4 @@
-import type { User } from "@supabase/supabase-js";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
 
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { AppUserProfile } from "@/types/auth";
@@ -10,6 +10,43 @@ export type CurrentAuthState = {
 
 function isAppUserRole(role: unknown): role is AppUserProfile["role"] {
   return role === "customer" || role === "admin";
+}
+
+type ProfileRow = {
+  id: string;
+  full_name: string | null;
+  phone: string | null;
+  role: AppUserProfile["role"];
+  created_at: string;
+  updated_at: string;
+};
+
+function mapProfile(row: ProfileRow): AppUserProfile {
+  return {
+    id: row.id,
+    fullName: row.full_name,
+    phone: row.phone,
+    role: row.role,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+export async function getUserProfileById(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<AppUserProfile | null> {
+  const { data, error } = await supabase
+    .from("users")
+    .select("id, full_name, phone, role, created_at, updated_at")
+    .eq("id", userId)
+    .single();
+
+  if (error || !data || !isAppUserRole(data.role)) {
+    return null;
+  }
+
+  return mapProfile(data as ProfileRow);
 }
 
 export async function getCurrentAuthState(): Promise<CurrentAuthState> {
@@ -56,13 +93,9 @@ export async function getCurrentUserProfile(): Promise<AppUserProfile | null> {
     return null;
   }
 
-  const { data, error } = await supabase
-    .from("users")
-    .select("id, full_name, phone, role, created_at, updated_at")
-    .eq("id", user.id)
-    .single();
+  const profile = await getUserProfileById(supabase, user.id);
 
-  if (error || !data || !isAppUserRole(data.role)) {
+  if (!profile) {
     return {
       id: user.id,
       fullName:
@@ -79,12 +112,5 @@ export async function getCurrentUserProfile(): Promise<AppUserProfile | null> {
     };
   }
 
-  return {
-    id: data.id,
-    fullName: data.full_name,
-    phone: data.phone,
-    role: data.role,
-    createdAt: data.created_at,
-    updatedAt: data.updated_at,
-  };
+  return profile;
 }

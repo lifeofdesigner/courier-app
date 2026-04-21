@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 import { AuthShell, LoginForm } from "@/components/auth";
 
@@ -18,6 +19,14 @@ function safeNextPath(nextPath: string | undefined) {
     return "/dashboard";
   }
 
+  if (nextPath === "/admin" || nextPath.startsWith("/admin/")) {
+    return "/dashboard";
+  }
+
+  if (nextPath === "/developer" || nextPath.startsWith("/developer/")) {
+    return "/dashboard";
+  }
+
   return nextPath;
 }
 
@@ -29,6 +38,14 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       eyebrow="Customer access"
       title="Sign in to manage shipments."
       description="Access your quotes, pickup requests, and shipment activity from one secure customer dashboard."
+      footer={
+        <p className="text-center text-sm text-slate-600">
+          Operations team?{" "}
+          <Link href="/admin/login" className="font-semibold text-[#FF6B2B]">
+            Use admin sign in
+          </Link>
+        </p>
+      }
     >
       <LoginForm
         nextPath={safeNextPath(params.next)}

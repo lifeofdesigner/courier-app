@@ -28,7 +28,7 @@ export async function requireAdmin() {
   const supabase = await createSupabaseServerClient();
 
   if (!supabase) {
-    redirect("/login?next=/admin");
+    redirect("/admin/login");
   }
 
   const {
@@ -36,7 +36,7 @@ export async function requireAdmin() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    redirect("/login?next=/admin");
+    redirect("/admin/login");
   }
 
   const { data, error } = await supabase

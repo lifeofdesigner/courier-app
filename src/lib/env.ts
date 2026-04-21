@@ -9,6 +9,12 @@ export type SupabaseServiceRoleEnv = SupabasePublicEnv & {
   serviceRoleKey: string;
 };
 
+export type DeveloperBootstrapEnv = {
+  enabled: boolean;
+  secret: string | null;
+  localOnly: boolean;
+};
+
 export type StripeServerEnv = {
   secretKey: string;
   webhookSecret: string;
@@ -27,13 +33,22 @@ export type LaunchEnvStatus = {
   key: string;
   label: string;
   configured: boolean;
-  requiredFor: "core app" | "payments" | "emails" | "production URL";
+  requiredFor:
+    | "core app"
+    | "payments"
+    | "emails"
+    | "production URL"
+    | "developer bootstrap";
 };
 
 function normalizeEnvValue(value: string | undefined) {
   const normalized = value?.trim();
 
   return normalized && normalized.length > 0 ? normalized : undefined;
+}
+
+function isTrueEnvValue(value: string | undefined) {
+  return normalizeEnvValue(value)?.toLowerCase() === "true";
 }
 
 export function getSupabasePublicEnv(): SupabasePublicEnv | null {
@@ -85,11 +100,19 @@ export function requireSupabaseServiceRoleEnv(): SupabaseServiceRoleEnv {
 
   if (!env) {
     throw new Error(
-      "Missing Supabase service role configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY for trusted server-side payment and label operations.",
+      "Missing Supabase service role configuration. Set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY for trusted server-side operations.",
     );
   }
 
   return env;
+}
+
+export function getDeveloperBootstrapEnv(): DeveloperBootstrapEnv {
+  return {
+    enabled: isTrueEnvValue(process.env.DEV_BOOTSTRAP_ENABLED),
+    secret: normalizeEnvValue(process.env.DEV_BOOTSTRAP_SECRET) ?? null,
+    localOnly: isTrueEnvValue(process.env.DEV_BOOTSTRAP_LOCAL_ONLY),
+  };
 }
 
 export function getStripeServerEnv(): StripeServerEnv | null {
@@ -209,6 +232,24 @@ export function getLaunchEnvStatus(): LaunchEnvStatus[] {
       label: "Public site URL",
       configured: Boolean(normalizeEnvValue(process.env.NEXT_PUBLIC_SITE_URL)),
       requiredFor: "production URL",
+    },
+    {
+      key: "DEV_BOOTSTRAP_ENABLED",
+      label: "Developer bootstrap enabled",
+      configured: isTrueEnvValue(process.env.DEV_BOOTSTRAP_ENABLED),
+      requiredFor: "developer bootstrap",
+    },
+    {
+      key: "DEV_BOOTSTRAP_SECRET",
+      label: "Developer bootstrap secret",
+      configured: Boolean(normalizeEnvValue(process.env.DEV_BOOTSTRAP_SECRET)),
+      requiredFor: "developer bootstrap",
+    },
+    {
+      key: "DEV_BOOTSTRAP_LOCAL_ONLY",
+      label: "Developer bootstrap local-only guard",
+      configured: isTrueEnvValue(process.env.DEV_BOOTSTRAP_LOCAL_ONLY),
+      requiredFor: "developer bootstrap",
     },
   ];
 }
