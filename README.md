@@ -44,6 +44,49 @@ The visual direction uses a clean courier/logistics aesthetic with a light
 background, navy hierarchy, orange primary accent, strong spacing rhythm, and
 business-ready copy.
 
+## Phase 3 Homepage CMS Foundation
+
+The homepage is now driven by structured CMS content instead of inline marketing
+copy. The server route fetches homepage section records through
+`src/lib/queries/cms.ts`, validates each section payload, and renders typed
+marketing components from `src/components/marketing`.
+
+Required Supabase environment variables:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+```
+
+If either variable is missing, the Supabase request fails, or no published
+homepage records exist, the homepage renders `src/content/homepage-fallback.ts`
+so the public site remains available.
+
+The Phase 3 CMS table assumption is a section-record model using a
+`cms_content` table:
+
+```ts
+{
+  section: "homepage";
+  key:
+    | "hero"
+    | "trackingPromo"
+    | "services"
+    | "trust"
+    | "coverage"
+    | "testimonials"
+    | "faqPreview"
+    | "cta"
+    | "seo";
+  value: Json;
+  published: boolean;
+  updated_at: string;
+}
+```
+
+Each `value` is the full JSON payload for that homepage section and should match
+the interfaces in `src/types/cms.ts`.
+
 ## Routes
 
 Public:
@@ -105,6 +148,5 @@ npm run build
 
 ## Next Phase
 
-Recommended next steps are Supabase environment setup, database schema design,
-Supabase Auth integration, and real shipment, quote, booking, and tracking
-workflows.
+Recommended next steps are database schema hardening, Supabase Auth integration,
+and real shipment, quote, booking, and tracking workflows.
