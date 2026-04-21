@@ -5,12 +5,14 @@ import {
   FAQPreview,
   HomeCta,
   HomeHero,
+  SeoJsonLd,
   ServicePreview,
   SocialProof,
   TrackingPromo,
   TrustSection,
 } from "@/components/marketing";
 import { getHomePageContent } from "@/lib/queries/cms";
+import { getOrganizationJsonLd, getWebsiteJsonLd } from "@/lib/seo";
 
 export async function generateMetadata(): Promise<Metadata> {
   const content = await getHomePageContent();
@@ -48,6 +50,7 @@ export default async function HomePage() {
 
   return (
     <main>
+      <SeoJsonLd data={[getOrganizationJsonLd(), getWebsiteJsonLd()]} />
       <HomeHero content={content.hero} />
       <TrackingPromo content={content.trackingPromo} />
       <ServicePreview content={content.services} />

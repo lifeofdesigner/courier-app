@@ -1,5 +1,7 @@
 import type { FooterColumn, NavItem } from "@/types/ui";
 
+export const DEFAULT_SITE_URL = "https://www.atlascourier.com";
+
 export const brandColors = {
   primary: "#FF6B2B",
   navy: "#0B1C3A",
@@ -18,10 +20,39 @@ export const company = {
   email: "support@atlascourier.com",
   emailHref: "mailto:support@atlascourier.com",
   address: "1200 Commerce Way, Newark, NJ 07102",
+  addressLines: ["1200 Commerce Way", "Newark, NJ 07102", "United States"],
   hours: "Monday-Friday, 8:00 AM-7:00 PM",
+  operatingHours: "Monday to Friday, 8:00 AM-7:00 PM",
   coverage: "Local, regional, and nationwide courier coverage",
   trustStatement:
     "Secure handling, clear tracking, and dependable pickup windows for business-critical shipments.",
+} as const;
+
+export const siteConfig = {
+  name: company.name,
+  defaultUrl: DEFAULT_SITE_URL,
+  defaultTitle: `${company.name} | Reliable courier and delivery services`,
+  titleTemplate: `%s | ${company.name}`,
+  description:
+    "Professional courier services for same-day pickup, scheduled delivery, shipment tracking, and business courier support.",
+  defaultOgImagePath: "/opengraph-image",
+  twitterImagePath: "/twitter-image",
+  locale: "en_US",
+  twitterHandle: "@atlascourier",
+} as const;
+
+export const socialLinks = {
+  linkedin: "https://www.linkedin.com/company/atlas-courier",
+  x: "https://x.com/atlascourier",
+  facebook: "https://www.facebook.com/atlascourier",
+} as const;
+
+export const blogCategoryLabels = {
+  operations: "Operations",
+  tracking: "Tracking",
+  customs: "Customs",
+  business: "Business shipping",
+  planning: "Shipping planning",
 } as const;
 
 export const ctaLabels = {
@@ -37,6 +68,7 @@ export const publicNavigation: NavItem[] = [
   { label: "Book Pickup", href: "/book" },
   { label: "Services", href: "/services" },
   { label: "About", href: "/about" },
+  { label: "Blog", href: "/blog" },
   { label: "Contact", href: "/contact" },
   { label: "FAQ", href: "/faq" },
 ];
@@ -94,6 +126,7 @@ export const footerNavigation: FooterColumn[] = [
     title: "Company",
     items: [
       { label: "About", href: "/about" },
+      { label: "Blog", href: "/blog" },
       { label: "Contact", href: "/contact" },
       { label: "FAQ", href: "/faq" },
       { label: "Sign In", href: "/login" },

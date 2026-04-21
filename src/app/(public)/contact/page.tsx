@@ -1,74 +1,55 @@
 import type { Metadata } from "next";
-import { Mail, Phone } from "lucide-react";
 
-import { Container } from "@/components/layout";
 import {
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  Input,
-  PageHero,
-  Textarea,
-} from "@/components/ui";
-import { company } from "@/constants/site";
+  ContactFormCard,
+  ContactPanel,
+  SeoJsonLd,
+} from "@/components/marketing";
+import { getPublicPageSettings } from "@/lib/queries/public-pages";
+import { createPageMetadata, getOrganizationJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Contact",
-};
+export const metadata: Metadata = createPageMetadata({
+  title: "Contact Atlas Courier",
+  description:
+    "Contact Atlas Courier for tracking questions, pickup coordination, quotes, delivery support, and courier operations assistance.",
+  path: "/contact",
+  keywords: [
+    "contact courier support",
+    "courier phone number",
+    "shipment support",
+    "pickup support",
+  ],
+});
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const settings = await getPublicPageSettings();
+
   return (
     <main>
-      <PageHero
-        eyebrow="Contact"
-        title="Reach the courier support team."
-        description="Give customers a clear place to ask about tracking, pickup planning, quotes, and shipment support."
-      />
-      <Container className="grid gap-6 py-14 sm:py-16 lg:grid-cols-[0.7fr_1fr]" size="lg">
-        <Card className="p-6">
-          <h2 className="text-xl font-bold tracking-tight text-navy">
-            Support details
-          </h2>
-          <div className="mt-6 space-y-4 text-sm text-slate-700">
-            <p className="flex gap-3">
-              <Phone aria-hidden="true" className="mt-0.5 h-4 w-4 text-primary" />
-              {company.phone}
+      <SeoJsonLd data={getOrganizationJsonLd()} />
+      <section className="py-16 lg:py-20">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl">
+            <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+              Contact
             </p>
-            <p className="flex gap-3">
-              <Mail aria-hidden="true" className="mt-0.5 h-4 w-4 text-primary" />
-              {company.email}
+            <h1 className="mt-3 font-heading text-4xl font-bold tracking-tight text-[#0B1C3A] lg:text-5xl">
+              Talk to courier support before the shipment stalls.
+            </h1>
+            <p className="mt-4 text-base leading-8 text-slate-600">
+              Reach Atlas Courier for pickup planning, tracking questions,
+              delivery exceptions, quote support, and account conversations.
+              We keep contact details easy to scan so customers can choose the
+              fastest support path.
             </p>
           </div>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Send a message</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <form className="grid gap-5">
-              <div className="grid gap-5 md:grid-cols-2">
-                <Input label="Name" name="name" placeholder="Jane Smith" />
-                <Input label="Email" name="email" type="email" placeholder="jane@example.com" />
-              </div>
-              <Input
-                label="Tracking number"
-                name="trackingNumber"
-                placeholder="Optional"
-              />
-              <Textarea
-                label="How can we help?"
-                name="message"
-                placeholder="Tell us about the shipment or service you need."
-              />
-              <Button type="submit" size="lg">
-                Prepare message
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
-      </Container>
+
+          <div className="mt-12 grid gap-6 lg:grid-cols-[0.85fr_1.15fr]">
+            <ContactPanel settings={settings} />
+            <ContactFormCard settings={settings} />
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

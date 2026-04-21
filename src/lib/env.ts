@@ -1,9 +1,9 @@
+import { DEFAULT_SITE_URL } from "@/constants/site";
+
 export type SupabasePublicEnv = {
   url: string;
   anonKey: string;
 };
-
-const LOCAL_SITE_URL = "http://localhost:3000";
 
 function normalizeEnvValue(value: string | undefined) {
   const normalized = value?.trim();
@@ -53,5 +53,5 @@ export function getSiteUrl() {
     return `https://${vercelUrl}`.replace(/\/$/, "");
   }
 
-  return LOCAL_SITE_URL;
+  return DEFAULT_SITE_URL;
 }

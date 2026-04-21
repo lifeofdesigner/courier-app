@@ -3,10 +3,15 @@ import type { Metadata } from "next";
 import { Container } from "@/components/layout";
 import { QuoteForm } from "@/components/quote";
 import { hasSupabasePublicEnv } from "@/lib/env";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Get Quote",
-};
+export const metadata: Metadata = createPageMetadata({
+  title: "Get a Courier Quote",
+  description:
+    "Estimate an Atlas Courier shipment with service type, route, package details, declared value, and delivery requirements before booking.",
+  path: "/quote",
+  keywords: ["courier quote", "delivery estimate", "shipping quote"],
+});
 
 export default function GetQuotePage() {
   return (

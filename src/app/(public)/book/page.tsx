@@ -3,10 +3,15 @@ import type { Metadata } from "next";
 import { BookingForm, BookingSummaryCard } from "@/components/booking";
 import { Container } from "@/components/layout";
 import { hasSupabasePublicEnv } from "@/lib/env";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Book Pickup",
-};
+export const metadata: Metadata = createPageMetadata({
+  title: "Book a Courier Pickup",
+  description:
+    "Book an Atlas Courier pickup with sender, recipient, package, pickup, and delivery details for a clear courier handoff.",
+  path: "/book",
+  keywords: ["book courier pickup", "schedule pickup", "courier booking"],
+});
 
 type BookPickupPageProps = {
   searchParams: Promise<{

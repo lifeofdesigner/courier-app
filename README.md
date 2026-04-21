@@ -226,6 +226,59 @@ CMS assets upload to the `cms-assets` bucket and return public URLs for homepage
 and future content media fields. Stripe, Resend, Mapbox, public homepage
 redesign, and blog publishing remain outside this phase.
 
+## Phase 7 Remaining Public Pages and SEO Foundation
+
+Phase 7 completes the public marketing and content surface and adds a
+production-style SEO layer using Next.js App Router metadata conventions. It
+does not add Stripe, Resend, Mapbox, new dashboard workflows, or complex blog
+publishing.
+
+Production-ready public content routes:
+
+- `/services`
+- `/about`
+- `/contact`
+- `/faq`
+- `/privacy`
+- `/terms`
+- `/blog`
+- `/blog/[slug]`
+- `/not-found`
+
+SEO features added:
+
+- Root metadata with `metadataBase`, title template, Open Graph, Twitter, and
+  robots defaults.
+- Route-level metadata and canonical URLs for public pages.
+- Dynamic `generateMetadata` for blog article pages.
+- Organization, WebSite, FAQPage, and BlogPosting JSON-LD helpers rendered
+  through `SeoJsonLd`.
+- `src/app/sitemap.ts` with static public routes and blog article URLs.
+- `src/app/robots.ts` that allows public pages and disallows admin,
+  dashboard, auth, and account-only routes.
+- File-based generated social previews through `src/app/opengraph-image.tsx`
+  and `src/app/twitter-image.tsx`.
+
+The blog uses a hybrid data strategy. `src/lib/queries/blog.ts` attempts to
+read published rows from a future `blog_posts` table when Supabase is available,
+then falls back to polished demo logistics articles from
+`src/content/blog-fallback.ts`.
+
+Public page settings use `src/lib/queries/public-pages.ts` to attempt reading
+`company_contact`, `support_hours`, `social_links`, and `footer_notice` from
+`site_settings`. Missing settings, unavailable Supabase configuration, or RLS
+errors gracefully fall back to constants in `src/constants/site.ts`.
+
+Every phase must end with lint, build, commit, and push to GitHub:
+
+```bash
+npm run lint
+npm run build
+git add .
+git commit -m "Phase 7: remaining public pages and SEO foundation"
+git push origin main
+```
+
 ## Routes
 
 Public:
@@ -238,6 +291,10 @@ Public:
 - `/about`
 - `/contact`
 - `/faq`
+- `/privacy`
+- `/terms`
+- `/blog`
+- `/blog/[slug]`
 
 Auth:
 
@@ -287,5 +344,5 @@ npm run build
 
 ## Next Phase
 
-Recommended next steps are database schema hardening, Supabase Auth integration,
-and real shipment, quote, booking, and tracking workflows.
+Recommended next steps are payment, email notification, map/geocoding, and
+production legal review work once those integrations are intentionally scoped.

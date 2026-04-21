@@ -8,10 +8,15 @@ import {
   TrackingTimeline,
 } from "@/components/tracking";
 import { getPublicTrackingResult } from "@/lib/queries/tracking";
+import { createPageMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: "Track Shipment",
-};
+  description:
+    "Track an Atlas Courier shipment by tracking number and review delivery status, route details, estimated delivery, and tracking milestones.",
+  path: "/track",
+  keywords: ["track shipment", "courier tracking", "delivery status"],
+});
 
 type TrackShipmentPageProps = {
   searchParams: Promise<{
