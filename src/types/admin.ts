@@ -6,6 +6,15 @@ export interface AdminActionState {
   fieldErrors?: Record<string, string[]>;
 }
 
+export interface CreateUserActionState {
+  success: boolean;
+  message: string;
+  createdUserId?: string;
+  createdEmail?: string;
+  createdRole?: "customer" | "admin";
+  fieldErrors?: Record<string, string[]>;
+}
+
 export interface AdminDashboardStats {
   totalShipments: number;
   activeShipments: number;

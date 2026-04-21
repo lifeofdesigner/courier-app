@@ -19,6 +19,7 @@ export default async function ManageUsersPage() {
       profile={admin.profile}
       title="User access"
       description="Review profile records and update customer or admin roles with server-side authorization."
+      primaryAction={{ label: "Create user", href: "/admin/users/create" }}
     >
       <AdminSectionCard
         title="Users"

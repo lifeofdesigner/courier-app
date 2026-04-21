@@ -410,6 +410,40 @@ git commit -m "Phase 8: payments emails labels and final QA"
 git push origin main
 ```
 
+## Admin Create-User Patch
+
+The admin workspace includes a dedicated user creation tool at
+`/admin/users/create`. It lets an existing admin create a Supabase Auth user,
+set full name, phone, email, password, and assign either the `customer` or
+`admin` role at creation time.
+
+Required server-only environment variable:
+
+```bash
+SUPABASE_SERVICE_ROLE_KEY=
+```
+
+The create-user action is admin-only and server-side. It calls the existing
+admin authorization guard before doing any work, uses a service-role Supabase
+client only on the server, and creates users with
+`supabase.auth.admin.createUser()`. Locally created users are email-confirmed
+immediately with `email_confirm: true` so they can log in during desktop
+testing.
+
+After auth user creation, the action updates `public.users` with `full_name`,
+`phone`, `role`, and `updated_at` so the profile row stays aligned with the
+selected role.
+
+This focused patch must end with lint, build, commit, and push to GitHub:
+
+```bash
+npm run lint
+npm run build
+git add .
+git commit -m "Patch: admin create user page with role assignment"
+git push origin main
+```
+
 ## Routes
 
 Public:

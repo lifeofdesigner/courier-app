@@ -11,6 +11,7 @@ import {
   PackageSearch,
   Settings,
   ShieldCheck,
+  UserPlus,
   UsersRound,
 } from "lucide-react";
 
@@ -23,6 +24,7 @@ const iconMap = {
   "/admin/quotes": FileText,
   "/admin/bookings": CalendarCheck,
   "/admin/users": UsersRound,
+  "/admin/users/create": UserPlus,
   "/admin/cms": BookOpenText,
   "/admin/analytics": BarChart3,
   "/admin/settings": Settings,
@@ -30,6 +32,10 @@ const iconMap = {
 
 function isActivePath(pathname: string, href: string) {
   if (href === "/admin") {
+    return pathname === href;
+  }
+
+  if (href === "/admin/users") {
     return pathname === href;
   }
 

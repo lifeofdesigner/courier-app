@@ -98,6 +98,7 @@ export const adminNavigation: NavItem[] = [
   { label: "Quotes", href: "/admin/quotes" },
   { label: "Bookings", href: "/admin/bookings" },
   { label: "Users", href: "/admin/users" },
+  { label: "Create User", href: "/admin/users/create" },
   { label: "CMS", href: "/admin/cms" },
   { label: "Analytics", href: "/admin/analytics" },
   { label: "Settings", href: "/admin/settings" },
