@@ -444,6 +444,13 @@ git commit -m "Patch: admin create user page with role assignment"
 git push origin main
 ```
 
+## Header Account Access Patch
+
+The public header and mobile navigation now surface account access as a primary
+action. Logged-out visitors see `Sign in`, authenticated customers see
+`My Account`, and authenticated admins see `Admin`. Account state is resolved
+server-side from Supabase Auth plus the `public.users.role` profile field.
+
 ## Routes
 
 Public:

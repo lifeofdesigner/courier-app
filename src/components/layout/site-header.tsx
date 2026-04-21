@@ -1,13 +1,43 @@
-import { Calculator, PackageSearch, Phone } from "lucide-react";
+import { Calculator, CircleUserRound, PackageSearch, Phone } from "lucide-react";
 
 import { Container } from "@/components/layout/container";
 import { Logo } from "@/components/layout/logo";
 import { MobileNav } from "@/components/layout/mobile-nav";
 import { NavLink } from "@/components/layout/nav-link";
-import { buttonVariants } from "@/components/ui/button";
-import { company, primaryCtas, publicNavigation } from "@/constants/site";
+import {
+  accountCtas,
+  company,
+  primaryCtas,
+  publicNavigation,
+} from "@/constants/site";
+import { getCurrentAuthState } from "@/lib/queries/auth";
+import type { CurrentAuthState } from "@/lib/queries/auth";
 
-export function SiteHeader() {
+const secondaryActionButtonClasses =
+  "inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200";
+
+const navyAccountButtonClasses =
+  "inline-flex h-11 items-center justify-center rounded-2xl bg-[#0B1C3A] px-5 text-sm font-semibold text-white transition hover:bg-[#08142c] focus:outline-none focus:ring-4 focus:ring-[#0B1C3A]/20";
+
+const primaryOrangeButtonClasses =
+  "inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20";
+
+function getHeaderAccountAction({ user, profileRole }: CurrentAuthState) {
+  if (!user) {
+    return accountCtas.signedOut;
+  }
+
+  if (profileRole === "admin") {
+    return accountCtas.admin;
+  }
+
+  return accountCtas.customer;
+}
+
+export async function SiteHeader() {
+  const authState = await getCurrentAuthState();
+  const accountAction = getHeaderAccountAction(authState);
+
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-sm shadow-slate-900/[0.03] backdrop-blur supports-[backdrop-filter]:bg-white/90">
       <div className="border-b border-white/10 bg-navy text-white">
@@ -46,31 +76,31 @@ export function SiteHeader() {
           <div className="hidden items-center gap-2 lg:flex">
             <NavLink
               href={primaryCtas.track.href}
-              className={buttonVariants({
-                variant: "outline",
-                size: "sm",
-                className: "rounded-xl bg-white",
-              })}
+              className={secondaryActionButtonClasses}
               activeClassName="border-primary bg-primary/10 text-primary"
             >
-              <PackageSearch aria-hidden="true" className="h-4 w-4" />
+              <PackageSearch aria-hidden="true" className="mr-2 h-4 w-4" />
               {primaryCtas.track.label}
             </NavLink>
             <NavLink
+              href={accountAction.href}
+              className={navyAccountButtonClasses}
+              activeClassName="ring-4 ring-[#0B1C3A]/20"
+            >
+              <CircleUserRound aria-hidden="true" className="mr-2 h-4 w-4" />
+              {accountAction.label}
+            </NavLink>
+            <NavLink
               href={primaryCtas.quote.href}
-              className={buttonVariants({
-                variant: "primary",
-                size: "sm",
-                className: "rounded-xl px-4",
-              })}
+              className={primaryOrangeButtonClasses}
               activeClassName="ring-2 ring-primary/25"
             >
-              <Calculator aria-hidden="true" className="h-4 w-4" />
+              <Calculator aria-hidden="true" className="mr-2 h-4 w-4" />
               {primaryCtas.quote.label}
             </NavLink>
           </div>
 
-          <MobileNav />
+          <MobileNav accountAction={accountAction} />
         </div>
       </Container>
     </header>

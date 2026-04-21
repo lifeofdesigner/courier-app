@@ -60,6 +60,8 @@ export const ctaLabels = {
   quote: "Get a Quote",
   book: "Book Pickup",
   signIn: "Sign in",
+  myAccount: "My Account",
+  admin: "Admin",
   createAccount: "Create account",
   contact: "Contact support",
 } as const;
@@ -76,6 +78,12 @@ export const publicNavigation: NavItem[] = [
 export const primaryCtas = {
   track: { label: ctaLabels.track, href: "/track" },
   quote: { label: ctaLabels.quote, href: "/quote" },
+} as const satisfies Record<string, NavItem>;
+
+export const accountCtas = {
+  signedOut: { label: ctaLabels.signIn, href: "/login" },
+  customer: { label: ctaLabels.myAccount, href: "/dashboard" },
+  admin: { label: ctaLabels.admin, href: "/admin" },
 } as const satisfies Record<string, NavItem>;
 
 export const authNavigation: NavItem[] = [
