@@ -8,9 +8,11 @@ import type {
   AdminTrackingEventRow,
   AdminUserRow,
 } from "@/types/admin";
+import type { PaymentStatus } from "@/types/payment";
 
 type ShipmentRow = {
   id: string;
+  booking_id: string | null;
   tracking_number: string;
   service_type: string;
   status: string;
@@ -19,6 +21,7 @@ type ShipmentRow = {
   destination_city: string;
   destination_country: string;
   estimated_delivery_date: string | null;
+  label_url: string | null;
   created_at: string;
   user_id: string | null;
 };
@@ -58,6 +61,11 @@ type BookingRow = {
   recipient_name: string;
   service_type: string;
   status: string;
+  payment_status: string;
+  amount_due: number | string;
+  amount_paid: number | string;
+  currency: string;
+  stripe_checkout_session_id: string | null;
   pickup_date: string;
   created_at: string;
 };
@@ -83,6 +91,7 @@ const activeShipmentStatuses = [
 function mapShipment(row: ShipmentRow): AdminShipmentRow {
   return {
     id: row.id,
+    bookingId: row.booking_id,
     trackingNumber: row.tracking_number,
     serviceType: row.service_type,
     status: row.status,
@@ -91,9 +100,24 @@ function mapShipment(row: ShipmentRow): AdminShipmentRow {
     destinationCity: row.destination_city,
     destinationCountry: row.destination_country,
     estimatedDeliveryDate: row.estimated_delivery_date,
+    labelUrl: row.label_url,
     createdAt: row.created_at,
     userId: row.user_id,
   };
+}
+
+function normalizePaymentStatus(status: string): PaymentStatus {
+  const statuses: PaymentStatus[] = [
+    "unpaid",
+    "checkout_created",
+    "paid",
+    "payment_failed",
+    "refunded",
+  ];
+
+  return statuses.includes(status as PaymentStatus)
+    ? (status as PaymentStatus)
+    : "unpaid";
 }
 
 function mapTrackingEvent(row: TrackingEventRow): AdminTrackingEventRow {
@@ -136,6 +160,11 @@ function mapBooking(row: BookingRow): AdminBookingRow {
     recipientName: row.recipient_name,
     serviceType: row.service_type,
     status: row.status,
+    paymentStatus: normalizePaymentStatus(row.payment_status),
+    amountDue: Number(row.amount_due),
+    amountPaid: Number(row.amount_paid),
+    currency: row.currency,
+    stripeCheckoutSessionId: row.stripe_checkout_session_id,
     pickupDate: row.pickup_date,
     createdAt: row.created_at,
   };
@@ -194,6 +223,7 @@ export async function getAdminShipments(limit = 20): Promise<AdminShipmentRow[]>
     .select(
       `
       id,
+      booking_id,
       tracking_number,
       service_type,
       status,
@@ -202,6 +232,7 @@ export async function getAdminShipments(limit = 20): Promise<AdminShipmentRow[]>
       destination_city,
       destination_country,
       estimated_delivery_date,
+      label_url,
       created_at,
       user_id
     `,
@@ -276,6 +307,11 @@ export async function getAdminBookings(limit = 50): Promise<AdminBookingRow[]> {
       recipient_name,
       service_type,
       status,
+      payment_status,
+      amount_due,
+      amount_paid,
+      currency,
+      stripe_checkout_session_id,
       pickup_date,
       created_at
     `,

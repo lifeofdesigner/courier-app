@@ -1,4 +1,5 @@
 import type { ServiceType } from "@/types/quote";
+import type { PaymentStatus } from "@/types/payment";
 
 export interface AddressInput {
   contactName: string;
@@ -52,6 +53,15 @@ export interface BookingRecord {
   pickupWindow: string | null;
   specialInstructions: string | null;
   status: string;
+  paymentStatus: PaymentStatus;
+  paymentProvider: string | null;
+  stripeCheckoutSessionId: string | null;
+  stripePaymentIntentId: string | null;
+  amountDue: number;
+  amountPaid: number;
+  currency: string;
+  labelUrl: string | null;
+  labelGeneratedAt: string | null;
   createdAt: string;
   updatedAt: string;
 }

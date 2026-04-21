@@ -8,16 +8,17 @@ export function BookingSummaryCard() {
         Submit the details operations needs.
       </h2>
       <p className="mt-4 text-sm leading-7 text-slate-600">
-        This MVP flow stores pickup and delivery addresses, package details,
-        service type, preferred pickup date, and request status. Payment and
-        label generation stay outside this phase.
+        This launch flow stores the pickup details, calculates the courier
+        amount due, and moves the booking into secure Stripe payment before a
+        shipment label is created.
       </p>
       <div className="mt-6 grid gap-3 text-sm text-slate-600">
         <div className="rounded-2xl bg-slate-50 p-4">
-          Saved as status <span className="font-semibold text-[#0B1C3A]">requested</span>
+          Starts as <span className="font-semibold text-[#0B1C3A]">unpaid</span>{" "}
+          until checkout is completed
         </div>
         <div className="rounded-2xl bg-slate-50 p-4">
-          Supports authenticated and guest request creation
+          Supports authenticated and guest bookings with webhook fulfillment
         </div>
       </div>
     </div>

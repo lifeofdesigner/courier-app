@@ -20,7 +20,7 @@ export default async function MyShipmentsPage() {
     <DashboardShell
       profile={context.profile}
       title="My shipments"
-      description="Search and review shipment routes, statuses, estimated delivery dates, and tracking links."
+      description="Search and review shipment routes, statuses, labels, estimated delivery dates, and tracking links."
       primaryAction={{ label: "Track a shipment", href: "/track" }}
     >
       <ShipmentTable shipments={shipments} />

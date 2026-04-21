@@ -1,8 +1,11 @@
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
-import type { SupabaseClient } from "@supabase/supabase-js";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-import { getSupabasePublicEnv } from "@/lib/env";
+import {
+  getSupabasePublicEnv,
+  requireSupabaseServiceRoleEnv,
+} from "@/lib/env";
 
 export async function createSupabaseServerClient(): Promise<SupabaseClient | null> {
   const env = getSupabasePublicEnv();
@@ -27,6 +30,17 @@ export async function createSupabaseServerClient(): Promise<SupabaseClient | nul
           // Server Components can read cookies, while Route Handlers and Actions can write them.
         }
       },
+    },
+  });
+}
+
+export function createSupabaseServiceRoleClient(): SupabaseClient {
+  const env = requireSupabaseServiceRoleEnv();
+
+  return createClient(env.url, env.serviceRoleKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
     },
   });
 }

@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 
+import { sendBookingEmail } from "@/lib/email/send-booking-email";
 import { insertBookingRequest } from "@/lib/queries/bookings";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { BookingRecord } from "@/types/booking";
@@ -145,6 +146,7 @@ export async function createBookingAction(
       input: parsed.data,
       userId: user?.id ?? null,
     });
+    await sendBookingEmail(booking);
 
     return {
       success: true,

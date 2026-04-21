@@ -20,7 +20,7 @@ export default async function MyQuotesPage() {
     <DashboardShell
       profile={context.profile}
       title="My quotes"
-      description="Review saved quote calculations, delivery lanes, totals, and booking actions."
+      description="Review saved quote calculations, delivery lanes, totals, and booking actions that lead into paid checkout."
       primaryAction={{ label: "Request a quote", href: "/quote" }}
     >
       <QuoteTable quotes={quotes} />

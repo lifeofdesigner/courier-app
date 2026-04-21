@@ -21,6 +21,7 @@ export interface TrackingEventItem {
 
 export interface ShipmentRecord {
   id: string;
+  bookingId: string | null;
   trackingNumber: string;
   referenceCode: string | null;
   serviceType: string;
@@ -34,6 +35,8 @@ export interface ShipmentRecord {
   weightKg: number;
   currency: string;
   status: ShipmentStatus;
+  labelUrl: string | null;
+  labelGeneratedAt: string | null;
   estimatedDeliveryDate: string | null;
   createdAt: string;
   updatedAt: string;

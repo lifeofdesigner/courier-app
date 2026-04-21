@@ -279,6 +279,137 @@ git commit -m "Phase 7: remaining public pages and SEO foundation"
 git push origin main
 ```
 
+## Phase 8 Payments, Emails, Labels, and Final QA
+
+Phase 8 completes the launch-ready MVP flow with server-side Stripe Checkout,
+verified Stripe webhooks, Resend transactional emails, printable HTML shipping
+labels, payment-aware dashboard/admin states, and final production readiness
+checks.
+
+Phase 8 adds:
+
+- Server-created Stripe Checkout Sessions at `/api/stripe/checkout`.
+- Verified Stripe webhook handling at `/api/stripe/webhook`.
+- Booking payment success and cancel routes at `/book/success` and
+  `/book/cancel`.
+- Webhook-driven paid fulfillment that marks bookings paid, creates one linked
+  order if missing, creates an initial tracking event, and stores `/label/{id}`
+  as the label URL.
+- Resend email helpers and templates for booking confirmation, payment
+  confirmation, and operational tracking status updates.
+- A printable label route at `/label/[bookingId]`.
+- Admin settings environment readiness checks for launch configuration.
+
+Stripe environment variables:
+
+```bash
+STRIPE_SECRET_KEY=
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+STRIPE_WEBHOOK_SECRET=
+```
+
+Supabase trusted server-side payment operations also require:
+
+```bash
+SUPABASE_SERVICE_ROLE_KEY=
+```
+
+Never expose `SUPABASE_SERVICE_ROLE_KEY` to the browser. It is used only by
+server-side route handlers and queries so webhook fulfillment can update RLS
+protected tables safely.
+
+Resend environment variables:
+
+```bash
+RESEND_API_KEY=
+RESEND_FROM_EMAIL=
+```
+
+If Resend variables are missing, booking/payment/status flows continue and email
+sending is skipped gracefully.
+
+Recommended public URL configuration:
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://your-production-domain.com
+```
+
+Stripe webhook setup:
+
+- Endpoint URL: `https://your-production-domain.com/api/stripe/webhook`
+- Required events:
+  - `checkout.session.completed`
+  - `checkout.session.expired`
+  - `payment_intent.payment_failed`
+
+Payment flow overview:
+
+1. A customer or guest creates a booking at `/book`.
+2. The booking stores `amount_due`, `currency`, and `payment_status = unpaid`.
+3. The customer starts Checkout through `/api/stripe/checkout`.
+4. The app stores `payment_status = checkout_created` and the Stripe Checkout
+   Session ID.
+5. Stripe redirects to `/book/success` or `/book/cancel`, but those pages do not
+   perform fulfillment.
+6. The verified webhook marks successful payments as paid, creates a linked
+   order if one does not already exist, creates the initial tracking event,
+   stores the label URL, and sends the payment confirmation email.
+
+Label printing:
+
+- Printable labels are served at `/label/[bookingId]`.
+- The label route renders only after payment is marked paid and an order exists.
+- The route is intentionally noindex and uses the unguessable booking UUID as
+  the MVP access token for guest label printing.
+- Labels are HTML/CSS print views; no carrier API or PDF service is introduced
+  in this phase.
+
+Run the Phase 8 migration before testing payments:
+
+```bash
+supabase db push
+```
+
+The migration `supabase/migrations/005_phase8_payments_emails_labels.sql`
+creates or updates:
+
+- payment fields on `public.bookings`
+- label fields on `public.bookings`
+- `booking_id` and label fields on `public.orders`
+- payment status checks and payment/order indexes
+- payment-safe booking insert RLS policies
+- existing owner/admin order and booking policies
+
+Final QA checklist:
+
+- Auth: sign up, sign in, dashboard guard, admin guard.
+- Quote: calculate and save an Express and Economy quote.
+- Booking: create signed-in and guest bookings with an amount due.
+- Stripe checkout: start Checkout from booking success, dashboard, and cancel
+  resume states.
+- Webhook: confirm `checkout.session.completed` marks the booking paid and
+  creates one linked order only.
+- Email: booking confirmation, payment confirmation, and status update emails
+  send when Resend env is configured and skip safely when it is not.
+- Admin role: verify `/admin`, bookings, shipments, settings, CMS, and user role
+  screens remain admin-only.
+- CMS publish: published homepage CMS content still renders with fallback safety.
+- Tracking: paid shipment tracking shows status and label access.
+- Label printing: `/label/[bookingId]` prints a clean label after payment.
+- Public SEO pages: services, about, contact, FAQ, legal, blog, sitemap, robots,
+  and social images still build.
+- GitHub push completed after lint and build pass.
+
+Every phase must end with lint, build, commit, and push to GitHub:
+
+```bash
+npm run lint
+npm run build
+git add .
+git commit -m "Phase 8: payments emails labels and final QA"
+git push origin main
+```
+
 ## Routes
 
 Public:
@@ -287,6 +418,9 @@ Public:
 - `/track`
 - `/quote`
 - `/book`
+- `/book/success`
+- `/book/cancel`
+- `/label/[bookingId]`
 - `/services`
 - `/about`
 - `/contact`
@@ -318,6 +452,7 @@ Admin:
 - `/admin/bookings`
 - `/admin/users`
 - `/admin/cms`
+- `/admin/settings`
 
 ## Getting Started
 

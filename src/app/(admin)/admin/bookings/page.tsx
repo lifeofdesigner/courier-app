@@ -18,11 +18,11 @@ export default async function ManageBookingsPage() {
     <AdminShell
       profile={admin.profile}
       title="Pickup bookings"
-      description="Review pickup requests submitted by customers and guests. Dispatch confirmation stays outside this phase."
+      description="Review pickup requests submitted by customers and guests with payment status, Stripe session visibility, and label readiness."
     >
       <AdminSectionCard
         title="Booking queue"
-        description="Read-only operations queue for submitted pickup requests."
+        description="Payment-aware operations queue for submitted pickup requests."
       >
         <BookingsTable bookings={bookings} />
       </AdminSectionCard>

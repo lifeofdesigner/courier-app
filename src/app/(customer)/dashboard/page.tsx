@@ -100,7 +100,7 @@ export default async function CustomerDashboardPage() {
 
       <DashboardSectionCard
         title="Recent pickup requests"
-        description="Submitted pickup requests and their current request status."
+        description="Submitted pickup requests with payment status, amount due, and label access after payment."
       >
         <RecentBookingList bookings={data.recentBookings} />
       </DashboardSectionCard>

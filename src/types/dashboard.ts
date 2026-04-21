@@ -1,4 +1,5 @@
 import type { AppUserProfile } from "@/types/auth";
+import type { PaymentStatus } from "@/types/payment";
 import type { ShipmentStatus } from "@/types/shipment";
 
 export interface DashboardStats {
@@ -18,6 +19,7 @@ export interface DashboardOverviewData {
 
 export interface ShipmentTableItem {
   id: string;
+  bookingId: string | null;
   trackingNumber: string;
   serviceType: string;
   status: ShipmentStatus;
@@ -26,6 +28,7 @@ export interface ShipmentTableItem {
   destinationCity: string;
   destinationCountry: string;
   estimatedDeliveryDate: string | null;
+  labelUrl: string | null;
   createdAt: string;
 }
 
@@ -46,6 +49,11 @@ export interface BookingListItem {
   id: string;
   serviceType: string;
   status: string;
+  paymentStatus: PaymentStatus;
+  amountDue: number;
+  amountPaid: number;
+  currency: string;
+  stripeCheckoutSessionId: string | null;
   pickupDate: string;
   createdAt: string;
 }

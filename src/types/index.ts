@@ -6,6 +6,7 @@ export * from "./booking";
 export * from "./cms";
 export * from "./dashboard";
 export * from "./database";
+export * from "./payment";
 export * from "./quote";
 export * from "./seo";
 export * from "./shipment";

@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { CheckoutButton } from "@/components/booking";
 import { DashboardEmptyState } from "@/components/dashboard/dashboard-empty-state";
 import type { BookingListItem } from "@/types/dashboard";
 
@@ -13,6 +14,13 @@ function formatDate(value: string) {
     day: "numeric",
     year: "numeric",
   }).format(new Date(value));
+}
+
+function formatMoney(value: number, currency: string) {
+  return new Intl.NumberFormat("en", {
+    style: "currency",
+    currency,
+  }).format(value);
 }
 
 export function RecentBookingList({ bookings }: RecentBookingListProps) {
@@ -41,10 +49,30 @@ export function RecentBookingList({ bookings }: RecentBookingListProps) {
               Pickup {formatDate(booking.pickupDate)} - requested{" "}
               {formatDate(booking.createdAt)}
             </p>
+            <p className="mt-1 text-sm leading-6 text-slate-600">
+              {formatMoney(booking.amountDue, booking.currency)} due - payment{" "}
+              {booking.paymentStatus.replaceAll("_", " ")}
+            </p>
           </div>
-          <span className="inline-flex w-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize text-slate-700">
-            {booking.status}
-          </span>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="inline-flex w-fit rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize text-slate-700">
+              {booking.status}
+            </span>
+            {booking.paymentStatus !== "paid" ? (
+              <CheckoutButton
+                bookingId={booking.id}
+                label="Pay"
+                className="inline-flex h-9 items-center justify-center gap-2 rounded-xl bg-[#FF6B2B] px-3 text-xs font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20 disabled:cursor-not-allowed disabled:opacity-60"
+              />
+            ) : (
+              <Link
+                href={`/label/${booking.id}`}
+                className="inline-flex h-9 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-[#0B1C3A] transition hover:bg-slate-50"
+              >
+                Label
+              </Link>
+            )}
+          </div>
         </div>
       ))}
       <div className="pt-4">

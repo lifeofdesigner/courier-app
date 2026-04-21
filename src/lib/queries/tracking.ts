@@ -19,6 +19,7 @@ const shipmentStatuses: ShipmentStatus[] = [
 
 type OrderRow = {
   id: string;
+  booking_id: string | null;
   tracking_number: string;
   reference_code: string | null;
   service_type: string;
@@ -32,6 +33,8 @@ type OrderRow = {
   weight_kg: number | string;
   currency: string;
   status: string;
+  label_url: string | null;
+  label_generated_at: string | null;
   estimated_delivery_date: string | null;
   created_at: string;
   updated_at: string;
@@ -57,6 +60,7 @@ function normalizeStatus(status: string): ShipmentStatus {
 function mapShipment(row: OrderRow): ShipmentRecord {
   return {
     id: row.id,
+    bookingId: row.booking_id,
     trackingNumber: row.tracking_number,
     referenceCode: row.reference_code,
     serviceType: row.service_type,
@@ -70,6 +74,8 @@ function mapShipment(row: OrderRow): ShipmentRecord {
     weightKg: Number(row.weight_kg),
     currency: row.currency,
     status: normalizeStatus(row.status),
+    labelUrl: row.label_url,
+    labelGeneratedAt: row.label_generated_at,
     estimatedDeliveryDate: row.estimated_delivery_date,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -117,6 +123,7 @@ export async function getPublicTrackingResult(
     .select(
       `
       id,
+      booking_id,
       tracking_number,
       reference_code,
       service_type,
@@ -130,6 +137,8 @@ export async function getPublicTrackingResult(
       weight_kg,
       currency,
       status,
+      label_url,
+      label_generated_at,
       estimated_delivery_date,
       created_at,
       updated_at

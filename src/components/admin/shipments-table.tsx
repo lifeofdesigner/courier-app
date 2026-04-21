@@ -43,6 +43,7 @@ export function ShipmentsTable({ shipments }: ShipmentsTableProps) {
         shipment.destinationCity,
         shipment.destinationCountry,
         shipment.userId ?? "",
+        shipment.bookingId ?? "",
       ]
         .join(" ")
         .toLowerCase();
@@ -94,18 +95,19 @@ export function ShipmentsTable({ shipments }: ShipmentsTableProps) {
       ) : (
         <div className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[920px]">
-              <thead className="bg-slate-50 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
-                <tr>
-                  <th className="px-4 py-4">Tracking number</th>
+          <table className="w-full min-w-[1040px]">
+            <thead className="bg-slate-50 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
+              <tr>
+                <th className="px-4 py-4">Tracking number</th>
                   <th className="px-4 py-4">Service</th>
                   <th className="px-4 py-4">Route</th>
                   <th className="px-4 py-4">Status</th>
-                  <th className="px-4 py-4">ETA</th>
-                  <th className="px-4 py-4">Created</th>
-                  <th className="px-4 py-4">Owner</th>
-                </tr>
-              </thead>
+                <th className="px-4 py-4">ETA</th>
+                <th className="px-4 py-4">Created</th>
+                <th className="px-4 py-4">Label</th>
+                <th className="px-4 py-4">Owner</th>
+              </tr>
+            </thead>
               <tbody className="divide-y divide-slate-100">
                 {filteredShipments.map((shipment) => (
                   <tr key={shipment.id}>
@@ -136,7 +138,24 @@ export function ShipmentsTable({ shipments }: ShipmentsTableProps) {
                       {formatDate(shipment.createdAt)}
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">
-                      {shipment.userId ?? "Guest"}
+                      {shipment.labelUrl ? (
+                        <Link
+                          href={shipment.labelUrl}
+                          className="inline-flex h-9 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-[#0B1C3A] transition hover:bg-slate-50"
+                        >
+                          Print
+                        </Link>
+                      ) : (
+                        "Pending"
+                      )}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-slate-700">
+                      <p>{shipment.userId ?? "Guest"}</p>
+                      {shipment.bookingId ? (
+                        <p className="mt-1 text-xs text-slate-500">
+                          Booking {shipment.bookingId}
+                        </p>
+                      ) : null}
                     </td>
                   </tr>
                 ))}

@@ -9,6 +9,7 @@ import type {
   QuoteTableItem,
   ShipmentTableItem,
 } from "@/types/dashboard";
+import type { PaymentStatus } from "@/types/payment";
 import type { ShipmentStatus } from "@/types/shipment";
 
 type ProfileRow = {
@@ -22,6 +23,7 @@ type ProfileRow = {
 
 type ShipmentRow = {
   id: string;
+  booking_id: string | null;
   tracking_number: string;
   service_type: string;
   status: string;
@@ -30,6 +32,7 @@ type ShipmentRow = {
   destination_city: string;
   destination_country: string;
   estimated_delivery_date: string | null;
+  label_url: string | null;
   created_at: string;
 };
 
@@ -50,6 +53,11 @@ type BookingRow = {
   id: string;
   service_type: string;
   status: string;
+  payment_status: string;
+  amount_due: number | string;
+  amount_paid: number | string;
+  currency: string;
+  stripe_checkout_session_id: string | null;
   pickup_date: string;
   created_at: string;
 };
@@ -78,6 +86,20 @@ function normalizeShipmentStatus(status: string): ShipmentStatus {
   return shipmentStatuses.includes(status as ShipmentStatus)
     ? (status as ShipmentStatus)
     : "exception";
+}
+
+function normalizePaymentStatus(status: string): PaymentStatus {
+  const statuses: PaymentStatus[] = [
+    "unpaid",
+    "checkout_created",
+    "paid",
+    "payment_failed",
+    "refunded",
+  ];
+
+  return statuses.includes(status as PaymentStatus)
+    ? (status as PaymentStatus)
+    : "unpaid";
 }
 
 function mapProfile(row: ProfileRow): AppUserProfile {
@@ -111,6 +133,7 @@ function fallbackProfile(user: User): AppUserProfile {
 function mapShipment(row: ShipmentRow): ShipmentTableItem {
   return {
     id: row.id,
+    bookingId: row.booking_id,
     trackingNumber: row.tracking_number,
     serviceType: row.service_type,
     status: normalizeShipmentStatus(row.status),
@@ -119,6 +142,7 @@ function mapShipment(row: ShipmentRow): ShipmentTableItem {
     destinationCity: row.destination_city,
     destinationCountry: row.destination_country,
     estimatedDeliveryDate: row.estimated_delivery_date,
+    labelUrl: row.label_url,
     createdAt: row.created_at,
   };
 }
@@ -143,6 +167,11 @@ function mapBooking(row: BookingRow): BookingListItem {
     id: row.id,
     serviceType: row.service_type,
     status: row.status,
+    paymentStatus: normalizePaymentStatus(row.payment_status),
+    amountDue: Number(row.amount_due),
+    amountPaid: Number(row.amount_paid),
+    currency: row.currency,
+    stripeCheckoutSessionId: row.stripe_checkout_session_id,
     pickupDate: row.pickup_date,
     createdAt: row.created_at,
   };
@@ -250,6 +279,7 @@ export async function getDashboardOverviewData(): Promise<DashboardOverviewData>
     .select(
       `
       id,
+      booking_id,
       tracking_number,
       service_type,
       status,
@@ -258,6 +288,7 @@ export async function getDashboardOverviewData(): Promise<DashboardOverviewData>
       destination_city,
       destination_country,
       estimated_delivery_date,
+      label_url,
       created_at
     `,
     )
@@ -292,6 +323,11 @@ export async function getDashboardOverviewData(): Promise<DashboardOverviewData>
       id,
       service_type,
       status,
+      payment_status,
+      amount_due,
+      amount_paid,
+      currency,
+      stripe_checkout_session_id,
       pickup_date,
       created_at
     `,
@@ -360,6 +396,7 @@ export async function getDashboardShipments(): Promise<ShipmentTableItem[]> {
     .select(
       `
       id,
+      booking_id,
       tracking_number,
       service_type,
       status,
@@ -368,6 +405,7 @@ export async function getDashboardShipments(): Promise<ShipmentTableItem[]> {
       destination_city,
       destination_country,
       estimated_delivery_date,
+      label_url,
       created_at
     `,
     )

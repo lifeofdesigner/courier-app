@@ -1,5 +1,12 @@
+import { calculateQuoteBreakdown } from "@/lib/calculations/quotes";
+import { getPricingRules } from "@/lib/queries/quotes";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
-import type { AddressInput, BookingFormInput, BookingRecord } from "@/types/booking";
+import type {
+  AddressInput,
+  BookingFormInput,
+  BookingRecord,
+} from "@/types/booking";
+import type { PaymentStatus } from "@/types/payment";
 import type { ServiceType } from "@/types/quote";
 
 type AddressRow = {
@@ -26,6 +33,15 @@ type BookingRow = {
   pickup_window: string | null;
   special_instructions: string | null;
   status: string;
+  payment_status: string;
+  payment_provider: string | null;
+  stripe_checkout_session_id: string | null;
+  stripe_payment_intent_id: string | null;
+  amount_due: number | string;
+  amount_paid: number | string;
+  currency: string;
+  label_url: string | null;
+  label_generated_at: string | null;
   created_at: string;
   updated_at: string;
 };
@@ -36,6 +52,20 @@ function optionalValue(value: string | undefined) {
 
 function toServiceType(value: string): ServiceType {
   return value === "Economy" ? "Economy" : "Express";
+}
+
+function toPaymentStatus(value: string): PaymentStatus {
+  const statuses: PaymentStatus[] = [
+    "unpaid",
+    "checkout_created",
+    "paid",
+    "payment_failed",
+    "refunded",
+  ];
+
+  return statuses.includes(value as PaymentStatus)
+    ? (value as PaymentStatus)
+    : "unpaid";
 }
 
 function mapBooking(row: BookingRow): BookingRecord {
@@ -59,9 +89,42 @@ function mapBooking(row: BookingRow): BookingRecord {
     pickupWindow: row.pickup_window,
     specialInstructions: row.special_instructions,
     status: row.status,
+    paymentStatus: toPaymentStatus(row.payment_status),
+    paymentProvider: row.payment_provider,
+    stripeCheckoutSessionId: row.stripe_checkout_session_id,
+    stripePaymentIntentId: row.stripe_payment_intent_id,
+    amountDue: Number(row.amount_due),
+    amountPaid: Number(row.amount_paid),
+    currency: row.currency,
+    labelUrl: row.label_url,
+    labelGeneratedAt: row.label_generated_at,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
+}
+
+async function calculateBookingAmountDue(input: BookingFormInput) {
+  const pricingRules = await getPricingRules({
+    serviceType: input.serviceType,
+  });
+
+  const breakdown = calculateQuoteBreakdown(
+    {
+      fullName: input.senderName,
+      email: input.senderEmail,
+      originCountry: input.pickup.country,
+      originCity: input.pickup.city,
+      destinationCountry: input.delivery.country,
+      destinationCity: input.delivery.city,
+      serviceType: input.serviceType,
+      packageType: input.packageType,
+      weightKg: input.weightKg,
+      declaredValue: input.declaredValue,
+    },
+    pricingRules,
+  );
+
+  return breakdown.total;
 }
 
 async function insertAddress({
@@ -134,6 +197,7 @@ export async function insertBookingRequest({
     addressType: "delivery",
     address: input.delivery,
   });
+  const amountDue = await calculateBookingAmountDue(input);
 
   const { data, error } = await supabase
     .from("bookings")
@@ -156,6 +220,10 @@ export async function insertBookingRequest({
       pickup_window: input.pickupWindow,
       special_instructions: optionalValue(input.specialInstructions),
       status: "requested",
+      payment_status: "unpaid",
+      amount_due: amountDue,
+      amount_paid: 0,
+      currency: "EUR",
     })
     .select()
     .single();

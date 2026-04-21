@@ -94,7 +94,7 @@ export function ShipmentTable({ shipments }: ShipmentTableProps) {
       ) : (
         <div className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm">
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[760px]">
+            <table className="w-full min-w-[840px]">
               <thead className="bg-slate-50 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
                 <tr>
                   <th className="px-4 py-4">Tracking number</th>
@@ -103,6 +103,7 @@ export function ShipmentTable({ shipments }: ShipmentTableProps) {
                   <th className="px-4 py-4">Status</th>
                   <th className="px-4 py-4">ETA</th>
                   <th className="px-4 py-4">Created</th>
+                  <th className="px-4 py-4">Label</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
@@ -131,6 +132,18 @@ export function ShipmentTable({ shipments }: ShipmentTableProps) {
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">
                       {formatDate(shipment.createdAt)}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-slate-700">
+                      {shipment.labelUrl ? (
+                        <Link
+                          href={shipment.labelUrl}
+                          className="inline-flex h-9 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-[#0B1C3A] transition hover:bg-slate-50"
+                        >
+                          Print
+                        </Link>
+                      ) : (
+                        "Pending"
+                      )}
                     </td>
                   </tr>
                 ))}

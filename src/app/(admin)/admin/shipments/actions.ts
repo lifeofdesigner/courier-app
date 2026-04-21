@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { assertAdminAction } from "@/lib/auth/assert-admin-action";
+import { sendStatusEmail } from "@/lib/email/send-status-email";
 import type { AdminActionState } from "@/types/admin";
 
 const shipmentStatusSchema = z.object({
@@ -94,6 +95,13 @@ export async function updateShipmentStatusAction(
     if (eventError) {
       throw new Error("Tracking event could not be created.");
     }
+
+    await sendStatusEmail({
+      orderId: parsed.data.orderId,
+      status: parsed.data.status,
+      label: parsed.data.label,
+      description: optionalValue(parsed.data.description),
+    });
 
     revalidatePath("/admin");
     revalidatePath("/admin/shipments");

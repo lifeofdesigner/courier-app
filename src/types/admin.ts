@@ -1,3 +1,5 @@
+import type { PaymentStatus } from "@/types/payment";
+
 export interface AdminActionState {
   success: boolean;
   message: string;
@@ -15,6 +17,7 @@ export interface AdminDashboardStats {
 
 export interface AdminShipmentRow {
   id: string;
+  bookingId: string | null;
   trackingNumber: string;
   serviceType: string;
   status: string;
@@ -23,6 +26,7 @@ export interface AdminShipmentRow {
   destinationCity: string;
   destinationCountry: string;
   estimatedDeliveryDate: string | null;
+  labelUrl: string | null;
   createdAt: string;
   userId: string | null;
 }
@@ -62,6 +66,11 @@ export interface AdminBookingRow {
   recipientName: string;
   serviceType: string;
   status: string;
+  paymentStatus: PaymentStatus;
+  amountDue: number;
+  amountPaid: number;
+  currency: string;
+  stripeCheckoutSessionId: string | null;
   pickupDate: string;
   createdAt: string;
 }

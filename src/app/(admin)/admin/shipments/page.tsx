@@ -18,7 +18,7 @@ export default async function ManageShipmentsPage() {
     <AdminShell
       profile={admin.profile}
       title="Manage shipments"
-      description="Review shipment records, filter operational queues, and create tracking events while updating shipment status."
+      description="Review shipment records, label links, filter operational queues, and create tracking events while updating shipment status."
     >
       <TrackingEventForm
         mode="shipment-status"

@@ -37,8 +37,8 @@ export default async function BookPickupPage({
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600">
               Submit a pickup request with sender, recipient, package, pickup,
-              and delivery details. This creates a request only; payment and
-              label generation are outside this phase.
+              and delivery details. You can pay through secure Stripe Checkout
+              after the booking is saved.
             </p>
           </div>
 

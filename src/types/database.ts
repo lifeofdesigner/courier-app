@@ -37,6 +37,7 @@ export interface Database {
         Row: {
           id: string;
           user_id: string | null;
+          booking_id: string | null;
           tracking_number: string;
           reference_code: string | null;
           service_type: string;
@@ -52,6 +53,8 @@ export interface Database {
           declared_value: number;
           currency: string;
           status: string;
+          label_url: string | null;
+          label_generated_at: string | null;
           estimated_delivery_date: string | null;
           created_at: string;
           updated_at: string;
@@ -80,7 +83,43 @@ export interface Database {
         Update: Record<string, unknown>;
       };
       bookings: {
-        Row: Record<string, unknown>;
+        Row: {
+          id: string;
+          user_id: string | null;
+          quote_id: string | null;
+          pickup_address_id: string | null;
+          delivery_address_id: string | null;
+          sender_name: string;
+          sender_email: string;
+          sender_phone: string | null;
+          recipient_name: string;
+          recipient_email: string | null;
+          recipient_phone: string | null;
+          service_type: string;
+          package_type: string | null;
+          weight_kg: number;
+          declared_value: number;
+          pickup_date: string;
+          pickup_window: string | null;
+          special_instructions: string | null;
+          status: string;
+          payment_status:
+            | "unpaid"
+            | "checkout_created"
+            | "paid"
+            | "payment_failed"
+            | "refunded";
+          payment_provider: string | null;
+          stripe_checkout_session_id: string | null;
+          stripe_payment_intent_id: string | null;
+          amount_due: number;
+          amount_paid: number;
+          currency: string;
+          label_url: string | null;
+          label_generated_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
         Insert: Record<string, unknown>;
         Update: Record<string, unknown>;
       };
