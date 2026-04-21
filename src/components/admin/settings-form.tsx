@@ -1,0 +1,83 @@
+"use client";
+
+import { useActionState } from "react";
+
+import { upsertSiteSettingAction } from "@/app/(admin)/admin/settings/actions";
+import type { AdminActionState, SiteSettingRow } from "@/types/admin";
+
+export type SettingsFormProps = {
+  setting?: SiteSettingRow;
+  defaultKey?: string;
+};
+
+const initialState: AdminActionState = {
+  success: false,
+  message: "",
+};
+
+const inputClassName =
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+
+const textareaClassName =
+  "min-h-28 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+
+export function SettingsForm({ setting, defaultKey = "" }: SettingsFormProps) {
+  const [state, formAction, isPending] = useActionState(
+    upsertSiteSettingAction,
+    initialState,
+  );
+
+  return (
+    <form
+      action={formAction}
+      className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"
+    >
+      <div className="grid gap-5 md:grid-cols-[0.45fr_1fr]">
+        <div className="space-y-2">
+          <label
+            htmlFor={`key-${setting?.id ?? defaultKey}`}
+            className="block text-sm font-semibold text-[#0B1C3A]"
+          >
+            Setting key
+          </label>
+          <input
+            id={`key-${setting?.id ?? defaultKey}`}
+            name="key"
+            defaultValue={setting?.key ?? defaultKey}
+            className={inputClassName}
+          />
+        </div>
+        <div className="space-y-2">
+          <label
+            htmlFor={`payload-${setting?.id ?? defaultKey}`}
+            className="block text-sm font-semibold text-[#0B1C3A]"
+          >
+            JSON value
+          </label>
+          <textarea
+            id={`payload-${setting?.id ?? defaultKey}`}
+            name="payload"
+            defaultValue={JSON.stringify(setting?.value ?? {}, null, 2)}
+            className={`${textareaClassName} font-mono`}
+          />
+        </div>
+      </div>
+      {state.message ? (
+        <p
+          className={`mt-4 text-sm ${
+            state.success ? "text-emerald-700" : "text-amber-700"
+          }`}
+        >
+          {state.message}
+        </p>
+      ) : null}
+      <button
+        type="submit"
+        disabled={isPending}
+        className="mt-5 inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+      >
+        {isPending ? "Saving..." : "Save setting"}
+      </button>
+    </form>
+  );
+}

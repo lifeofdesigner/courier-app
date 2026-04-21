@@ -1,23 +1,31 @@
 import type { Metadata } from "next";
 
-import { PlaceholderPage } from "@/components/sections";
+import { AdminSectionCard, AdminShell, BookingsTable } from "@/components/admin";
+import { requireAdmin } from "@/lib/auth/require-admin";
+import { getAdminBookings } from "@/lib/queries/admin";
 
 export const metadata: Metadata = {
   title: "Manage Bookings",
 };
 
-export default function ManageBookingsPage() {
+export default async function ManageBookingsPage() {
+  const [admin, bookings] = await Promise.all([
+    requireAdmin(),
+    getAdminBookings(100),
+  ]);
+
   return (
-    <PlaceholderPage
-      eyebrow="Admin bookings"
-      title="Manage pickup bookings."
-      description="This route is prepared for dispatch teams to review pickup requests, confirm windows, and assign collection work."
-      highlights={[
-        "Admin bookings route scaffolded",
-        "Ready for pickup queue management",
-        "Prepared for dispatcher assignment logic",
-      ]}
-      note="Pickup confirmation, dispatch assignment, and operational alerts are reserved for future backend integration."
-    />
+    <AdminShell
+      profile={admin.profile}
+      title="Pickup bookings"
+      description="Review pickup requests submitted by customers and guests. Dispatch confirmation stays outside this phase."
+    >
+      <AdminSectionCard
+        title="Booking queue"
+        description="Read-only operations queue for submitted pickup requests."
+      >
+        <BookingsTable bookings={bookings} />
+      </AdminSectionCard>
+    </AdminShell>
   );
 }

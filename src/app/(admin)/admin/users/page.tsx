@@ -1,23 +1,31 @@
 import type { Metadata } from "next";
 
-import { PlaceholderPage } from "@/components/sections";
+import { AdminSectionCard, AdminShell, UsersTable } from "@/components/admin";
+import { requireAdmin } from "@/lib/auth/require-admin";
+import { getAdminUsers } from "@/lib/queries/admin";
 
 export const metadata: Metadata = {
   title: "Manage Users",
 };
 
-export default function ManageUsersPage() {
+export default async function ManageUsersPage() {
+  const [admin, users] = await Promise.all([
+    requireAdmin(),
+    getAdminUsers(100),
+  ]);
+
   return (
-    <PlaceholderPage
-      eyebrow="Admin users"
-      title="Manage customer and staff access."
-      description="This route will support user review, roles, customer accounts, and support access once authentication is connected."
-      highlights={[
-        "Admin users route scaffolded",
-        "Ready for customer and staff lists",
-        "Prepared for role-based access controls",
-      ]}
-      note="User management depends on the future Supabase Auth setup, so Phase 1 keeps this as a styled route foundation."
-    />
+    <AdminShell
+      profile={admin.profile}
+      title="User access"
+      description="Review profile records and update customer or admin roles with server-side authorization."
+    >
+      <AdminSectionCard
+        title="Users"
+        description="Admins cannot remove their own admin role in this phase."
+      >
+        <UsersTable users={users} />
+      </AdminSectionCard>
+    </AdminShell>
   );
 }

@@ -1,23 +1,31 @@
 import type { Metadata } from "next";
 
-import { PlaceholderPage } from "@/components/sections";
+import { AdminSectionCard, AdminShell, QuotesTable } from "@/components/admin";
+import { requireAdmin } from "@/lib/auth/require-admin";
+import { getAdminQuotes } from "@/lib/queries/admin";
 
 export const metadata: Metadata = {
   title: "Manage Quotes",
 };
 
-export default function ManageQuotesPage() {
+export default async function ManageQuotesPage() {
+  const [admin, quotes] = await Promise.all([
+    requireAdmin(),
+    getAdminQuotes(100),
+  ]);
+
   return (
-    <PlaceholderPage
-      eyebrow="Admin quotes"
-      title="Review and manage customer quote requests."
-      description="This route will support quote review, service selection, pricing status, and follow-up actions for booking conversion."
-      highlights={[
-        "Admin quotes route scaffolded",
-        "Ready for quote status workflows",
-        "Prepared for customer communication history",
-      ]}
-      note="Pricing rules, quote approvals, and customer notifications are intentionally not implemented in Phase 1."
-    />
+    <AdminShell
+      profile={admin.profile}
+      title="Quote review"
+      description="Review recent customer quote calculations for service demand, follow-up, and booking support."
+    >
+      <AdminSectionCard
+        title="Recent quotes"
+        description="Read-only operational list for this phase."
+      >
+        <QuotesTable quotes={quotes} />
+      </AdminSectionCard>
+    </AdminShell>
   );
 }

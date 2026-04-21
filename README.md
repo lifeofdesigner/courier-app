@@ -178,6 +178,54 @@ git commit -m "Phase 5: customer dashboard workspace"
 git push origin main
 ```
 
+## Phase 6 Admin Panel
+
+Phase 6 adds a real server-protected admin workspace for courier operations and
+homepage content management. Admin routes are protected by
+`src/app/(admin)/admin/layout.tsx`, which calls `requireAdmin()` before any
+admin page renders. Admin mutations call `assertAdminAction()` on the server
+before changing data.
+
+Admin-only routes:
+
+- `/admin`
+- `/admin/shipments`
+- `/admin/tracking-events`
+- `/admin/quotes`
+- `/admin/bookings`
+- `/admin/users`
+- `/admin/cms`
+- `/admin/analytics`
+- `/admin/settings`
+
+Admin role protection:
+
+- Supabase Auth remains the identity source.
+- `public.users.role` controls application authorization.
+- Unauthenticated admin route access redirects to `/login?next=/admin`.
+- Signed-in non-admin users redirect to `/dashboard`.
+- Admin Server Actions reject non-admin mutation attempts with safe messages.
+
+Run the Phase 6 migration before using the admin CMS/settings features:
+
+```bash
+supabase db push
+```
+
+The migration `supabase/migrations/004_phase6_admin_panel.sql` creates or
+updates:
+
+- `public.cms_content`
+- `public.site_settings`
+- admin RLS policies for CMS, settings, and operational tables
+- public read policies for published CMS content
+- the public `cms-assets` Supabase Storage bucket and admin upload policies
+- lightweight indexes for operations queries
+
+CMS assets upload to the `cms-assets` bucket and return public URLs for homepage
+and future content media fields. Stripe, Resend, Mapbox, public homepage
+redesign, and blog publishing remain outside this phase.
+
 ## Routes
 
 Public:

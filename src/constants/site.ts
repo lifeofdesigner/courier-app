@@ -60,13 +60,15 @@ export const customerNavigation: NavItem[] = [
 ];
 
 export const adminNavigation: NavItem[] = [
-  { label: "Admin Dashboard", href: "/admin" },
-  { label: "Manage Shipments", href: "/admin/shipments" },
+  { label: "Overview", href: "/admin" },
+  { label: "Shipments", href: "/admin/shipments" },
   { label: "Tracking Events", href: "/admin/tracking-events" },
-  { label: "Manage Quotes", href: "/admin/quotes" },
-  { label: "Manage Bookings", href: "/admin/bookings" },
-  { label: "Manage Users", href: "/admin/users" },
+  { label: "Quotes", href: "/admin/quotes" },
+  { label: "Bookings", href: "/admin/bookings" },
+  { label: "Users", href: "/admin/users" },
   { label: "CMS", href: "/admin/cms" },
+  { label: "Analytics", href: "/admin/analytics" },
+  { label: "Settings", href: "/admin/settings" },
 ];
 
 export const footerNavigation: FooterColumn[] = [

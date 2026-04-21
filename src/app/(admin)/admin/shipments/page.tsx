@@ -1,23 +1,32 @@
 import type { Metadata } from "next";
 
-import { PlaceholderPage } from "@/components/sections";
+import { AdminShell, ShipmentsTable, TrackingEventForm } from "@/components/admin";
+import { requireAdmin } from "@/lib/auth/require-admin";
+import { getAdminShipments } from "@/lib/queries/admin";
 
 export const metadata: Metadata = {
   title: "Manage Shipments",
 };
 
-export default function ManageShipmentsPage() {
+export default async function ManageShipmentsPage() {
+  const [admin, shipments] = await Promise.all([
+    requireAdmin(),
+    getAdminShipments(100),
+  ]);
+
   return (
-    <PlaceholderPage
-      eyebrow="Admin shipments"
-      title="Manage shipment records."
-      description="This route will support creating, reviewing, and updating shipment records once the operational data model is connected."
-      highlights={[
-        "Admin shipment route scaffolded",
-        "Ready for table, filters, and detail drawers",
-        "Prepared for tracking event relationships",
-      ]}
-      note="The layout is intentionally simple for Phase 1. Shipment creation, status updates, and database persistence are reserved for the Supabase phase."
-    />
+    <AdminShell
+      profile={admin.profile}
+      title="Manage shipments"
+      description="Review shipment records, filter operational queues, and create tracking events while updating shipment status."
+    >
+      <TrackingEventForm
+        mode="shipment-status"
+        shipments={shipments}
+        title="Update shipment status"
+        description="Changing status here also creates a customer-facing tracking event for the selected shipment."
+      />
+      <ShipmentsTable shipments={shipments} />
+    </AdminShell>
   );
 }
