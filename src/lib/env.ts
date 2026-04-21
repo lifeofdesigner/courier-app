@@ -3,6 +3,8 @@ export type SupabasePublicEnv = {
   anonKey: string;
 };
 
+const LOCAL_SITE_URL = "http://localhost:3000";
+
 function normalizeEnvValue(value: string | undefined) {
   const normalized = value?.trim();
 
@@ -37,4 +39,19 @@ export function requireSupabasePublicEnv(): SupabasePublicEnv {
   }
 
   return env;
+}
+
+export function getSiteUrl() {
+  const configuredUrl = normalizeEnvValue(process.env.NEXT_PUBLIC_SITE_URL);
+  const vercelUrl = normalizeEnvValue(process.env.VERCEL_URL);
+
+  if (configuredUrl) {
+    return configuredUrl.replace(/\/$/, "");
+  }
+
+  if (vercelUrl) {
+    return `https://${vercelUrl}`.replace(/\/$/, "");
+  }
+
+  return LOCAL_SITE_URL;
 }

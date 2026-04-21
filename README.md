@@ -87,6 +87,58 @@ The Phase 3 CMS table assumption is a section-record model using a
 Each `value` is the full JSON payload for that homepage section and should match
 the interfaces in `src/types/cms.ts`.
 
+## Phase 4 Auth, Tracking, Quote, and Booking MVP
+
+Phase 4 adds the working MVP flows for Supabase Auth, protected customer
+dashboard access, public shipment tracking, quote calculation, and pickup
+booking requests. It does not include admin CRUD, Stripe, Resend, Mapbox,
+dashboard analytics, or CMS editing UI.
+
+Auth and public Supabase environment variables:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=
+NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_SITE_URL=http://localhost:3000
+```
+
+`NEXT_PUBLIC_SITE_URL` is used for Supabase Auth redirect URLs. If it is not
+set, the app falls back to `http://localhost:3000` locally.
+
+Run the Phase 4 migration before testing database-backed flows:
+
+```bash
+supabase db push
+```
+
+The migration `supabase/migrations/002_phase4_auth_tracking_quote_booking.sql`
+creates or extends:
+
+- `public.users`
+- `public.orders`
+- `public.tracking_events`
+- `public.pricing_rules`
+- `public.quotes`
+- `public.addresses`
+- `public.bookings`
+
+It also adds profile sync from `auth.users`, RLS policies for customer-owned
+data, constrained public tracking access, guest quote/booking inserts, and
+starter pricing rules for Express and Economy EU/International quotes.
+
+This project uses Next.js 16, so session refresh is implemented in `proxy.ts`
+rather than `middleware.ts`. Do not create both files for this project version.
+
+Phase 4 should end with lint, build, commit, and push:
+
+```bash
+npm run lint
+npm run build
+git add .
+git commit -m "Phase 4: auth tracking quote and booking MVP"
+git push origin main
+```
+
 ## Routes
 
 Public:

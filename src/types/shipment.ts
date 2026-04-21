@@ -1,104 +1,46 @@
-export type ServiceLevel =
-  | "same_day"
-  | "next_day"
-  | "standard"
-  | "international";
-
 export type ShipmentStatus =
-  | "draft"
-  | "booked"
+  | "label_created"
   | "picked_up"
   | "in_transit"
-  | "out_for_delivery"
-  | "delivered"
-  | "exception"
-  | "cancelled";
-
-export type TrackingEventType =
-  | "created"
-  | "pickup_scheduled"
-  | "picked_up"
-  | "facility_arrival"
-  | "facility_departure"
-  | "customs_review"
+  | "arrived_at_hub"
+  | "customs_clearance"
   | "out_for_delivery"
   | "delivered"
   | "exception";
 
-export type QuoteStatus = "draft" | "requested" | "priced" | "expired";
-
-export type BookingStatus =
-  | "requested"
-  | "confirmed"
-  | "assigned"
-  | "completed"
-  | "cancelled";
-
-export type UserRole = "customer" | "admin" | "dispatcher" | "support";
-
-export type ShipmentAddress = {
-  name: string;
-  company?: string;
-  street: string;
-  city: string;
-  state: string;
-  postalCode: string;
-  country: string;
-  phone?: string;
-};
-
-export type ShipmentPiece = {
-  weight: number;
-  weightUnit: "lb" | "kg";
-  length?: number;
-  width?: number;
-  height?: number;
-  dimensionUnit?: "in" | "cm";
-};
-
-export type TrackingEvent = {
+export interface TrackingEventItem {
   id: string;
-  shipmentId: string;
-  type: TrackingEventType;
+  orderId: string;
   status: ShipmentStatus;
-  location?: string;
-  message: string;
-  occurredAt: string;
+  label: string;
+  description: string | null;
+  locationName: string | null;
+  eventTime: string;
   createdAt: string;
-};
+}
 
-export type Shipment = {
+export interface ShipmentRecord {
   id: string;
   trackingNumber: string;
-  customerId: string;
+  referenceCode: string | null;
+  serviceType: string;
+  packageType: string | null;
+  originCountry: string;
+  originCity: string;
+  destinationCountry: string;
+  destinationCity: string;
+  recipientName: string;
+  senderName: string | null;
+  weightKg: number;
+  currency: string;
   status: ShipmentStatus;
-  serviceLevel: ServiceLevel;
-  origin: ShipmentAddress;
-  destination: ShipmentAddress;
-  pieces: ShipmentPiece[];
-  estimatedDeliveryDate?: string;
+  estimatedDeliveryDate: string | null;
   createdAt: string;
   updatedAt: string;
-};
+}
 
-export type QuoteRequest = {
-  id: string;
-  customerId?: string;
-  status: QuoteStatus;
-  serviceLevel: ServiceLevel;
-  originPostalCode: string;
-  destinationPostalCode: string;
-  pieces: ShipmentPiece[];
-  requestedAt: string;
-};
-
-export type PickupBooking = {
-  id: string;
-  customerId?: string;
-  status: BookingStatus;
-  pickupAddress: ShipmentAddress;
-  pickupWindowStart: string;
-  pickupWindowEnd: string;
-  shipmentIds: string[];
-  createdAt: string;
-};
+export interface PublicTrackingResult {
+  shipment: ShipmentRecord | null;
+  events: TrackingEventItem[];
+  notFound: boolean;
+}
