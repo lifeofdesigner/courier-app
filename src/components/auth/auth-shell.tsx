@@ -1,7 +1,4 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
-
-import { Logo } from "@/components/layout";
 
 export type AuthShellProps = {
   eyebrow: string;
@@ -23,11 +20,6 @@ export function AuthShell({
       <section className="py-16 lg:py-20">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto w-full max-w-xl">
-            <div className="mb-8 flex justify-center">
-              <Link href="/" aria-label="Go to homepage">
-                <Logo />
-              </Link>
-            </div>
             <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
               <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
                 {eyebrow}
