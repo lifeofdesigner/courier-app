@@ -139,6 +139,45 @@ git commit -m "Phase 4: auth tracking quote and booking MVP"
 git push origin main
 ```
 
+## Phase 5 Customer Dashboard Workspace
+
+Phase 5 turns the authenticated customer area into a real workspace. The
+dashboard pages are protected by the `/dashboard` layout guard, use Supabase
+server-side queries, and render customer-owned data from the Phase 4 tables.
+
+Authenticated customer pages:
+
+- `/dashboard` shows workspace stats, recent shipments, recent quotes, recent
+  pickup requests, and quick actions.
+- `/dashboard/shipments` lists customer shipments with search, status filtering,
+  route details, tracking links, ETA, and created dates.
+- `/dashboard/quotes` lists saved quote calculations with lane, total, status,
+  created date, and a safe `Book this shipment` link to `/book?quoteId=...`.
+- `/dashboard/profile` lets the signed-in customer update profile details, view
+  saved addresses, and add new saved addresses.
+
+Phase 5 uses these existing tables only:
+
+- `public.users`
+- `public.orders`
+- `public.quotes`
+- `public.bookings`
+- `public.addresses`
+
+No new business tables are introduced for Phase 5. The route guard remains
+server-side, and profile/address mutations use Server Actions with Zod
+validation.
+
+Every phase must end with lint, build, commit, and push to GitHub:
+
+```bash
+npm run lint
+npm run build
+git add .
+git commit -m "Phase 5: customer dashboard workspace"
+git push origin main
+```
+
 ## Routes
 
 Public:

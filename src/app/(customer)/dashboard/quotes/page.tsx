@@ -1,22 +1,29 @@
 import type { Metadata } from "next";
 
-import { PlaceholderPage } from "@/components/sections";
+import { DashboardShell, QuoteTable } from "@/components/dashboard";
+import {
+  getCurrentDashboardContext,
+  getDashboardQuotes,
+} from "@/lib/queries/dashboard";
 
 export const metadata: Metadata = {
   title: "My Quotes",
 };
 
-export default function MyQuotesPage() {
+export default async function MyQuotesPage() {
+  const [context, quotes] = await Promise.all([
+    getCurrentDashboardContext(),
+    getDashboardQuotes(),
+  ]);
+
   return (
-    <PlaceholderPage
-      eyebrow="My quotes"
-      title="Quote requests and pricing decisions."
-      description="Customers will use this route to review saved quote requests, selected service levels, and follow-up booking actions."
-      highlights={[
-        "Customer quote list route scaffolded",
-        "Ready for quote statuses and service levels",
-        "Prepared for future booking conversion flows",
-      ]}
-    />
+    <DashboardShell
+      profile={context.profile}
+      title="My quotes"
+      description="Review saved quote calculations, delivery lanes, totals, and booking actions."
+      primaryAction={{ label: "Request a quote", href: "/quote" }}
+    >
+      <QuoteTable quotes={quotes} />
+    </DashboardShell>
   );
 }

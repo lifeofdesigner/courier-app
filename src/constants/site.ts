@@ -53,10 +53,10 @@ export const authNavigation: NavItem[] = [
 ];
 
 export const customerNavigation: NavItem[] = [
-  { label: "Dashboard", href: "/dashboard" },
+  { label: "Overview", href: "/dashboard" },
   { label: "My Shipments", href: "/dashboard/shipments" },
   { label: "My Quotes", href: "/dashboard/quotes" },
-  { label: "Profile", href: "/dashboard/profile" },
+  { label: "Profile & Address Book", href: "/dashboard/profile" },
 ];
 
 export const adminNavigation: NavItem[] = [

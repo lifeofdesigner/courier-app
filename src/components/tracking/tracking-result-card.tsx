@@ -53,7 +53,7 @@ export function TrackingResultCard({ shipment }: TrackingResultCardProps) {
           <p className="mt-3 text-sm font-semibold text-[#0B1C3A]">Service</p>
           <p className="mt-2 text-sm leading-6 text-slate-600">
             {shipment.serviceType}
-            {shipment.packageType ? ` · ${shipment.packageType}` : ""}
+            {shipment.packageType ? ` - ${shipment.packageType}` : ""}
           </p>
         </div>
         <div className="rounded-2xl bg-slate-50 p-4">

@@ -1,22 +1,29 @@
 import type { Metadata } from "next";
 
-import { PlaceholderPage } from "@/components/sections";
+import { DashboardShell, ShipmentTable } from "@/components/dashboard";
+import {
+  getCurrentDashboardContext,
+  getDashboardShipments,
+} from "@/lib/queries/dashboard";
 
 export const metadata: Metadata = {
   title: "My Shipments",
 };
 
-export default function MyShipmentsPage() {
+export default async function MyShipmentsPage() {
+  const [context, shipments] = await Promise.all([
+    getCurrentDashboardContext(),
+    getDashboardShipments(),
+  ]);
+
   return (
-    <PlaceholderPage
-      eyebrow="My shipments"
-      title="Shipment history and active deliveries."
-      description="This customer route is reserved for active shipments, delivery status, tracking detail links, and proof-of-delivery records."
-      highlights={[
-        "Customer shipment list route scaffolded",
-        "Ready for tracking status summaries",
-        "Prepared for customer-owned Supabase records",
-      ]}
-    />
+    <DashboardShell
+      profile={context.profile}
+      title="My shipments"
+      description="Search and review shipment routes, statuses, estimated delivery dates, and tracking links."
+      primaryAction={{ label: "Track a shipment", href: "/track" }}
+    >
+      <ShipmentTable shipments={shipments} />
+    </DashboardShell>
   );
 }
