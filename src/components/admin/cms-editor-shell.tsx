@@ -54,7 +54,7 @@ export function CmsManagedForm({
     initialState,
   );
   useActionToast(state, {
-    successTitle: "CMS section saved",
+    successTitle: "CMS section published",
     errorTitle: "CMS section could not be saved",
   });
   const formRef = usePreservedFormValues(state.values);
@@ -90,14 +90,14 @@ export function CmsManagedForm({
       <div className="sticky bottom-4 z-10 rounded-[20px] border border-slate-200 bg-white/95 p-4 shadow-sm backdrop-blur">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-sm leading-6 text-slate-500">
-            Save this section before publishing or switching editors.
+            Save publishes this section immediately to the public site.
           </p>
           <button
             type="submit"
             disabled={isPending}
             className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#b0825f] px-5 text-sm font-semibold text-white transition hover:bg-[#9a704f] focus:outline-none focus:ring-4 focus:ring-[#b0825f]/20 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isPending ? "Saving..." : "Save Changes"}
+            {isPending ? "Saving..." : "Save and Publish"}
           </button>
         </div>
       </div>

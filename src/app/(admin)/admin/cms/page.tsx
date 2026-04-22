@@ -125,8 +125,8 @@ export default async function CMSPage({ searchParams }: CMSPageProps) {
           { label: "CMS" },
         ]}
         title="Content Management"
-        description="Edit public site content with friendly fields, inline image uploads, and explicit draft or published controls."
-        status={{ label: "Draft and publish", tone: "accent" }}
+        description="Edit public site content with friendly fields, inline image uploads, and one-click saves that publish immediately."
+        status={{ label: "Save publishes live", tone: "accent" }}
         primaryAction={{ label: "Preview Site", href: "/" }}
       />
 

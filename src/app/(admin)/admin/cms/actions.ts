@@ -630,21 +630,6 @@ async function buildEditorPayload(formType: string, formData: FormData) {
   }
 }
 
-async function getExistingPublishedState(
-  { supabase }: AdminContext,
-  section: string,
-  key: string,
-) {
-  const { data } = await supabase
-    .from("cms_content")
-    .select("published")
-    .eq("section", section)
-    .eq("key", key)
-    .maybeSingle();
-
-  return Boolean((data as { published?: boolean } | null)?.published);
-}
-
 async function upsertSiteSetting(
   { supabase, profile }: AdminContext,
   key: string,
@@ -731,6 +716,8 @@ async function syncPublishedCmsToSettings(
 }
 
 function revalidateCmsPaths() {
+  revalidatePath("/", "layout");
+
   for (const path of [
     "/",
     "/about",
@@ -739,7 +726,10 @@ function revalidateCmsPaths() {
     "/admin/settings",
     "/contact",
     "/faq",
+    "/book",
+    "/quote",
     "/services",
+    "/track",
   ]) {
     revalidatePath(path);
   }
@@ -757,13 +747,14 @@ async function upsertCmsValue({
   value: unknown;
 }) {
   const { supabase, profile } = context;
-  const wasPublished = await getExistingPublishedState(context, section, key);
   const { error } = await supabase.from("cms_content").upsert(
     {
       section,
       key,
       value,
+      published: true,
       updated_by: profile.id,
+      updated_at: new Date().toISOString(),
     },
     {
       onConflict: "section,key",
@@ -774,9 +765,7 @@ async function upsertCmsValue({
     throw new Error("CMS section could not be saved.");
   }
 
-  if (wasPublished) {
-    await syncPublishedCmsToSettings(context, section, key, value);
-  }
+  await syncPublishedCmsToSettings(context, section, key, value);
 }
 
 export async function saveCmsEditorSectionAction(
@@ -825,7 +814,7 @@ export async function saveCmsEditorSectionAction(
 
     return {
       success: true,
-      message: "Changes saved. Publish this section when it is ready to go live.",
+      message: "Changes saved and published.",
     };
   } catch (error) {
     return {
@@ -894,7 +883,7 @@ export async function upsertCmsSectionAction(
 
     return {
       success: true,
-      message: "CMS section saved.",
+      message: "CMS section saved and published.",
     };
   } catch (error) {
     return {

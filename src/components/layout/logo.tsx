@@ -40,6 +40,7 @@ export function Logo({
   const { title, descriptor } = getBrandText(siteName);
   const logoWidth = logo?.width ?? 160;
   const logoHeight = logo?.height ?? 80;
+  const logoOnly = Boolean(logo);
 
   return (
     <Link
@@ -50,7 +51,7 @@ export function Logo({
       {logo ? (
         <span
           className={cn(
-            "flex h-14 max-w-32 shrink-0 items-center justify-center overflow-hidden rounded-2xl border bg-white px-2 py-1 shadow-sm",
+            "flex h-14 w-auto max-w-52 shrink-0 items-center justify-center overflow-hidden rounded-2xl border bg-white px-3 py-1.5 shadow-sm",
             isInverse ? "border-white/15" : "border-slate-200",
           )}
         >
@@ -59,8 +60,8 @@ export function Logo({
             alt={logo.alt}
             width={logoWidth}
             height={logoHeight}
-            sizes={context === "footer" ? "128px" : "112px"}
-            className="h-full w-auto max-w-28 object-contain"
+            sizes={context === "footer" ? "208px" : "192px"}
+            className="h-full w-auto max-w-48 object-contain"
             unoptimized
           />
         </span>
@@ -69,7 +70,7 @@ export function Logo({
           <PackageCheck aria-hidden="true" className="h-5 w-5" />
         </span>
       )}
-      <span className="min-w-0 leading-tight">
+      <span className={cn("min-w-0 leading-tight", logoOnly && "sr-only")}>
         <span
           className={cn(
             "block whitespace-nowrap text-lg font-extrabold tracking-tight sm:text-xl",

@@ -96,7 +96,15 @@ export async function upsertSiteSettingAction(
 
     revalidatePath("/admin");
     revalidatePath("/admin/settings");
+    revalidatePath("/", "layout");
     revalidatePath("/");
+    revalidatePath("/about");
+    revalidatePath("/book");
+    revalidatePath("/contact");
+    revalidatePath("/faq");
+    revalidatePath("/quote");
+    revalidatePath("/services");
+    revalidatePath("/track");
 
     return {
       success: true,

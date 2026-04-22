@@ -36,7 +36,7 @@ export function CmsImageField({
               alt={defaultImage?.alt ?? label}
               fill
               sizes="(max-width: 768px) 100vw, 320px"
-              className="object-cover"
+              className="object-contain p-3"
               unoptimized
             />
           ) : (

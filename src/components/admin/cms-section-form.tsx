@@ -47,7 +47,7 @@ export function CmsSectionForm({
     initialState,
   );
   useActionToast(upsertState, {
-    successTitle: "CMS section saved",
+    successTitle: "CMS section published",
     errorTitle: "CMS section could not be saved",
   });
   useActionToast(toggleState, {
@@ -121,7 +121,7 @@ export function CmsSectionForm({
           disabled={isUpserting}
           className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#b0825f] px-5 text-sm font-semibold text-white transition hover:bg-[#9a704f] focus:outline-none focus:ring-4 focus:ring-[#b0825f]/20"
         >
-          {isUpserting ? "Saving..." : "Save section"}
+          {isUpserting ? "Saving..." : "Save and publish section"}
         </button>
       </form>
 

@@ -72,7 +72,7 @@ export function CmsPublishBar({
             Updated {formatDate(updatedAt)}
           </p>
           <p className="mt-1 text-xs font-medium text-slate-500">
-            Save field changes before switching publish state.
+            Save publishes changes immediately. Use draft only to hide this section.
           </p>
         </div>
         <form action={formAction}>
@@ -89,7 +89,7 @@ export function CmsPublishBar({
               ? "Updating..."
               : published
                 ? "Move to Draft"
-                : "Publish Section"}
+                : "Publish Now"}
           </button>
         </form>
       </div>
@@ -106,7 +106,7 @@ export function CmsPublishBar({
       ) : null}
       {!id ? (
         <p className="mt-3 text-xs font-medium text-amber-700">
-          Save this section once before publishing.
+          Save this section once to publish it.
         </p>
       ) : null}
     </div>
