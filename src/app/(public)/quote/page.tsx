@@ -6,11 +6,16 @@ import { hasSupabasePublicEnv } from "@/lib/env";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Get a Courier Quote",
+  title: "Get a Mode-Aware Courier Quote",
   description:
-    "Estimate an Atlas Courier shipment with service type, route, package details, declared value, and delivery requirements before booking.",
+    "Estimate an Atlas Courier air, road, or freight shipment with mode-aware service types, route details, cargo details, and declared value before booking.",
   path: "/quote",
-  keywords: ["courier quote", "delivery estimate", "shipping quote"],
+  keywords: [
+    "courier quote",
+    "air cargo quote",
+    "road delivery estimate",
+    "freight quote",
+  ],
 });
 
 export default function GetQuotePage() {
@@ -23,11 +28,12 @@ export default function GetQuotePage() {
               Get quote
             </p>
             <h1 className="mt-3 font-heading text-4xl font-bold tracking-tight text-[#0B1C3A] lg:text-5xl">
-              Estimate the best courier option before you book.
+              Estimate the right air, road, or freight service before you book.
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600">
-              Calculate a production-style MVP quote using active pricing rules,
-              zone detection, fuel surcharge, and a saved quote record.
+              Choose a transport mode, pick a matching service type, and
+              calculate a quote using active pricing rules, zone detection, and
+              fuel surcharge logic.
             </p>
           </div>
           <div className="mt-10">

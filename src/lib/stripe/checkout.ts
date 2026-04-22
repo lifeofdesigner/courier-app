@@ -1,6 +1,10 @@
 import { getSiteUrl } from "@/lib/env";
 import { getStripeServerClient } from "@/lib/stripe/server";
 import type { PaymentBooking } from "@/lib/queries/payments";
+import {
+  formatModeAwareServiceType,
+  getTransportModeMeta,
+} from "@/types/shipment";
 
 function toStripeAmount(amount: number) {
   return Math.round(amount * 100);
@@ -11,6 +15,11 @@ export async function createCheckoutSessionForBooking(booking: PaymentBooking) {
   const siteUrl = getSiteUrl();
   const bookingAmount = toStripeAmount(booking.amountDue);
   const currency = (booking.currency || "EUR").toLowerCase();
+  const transportMode = getTransportModeMeta(booking.transportMode);
+  const serviceType = formatModeAwareServiceType(
+    booking.serviceType,
+    booking.transportMode,
+  );
   const metadata = {
     bookingId: booking.id,
     userId: booking.userId ?? "",
@@ -33,7 +42,7 @@ export async function createCheckoutSessionForBooking(booking: PaymentBooking) {
           currency,
           unit_amount: bookingAmount,
           product_data: {
-            name: `${booking.serviceType} courier booking`,
+            name: `${serviceType} ${transportMode.label.toLowerCase()} booking`,
             description: `Booking ${booking.id} for ${booking.recipientName}`,
           },
         },

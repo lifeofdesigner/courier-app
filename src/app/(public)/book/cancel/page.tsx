@@ -6,11 +6,16 @@ import { CheckoutButton } from "@/components/booking";
 import { Container } from "@/components/layout";
 import { getPaymentSummaryByBookingId } from "@/lib/queries/payments";
 import { createPageMetadata } from "@/lib/seo";
+import {
+  formatModeAwareServiceType,
+  getTransportModeMeta,
+  getTransportModePublicCopy,
+} from "@/types/shipment";
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Booking Payment Not Completed",
+  title: "Shipment Payment Not Completed",
   description:
-    "Resume or review an Atlas Courier booking payment after Stripe Checkout was canceled.",
+    "Resume or review an Atlas Courier air, road, or freight booking payment after Stripe Checkout was canceled.",
   path: "/book/cancel",
 });
 
@@ -40,27 +45,47 @@ export default async function BookingCancelPage({
 }: BookingCancelPageProps) {
   const params = await searchParams;
   const payment = params.bookingId ? await getPayment(params.bookingId) : null;
+  const modeMeta = payment ? getTransportModeMeta(payment.transportMode) : null;
+  const modeCopy = payment
+    ? getTransportModePublicCopy(payment.transportMode)
+    : null;
+  const serviceLabel = payment
+    ? formatModeAwareServiceType(payment.serviceType, payment.transportMode)
+    : null;
 
   return (
     <main>
       <section className="py-16 lg:py-20">
         <Container>
-          <div className="mx-auto max-w-2xl rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
+          <div className="mx-auto max-w-2xl rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
             <AlertTriangle aria-hidden="true" className="h-10 w-10 text-amber-500" />
             <h1 className="mt-5 font-heading text-3xl font-bold tracking-tight text-[#0B1C3A]">
               Payment was not completed.
             </h1>
             <p className="mt-4 text-base leading-8 text-slate-600">
-              Your booking is still saved, but Stripe has not confirmed payment.
-              You can safely resume Checkout when you are ready.
+              {modeCopy
+                ? modeCopy.paymentCancelLead
+                : "Your booking is still saved, but Stripe has not confirmed payment. You can safely resume Checkout when you are ready."}
             </p>
 
             {payment ? (
-              <div className="mt-6 rounded-[28px] border border-[#0B1C3A]/10 bg-[#0B1C3A] p-6 text-white shadow-sm">
+              <div className="mt-6 rounded-[24px] border border-[#0B1C3A]/10 bg-[#0B1C3A] p-6 text-white shadow-sm">
                 <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
-                  Booking {payment.bookingId}
+                  {modeCopy?.paymentSummaryTitle ?? "Payment summary"}
                 </p>
                 <div className="mt-4 grid gap-4 text-sm text-slate-200 sm:grid-cols-2">
+                  <div>
+                    <p className="font-semibold text-white">Booking</p>
+                    <p className="mt-1 break-all">{payment.bookingId}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-white">Transport mode</p>
+                    <p className="mt-1">{modeMeta?.label}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-white">Service type</p>
+                    <p className="mt-1">{serviceLabel}</p>
+                  </div>
                   <div>
                     <p className="font-semibold text-white">Payment status</p>
                     <p className="mt-1 capitalize">
@@ -76,8 +101,9 @@ export default async function BookingCancelPage({
                 </div>
                 {payment.paymentStatus === "paid" ? (
                   <p className="mt-5 text-sm leading-7 text-slate-200">
-                    This booking is already paid. The label is available from
-                    the payment success page, dashboard, or tracking view.
+                    This {modeMeta?.label.toLowerCase() ?? "shipment"} booking
+                    is already paid. The label is available from the payment
+                    success page, dashboard, or tracking view.
                   </p>
                 ) : (
                   <div className="mt-5">

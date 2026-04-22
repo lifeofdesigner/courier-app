@@ -7,6 +7,11 @@ import type {
   QuoteZone,
   ServiceType,
 } from "@/types/quote";
+import {
+  getModeAwareServiceMeta,
+  normalizeModeAwareServiceType,
+  normalizeTransportMode,
+} from "@/types/shipment";
 
 type PricingRuleRow = {
   id: string;
@@ -33,6 +38,7 @@ type QuoteRow = {
   destination_country: string;
   destination_city: string;
   service_type: string;
+  transport_mode: string | null;
   package_type: string | null;
   weight_kg: number | string;
   declared_value: number | string;
@@ -51,6 +57,12 @@ function toServiceType(value: string): ServiceType {
 
 function toQuoteZone(value: string): QuoteZone {
   return value === "EU" ? "EU" : "International";
+}
+
+function transportModeFromQuote(row: QuoteRow) {
+  return row.transport_mode
+    ? normalizeTransportMode(row.transport_mode)
+    : getModeAwareServiceMeta(row.service_type, { mode: "road" }).transportMode;
 }
 
 function mapPricingRule(row: PricingRuleRow): PricingRuleRecord {
@@ -72,6 +84,8 @@ function mapPricingRule(row: PricingRuleRow): PricingRuleRecord {
 }
 
 function mapQuote(row: QuoteRow): QuoteRecord {
+  const transportMode = transportModeFromQuote(row);
+
   return {
     id: row.id,
     userId: row.user_id,
@@ -81,7 +95,10 @@ function mapQuote(row: QuoteRow): QuoteRecord {
     originCity: row.origin_city,
     destinationCountry: row.destination_country,
     destinationCity: row.destination_city,
-    serviceType: toServiceType(row.service_type),
+    transportMode: normalizeTransportMode(transportMode),
+    serviceType: normalizeModeAwareServiceType(row.service_type, {
+      mode: transportMode,
+    }),
     packageType: row.package_type,
     weightKg: Number(row.weight_kg),
     declaredValue: Number(row.declared_value),
@@ -158,6 +175,7 @@ export async function insertQuoteRecord({
       origin_city: input.originCity,
       destination_country: input.destinationCountry,
       destination_city: input.destinationCity,
+      transport_mode: input.transportMode,
       service_type: input.serviceType,
       package_type: input.packageType,
       weight_kg: input.weightKg,

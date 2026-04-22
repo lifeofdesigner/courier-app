@@ -18,6 +18,108 @@ export const transportModeDefinitions = [
 
 export type TransportMode = (typeof transportModeDefinitions)[number]["code"];
 
+export type TransportModePublicCopy = {
+  quoteTitle: string;
+  quoteLead: string;
+  originLabel: string;
+  destinationLabel: string;
+  packageLabel: string;
+  packagePlaceholder: string;
+  declaredValueLabel: string;
+  bookingTitle: string;
+  bookingLead: string;
+  bookingReceivedTitle: string;
+  bookingSubmitLabel: string;
+  bookingSummaryLead: string;
+  pickupHeading: string;
+  deliveryHeading: string;
+  specialInstructionsPlaceholder: string;
+  paymentSummaryTitle: string;
+  paymentSuccessLead: string;
+  paymentCancelLead: string;
+};
+
+export const transportModePublicCopy = {
+  air: {
+    quoteTitle: "Air cargo quote",
+    quoteLead:
+      "Estimate airport-aware air cargo movement with cargo details, declared value, and customs-ready handling context.",
+    originLabel: "Origin airport or city",
+    destinationLabel: "Destination airport or city",
+    packageLabel: "Cargo details",
+    packagePlaceholder: "Documents, parcel, or air cargo",
+    declaredValueLabel: "Declared cargo value",
+    bookingTitle: "Air cargo request",
+    bookingLead:
+      "Airport, cargo, and customs-aware handling for time-sensitive air movement.",
+    bookingReceivedTitle: "Air cargo request confirmed",
+    bookingSubmitLabel: "Submit air cargo request",
+    bookingSummaryLead:
+      "Operations will review cargo readiness, pickup timing, and airport handoff before label creation.",
+    pickupHeading: "Pickup and origin details",
+    deliveryHeading: "Destination and consignee details",
+    specialInstructionsPlaceholder:
+      "Cargo handling, airport, customs, or commercial invoice notes",
+    paymentSummaryTitle: "Air cargo payment summary",
+    paymentSuccessLead:
+      "Stripe is confirming payment before operations prepares the air cargo shipment and label.",
+    paymentCancelLead:
+      "The air cargo request is still saved. Resume payment when the shipment is ready to move.",
+  },
+  road: {
+    quoteTitle: "Road shipment quote",
+    quoteLead:
+      "Estimate local, regional, or standard road delivery with route and depot-aware pricing context.",
+    originLabel: "Pickup city",
+    destinationLabel: "Delivery city",
+    packageLabel: "Package details",
+    packagePlaceholder: "Parcel, satchel, or multi-piece shipment",
+    declaredValueLabel: "Declared shipment value",
+    bookingTitle: "Road shipment request",
+    bookingLead:
+      "Route, depot, and local delivery handling for same-day, regional, or standard road service.",
+    bookingReceivedTitle: "Road shipment request received",
+    bookingSubmitLabel: "Submit road pickup request",
+    bookingSummaryLead:
+      "Operations will confirm the route, pickup window, and delivery handoff before label creation.",
+    pickupHeading: "Pickup address",
+    deliveryHeading: "Delivery address",
+    specialInstructionsPlaceholder:
+      "Depot, route, access, handoff, or local delivery instructions",
+    paymentSummaryTitle: "Road shipment payment summary",
+    paymentSuccessLead:
+      "Stripe is confirming payment before operations prepares the road shipment and label.",
+    paymentCancelLead:
+      "The road shipment request is still saved. Resume payment when you are ready.",
+  },
+  freight: {
+    quoteTitle: "Freight booking quote",
+    quoteLead:
+      "Estimate pallet, cargo, or truckload freight with appointment and handling context.",
+    originLabel: "Origin facility or city",
+    destinationLabel: "Destination facility or city",
+    packageLabel: "Freight details",
+    packagePlaceholder: "Pallet, crate, cargo, or consolidated freight",
+    declaredValueLabel: "Declared freight value",
+    bookingTitle: "Freight booking request",
+    bookingLead:
+      "Cargo, pallet, appointment, and freight handling for larger commercial moves.",
+    bookingReceivedTitle: "Freight booking request created",
+    bookingSubmitLabel: "Submit freight booking",
+    bookingSummaryLead:
+      "Operations will review freight readiness, pickup access, appointment needs, and handling notes.",
+    pickupHeading: "Pickup facility",
+    deliveryHeading: "Delivery facility",
+    specialInstructionsPlaceholder:
+      "Pallet count, dock access, appointment, liftgate, or cargo handling notes",
+    paymentSummaryTitle: "Freight booking payment summary",
+    paymentSuccessLead:
+      "Stripe is confirming payment before operations prepares the freight movement and label.",
+    paymentCancelLead:
+      "The freight booking request is still saved. Resume payment when the cargo is ready.",
+  },
+} as const satisfies Record<TransportMode, TransportModePublicCopy>;
+
 export type PricingServiceTier = "Express" | "Economy";
 
 export type ModeAwareServiceDefinition = {
@@ -505,6 +607,12 @@ export function getTransportModeMeta(mode: string | null | undefined) {
     transportModeDefinitions.find((definition) => definition.code === normalized) ??
     transportModeDefinitions[1]
   );
+}
+
+export function getTransportModePublicCopy(
+  mode: string | null | undefined,
+): TransportModePublicCopy {
+  return transportModePublicCopy[normalizeTransportMode(mode)];
 }
 
 function normalizeLegacyServiceTier(

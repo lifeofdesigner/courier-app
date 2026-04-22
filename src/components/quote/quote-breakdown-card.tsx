@@ -23,7 +23,7 @@ export function QuoteBreakdownCard({ breakdown }: QuoteBreakdownCardProps) {
   ] as const;
 
   return (
-    <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+    <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
       <h2 className="text-xl font-bold tracking-tight text-[#0B1C3A]">
         Price breakdown
       </h2>

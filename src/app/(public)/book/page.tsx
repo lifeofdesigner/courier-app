@@ -1,21 +1,28 @@
 import type { Metadata } from "next";
 
-import { BookingForm, BookingSummaryCard } from "@/components/booking";
+import { BookingForm } from "@/components/booking";
 import { Container } from "@/components/layout";
 import { hasSupabasePublicEnv } from "@/lib/env";
 import { createPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Book a Courier Pickup",
+  title: "Book an Air, Road, or Freight Shipment",
   description:
-    "Book an Atlas Courier pickup with sender, recipient, package, pickup, and delivery details for a clear courier handoff.",
+    "Book an Atlas Courier air, road, or freight shipment with mode-aware service selection, pickup details, payment, and shipment handoff.",
   path: "/book",
-  keywords: ["book courier pickup", "schedule pickup", "courier booking"],
+  keywords: [
+    "book courier pickup",
+    "schedule road delivery",
+    "air cargo booking",
+    "freight booking",
+  ],
 });
 
 type BookPickupPageProps = {
   searchParams: Promise<{
     quoteId?: string;
+    transportMode?: string;
+    serviceType?: string;
   }>;
 };
 
@@ -33,21 +40,22 @@ export default async function BookPickupPage({
               Book pickup
             </p>
             <h1 className="mt-3 font-heading text-4xl font-bold tracking-tight text-[#0B1C3A] lg:text-5xl">
-              Schedule a pickup with clear collection details.
+              Book the right air, road, or freight movement.
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600">
-              Submit a pickup request with sender, recipient, package, pickup,
-              and delivery details. You can pay through secure Stripe Checkout
-              after the booking is saved.
+              Submit a mode-aware booking request with matching service type,
+              pickup, delivery, cargo details, and secure Stripe Checkout after
+              the request is saved.
             </p>
           </div>
 
-          <div className="mt-10 grid gap-8 lg:grid-cols-[1fr_0.42fr] lg:items-start">
+          <div className="mt-10">
             <BookingForm
               isConfigured={hasSupabasePublicEnv()}
               quoteId={params.quoteId}
+              initialTransportMode={params.transportMode}
+              initialServiceType={params.serviceType}
             />
-            <BookingSummaryCard />
           </div>
         </Container>
       </section>

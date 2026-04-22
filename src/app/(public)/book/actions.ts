@@ -6,6 +6,14 @@ import { sendBookingEmail } from "@/lib/email/send-booking-email";
 import { insertBookingRequest } from "@/lib/queries/bookings";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { BookingRecord } from "@/types/booking";
+import {
+  getModeAwareServiceMeta,
+  isModeAwareServiceTypeForMode,
+  modeAwareServiceTypes,
+  normalizeModeAwareServiceType,
+  normalizeTransportMode,
+  transportModes,
+} from "@/types/shipment";
 
 export type BookingActionState = {
   success: boolean;
@@ -35,26 +43,41 @@ const addressSchema = z.object({
   country: z.string().trim().min(1, "Enter a country."),
 });
 
-const bookingSchema = z.object({
-  quoteId: z.string().trim().optional(),
-  senderName: z.string().trim().min(1, "Enter the sender name."),
-  senderEmail: z.string().trim().email("Enter a valid sender email."),
-  senderPhone: z.string().trim().optional(),
-  recipientName: z.string().trim().min(1, "Enter the recipient name."),
-  recipientEmail: optionalEmailSchema,
-  recipientPhone: z.string().trim().optional(),
-  serviceType: z.enum(["Express", "Economy"]),
-  packageType: z.string().trim().min(1, "Enter a package type."),
-  weightKg: z.coerce.number().positive("Weight must be greater than 0."),
-  declaredValue: z.coerce
-    .number()
-    .min(0, "Declared value cannot be negative."),
-  pickupDate: z.string().trim().min(1, "Choose a pickup date."),
-  pickupWindow: z.string().trim().min(1, "Choose a pickup window."),
-  specialInstructions: z.string().trim().optional(),
-  pickup: addressSchema,
-  delivery: addressSchema,
-});
+const bookingSchema = z
+  .object({
+    quoteId: z.string().trim().optional(),
+    transportMode: z.enum(transportModes, {
+      message: "Choose a transport mode.",
+    }),
+    senderName: z.string().trim().min(1, "Enter the sender name."),
+    senderEmail: z.string().trim().email("Enter a valid sender email."),
+    senderPhone: z.string().trim().optional(),
+    recipientName: z.string().trim().min(1, "Enter the recipient name."),
+    recipientEmail: optionalEmailSchema,
+    recipientPhone: z.string().trim().optional(),
+    serviceType: z.enum(modeAwareServiceTypes, {
+      message: "Choose a service type.",
+    }),
+    packageType: z.string().trim().min(1, "Enter package or cargo details."),
+    weightKg: z.coerce.number().positive("Weight must be greater than 0."),
+    declaredValue: z.coerce
+      .number()
+      .min(0, "Declared value cannot be negative."),
+    pickupDate: z.string().trim().min(1, "Choose a pickup date."),
+    pickupWindow: z.string().trim().min(1, "Choose a pickup window."),
+    specialInstructions: z.string().trim().optional(),
+    pickup: addressSchema,
+    delivery: addressSchema,
+  })
+  .superRefine((data, context) => {
+    if (!isModeAwareServiceTypeForMode(data.serviceType, data.transportMode)) {
+      context.addIssue({
+        code: "custom",
+        path: ["serviceType"],
+        message: "Choose a service type for the selected transport mode.",
+      });
+    }
+  });
 
 function getString(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -81,6 +104,7 @@ export async function createBookingAction(
 ): Promise<BookingActionState> {
   const parsed = bookingSchema.safeParse({
     quoteId: getString(formData, "quoteId"),
+    transportMode: getString(formData, "transportMode"),
     senderName: getString(formData, "senderName"),
     senderEmail: getString(formData, "senderEmail"),
     senderPhone: getString(formData, "senderPhone"),
@@ -142,15 +166,27 @@ export async function createBookingAction(
     const {
       data: { user },
     } = await supabase.auth.getUser();
+    const transportMode = normalizeTransportMode(parsed.data.transportMode);
+    const serviceType = normalizeModeAwareServiceType(parsed.data.serviceType, {
+      mode: transportMode,
+    });
+    const bookingInput = {
+      ...parsed.data,
+      transportMode,
+      serviceType,
+    };
     const booking = await insertBookingRequest({
-      input: parsed.data,
+      input: bookingInput,
       userId: user?.id ?? null,
     });
     await sendBookingEmail(booking);
+    const serviceMeta = getModeAwareServiceMeta(serviceType, {
+      mode: transportMode,
+    });
 
     return {
       success: true,
-      message: "Pickup request submitted.",
+      message: `${serviceMeta.label} booking request submitted.`,
       booking,
     };
   } catch (error) {

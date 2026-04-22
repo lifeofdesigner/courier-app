@@ -1,15 +1,24 @@
-export type ServiceType = "Express" | "Economy";
+import type {
+  ModeAwareServiceType,
+  PricingServiceTier,
+  TransportMode,
+} from "@/types/shipment";
+
+export type ServiceType = PricingServiceTier;
+
+export type QuoteServiceType = ModeAwareServiceType;
 
 export type QuoteZone = "EU" | "International";
 
 export interface QuoteFormInput {
   fullName: string;
   email: string;
+  transportMode: TransportMode;
   originCountry: string;
   originCity: string;
   destinationCountry: string;
   destinationCity: string;
-  serviceType: ServiceType;
+  serviceType: QuoteServiceType;
   packageType: string;
   weightKg: number;
   declaredValue: number;
@@ -49,7 +58,8 @@ export interface QuoteRecord {
   originCity: string;
   destinationCountry: string;
   destinationCity: string;
-  serviceType: ServiceType;
+  transportMode: TransportMode;
+  serviceType: QuoteServiceType;
   packageType: string | null;
   weightKg: number;
   declaredValue: number;

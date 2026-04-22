@@ -1,6 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
-import { normalizeTransportMode } from "@/lib/shipping/statuses";
+import {
+  normalizeModeAwareServiceType,
+  normalizeTransportMode,
+} from "@/lib/shipping/statuses";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import type { PaymentStatus, PaymentSummary } from "@/types/payment";
 import type { TransportMode } from "@/types/shipment";
@@ -66,6 +69,8 @@ type PaymentBookingRow = {
 
 type PaymentSummaryRow = {
   id: string;
+  service_type: string;
+  transport_mode: string | null;
   payment_status: string;
   amount_due: number | string;
   amount_paid: number | string;
@@ -153,8 +158,14 @@ function mapPaymentBooking(row: PaymentBookingRow): PaymentBooking {
 }
 
 function mapPaymentSummary(row: PaymentSummaryRow): PaymentSummary {
+  const transportMode = normalizeTransportMode(row.transport_mode);
+
   return {
     bookingId: row.id,
+    serviceType: normalizeModeAwareServiceType(row.service_type, {
+      mode: transportMode,
+    }),
+    transportMode,
     paymentStatus: toPaymentStatus(row.payment_status),
     amountDue: Number(row.amount_due),
     amountPaid: Number(row.amount_paid),
@@ -284,6 +295,8 @@ export async function getPaymentSummaryByCheckoutSessionId(
     .select(
       `
       id,
+      service_type,
+      transport_mode,
       payment_status,
       amount_due,
       amount_paid,
@@ -311,6 +324,8 @@ export async function getPaymentSummaryByBookingId(
     .select(
       `
       id,
+      service_type,
+      transport_mode,
       payment_status,
       amount_due,
       amount_paid,

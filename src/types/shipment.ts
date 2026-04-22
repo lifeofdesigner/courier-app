@@ -11,6 +11,7 @@ export type {
   ModeAwareServiceMeta,
   ModeAwareServiceType,
   PricingServiceTier,
+  TransportModePublicCopy,
   ShipmentStatus,
   ShipmentStatusInput,
   ShipmentStatusMeta,
@@ -31,6 +32,7 @@ export {
   getShipmentStatusMeta,
   getShipmentStatusOptions,
   getTransportModeMeta,
+  getTransportModePublicCopy,
   isModeAwareServiceTypeForMode,
   legacyShipmentStatusMap,
   modeAwareServiceDefinitions,
@@ -40,6 +42,7 @@ export {
   normalizeShipmentStatus,
   normalizeTransportMode,
   transportModeDefinitions,
+  transportModePublicCopy,
   transportModes,
   shipmentStatuses,
 } from "@/lib/shipping/statuses";

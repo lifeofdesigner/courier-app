@@ -1,3 +1,5 @@
+import type { ModeAwareServiceType, TransportMode } from "@/types/shipment";
+
 export type PaymentStatus =
   | "unpaid"
   | "checkout_created"
@@ -34,6 +36,8 @@ export interface StripeCheckoutResponse {
 
 export interface PaymentSummary {
   bookingId: string;
+  serviceType: ModeAwareServiceType;
+  transportMode: TransportMode;
   paymentStatus: PaymentStatus;
   amountDue: number;
   amountPaid: number;

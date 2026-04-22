@@ -3,8 +3,11 @@ import type {
   QuoteBreakdown,
   QuoteFormInput,
   QuoteZone,
-  ServiceType,
 } from "@/types/quote";
+import {
+  formatModeAwareServiceType,
+  getPricingServiceTypeForModeAwareService,
+} from "@/types/shipment";
 
 const euCountries = new Set([
   "austria",
@@ -60,11 +63,15 @@ export function calculateQuoteBreakdown(
   pricingRules: PricingRuleRecord[],
 ): QuoteBreakdown {
   const zone = determineQuoteZone(input.originCountry, input.destinationCountry);
+  const pricingServiceType = getPricingServiceTypeForModeAwareService(
+    input.serviceType,
+    input.transportMode,
+  );
   const matchingRules = pricingRules
     .filter(
       (rule) =>
         rule.isActive &&
-        rule.serviceType === input.serviceType &&
+        rule.serviceType === pricingServiceType &&
         rule.zone === zone,
     )
     .sort((a, b) => a.priority - b.priority);
@@ -78,8 +85,13 @@ export function calculateQuoteBreakdown(
     ) ?? matchingRules[0];
 
   if (!rule) {
+    const serviceLabel = formatModeAwareServiceType(
+      input.serviceType,
+      input.transportMode,
+    );
+
     throw new Error(
-      `No active ${input.serviceType as ServiceType} pricing rule is available for ${zone}.`,
+      `No active ${serviceLabel} pricing rule is available for ${zone}.`,
     );
   }
 

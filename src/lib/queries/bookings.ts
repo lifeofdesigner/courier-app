@@ -1,6 +1,10 @@
 import { calculateQuoteBreakdown } from "@/lib/calculations/quotes";
 import { getPricingRules } from "@/lib/queries/quotes";
-import { normalizeTransportMode } from "@/lib/shipping/statuses";
+import {
+  getPricingServiceTypeForModeAwareService,
+  normalizeModeAwareServiceType,
+  normalizeTransportMode,
+} from "@/lib/shipping/statuses";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   AddressInput,
@@ -8,7 +12,6 @@ import type {
   BookingRecord,
 } from "@/types/booking";
 import type { PaymentStatus } from "@/types/payment";
-import type { ServiceType } from "@/types/quote";
 
 type AddressRow = {
   id: string;
@@ -52,10 +55,6 @@ function optionalValue(value: string | undefined) {
   return value && value.trim().length > 0 ? value.trim() : null;
 }
 
-function toServiceType(value: string): ServiceType {
-  return value === "Economy" ? "Economy" : "Express";
-}
-
 function toPaymentStatus(value: string): PaymentStatus {
   const statuses: PaymentStatus[] = [
     "unpaid",
@@ -71,6 +70,8 @@ function toPaymentStatus(value: string): PaymentStatus {
 }
 
 function mapBooking(row: BookingRow): BookingRecord {
+  const transportMode = normalizeTransportMode(row.transport_mode);
+
   return {
     id: row.id,
     userId: row.user_id,
@@ -83,8 +84,10 @@ function mapBooking(row: BookingRow): BookingRecord {
     recipientName: row.recipient_name,
     recipientEmail: row.recipient_email,
     recipientPhone: row.recipient_phone,
-    serviceType: toServiceType(row.service_type),
-    transportMode: normalizeTransportMode(row.transport_mode),
+    serviceType: normalizeModeAwareServiceType(row.service_type, {
+      mode: transportMode,
+    }),
+    transportMode,
     packageType: row.package_type,
     weightKg: Number(row.weight_kg),
     declaredValue: Number(row.declared_value),
@@ -107,8 +110,16 @@ function mapBooking(row: BookingRow): BookingRecord {
 }
 
 export async function calculateBookingAmountDue(input: BookingFormInput) {
+  const transportMode = normalizeTransportMode(input.transportMode);
+  const serviceType = normalizeModeAwareServiceType(input.serviceType, {
+    mode: transportMode,
+  });
+  const pricingServiceType = getPricingServiceTypeForModeAwareService(
+    serviceType,
+    transportMode,
+  );
   const pricingRules = await getPricingRules({
-    serviceType: input.serviceType,
+    serviceType: pricingServiceType,
   });
 
   const breakdown = calculateQuoteBreakdown(
@@ -119,7 +130,8 @@ export async function calculateBookingAmountDue(input: BookingFormInput) {
       originCity: input.pickup.city,
       destinationCountry: input.delivery.country,
       destinationCity: input.delivery.city,
-      serviceType: input.serviceType,
+      transportMode,
+      serviceType,
       packageType: input.packageType,
       weightKg: input.weightKg,
       declaredValue: input.declaredValue,
@@ -200,6 +212,10 @@ export async function insertBookingRequest({
     addressType: "delivery",
     address: input.delivery,
   });
+  const transportMode = normalizeTransportMode(input.transportMode);
+  const serviceType = normalizeModeAwareServiceType(input.serviceType, {
+    mode: transportMode,
+  });
   const amountDue = await calculateBookingAmountDue(input);
 
   const { data, error } = await supabase
@@ -215,9 +231,9 @@ export async function insertBookingRequest({
       recipient_name: input.recipientName,
       recipient_email: optionalValue(input.recipientEmail),
       recipient_phone: optionalValue(input.recipientPhone),
-      service_type: input.serviceType,
+      service_type: serviceType,
       package_type: input.packageType,
-      transport_mode: "road",
+      transport_mode: transportMode,
       weight_kg: input.weightKg,
       declared_value: input.declaredValue,
       pickup_date: input.pickupDate,

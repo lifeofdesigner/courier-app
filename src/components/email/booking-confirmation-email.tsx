@@ -4,6 +4,8 @@ export type BookingConfirmationEmailProps = {
   bookingId: string;
   senderName: string;
   recipientName: string;
+  heading?: string;
+  transportMode: string;
   serviceType: string;
   pickupDate: string;
   pickupWindow: string | null;
@@ -31,6 +33,8 @@ export function BookingConfirmationEmail({
   bookingId,
   senderName,
   recipientName,
+  heading = "Booking request received",
+  transportMode,
   serviceType,
   pickupDate,
   pickupWindow,
@@ -40,13 +44,16 @@ export function BookingConfirmationEmail({
 }: BookingConfirmationEmailProps) {
   return (
     <div style={{ fontFamily: "Arial, sans-serif", color: "#0F172A" }}>
-      <h1 style={{ color: "#0B1C3A" }}>Booking request received</h1>
+      <h1 style={{ color: "#0B1C3A" }}>{heading}</h1>
       <p>Hello {senderName},</p>
       <p>
-        We received your {serviceType.toLowerCase()} courier booking for{" "}
-        {recipientName}. Your booking reference is <strong>{bookingId}</strong>.
+        We received your {transportMode.toLowerCase()}{" "}
+        {serviceType.toLowerCase()} booking for {recipientName}. Your booking
+        reference is <strong>{bookingId}</strong>.
       </p>
       <ul>
+        <li>Transport mode: {transportMode}</li>
+        <li>Service type: {serviceType}</li>
         <li>Pickup date: {formatDate(pickupDate)}</li>
         <li>Pickup window: {pickupWindow ?? "To be confirmed"}</li>
         <li>Amount due: {formatMoney(amountDue, currency)}</li>

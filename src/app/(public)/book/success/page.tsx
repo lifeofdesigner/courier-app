@@ -5,11 +5,16 @@ import { CheckCircle2 } from "lucide-react";
 import { Container } from "@/components/layout";
 import { getPaymentSummaryByCheckoutSessionId } from "@/lib/queries/payments";
 import { createPageMetadata } from "@/lib/seo";
+import {
+  formatModeAwareServiceType,
+  getTransportModeMeta,
+  getTransportModePublicCopy,
+} from "@/types/shipment";
 
 export const metadata: Metadata = createPageMetadata({
-  title: "Booking Payment Processing",
+  title: "Shipment Payment Processing",
   description:
-    "Review the secure payment processing result for an Atlas Courier booking.",
+    "Review the secure payment processing result for an Atlas Courier air, road, or freight booking.",
   path: "/book/success",
 });
 
@@ -40,28 +45,49 @@ export default async function BookingSuccessPage({
   const params = await searchParams;
   const payment = params.session_id ? await getPayment(params.session_id) : null;
   const isPaid = payment?.paymentStatus === "paid";
+  const modeMeta = payment ? getTransportModeMeta(payment.transportMode) : null;
+  const modeCopy = payment
+    ? getTransportModePublicCopy(payment.transportMode)
+    : null;
+  const serviceLabel = payment
+    ? formatModeAwareServiceType(payment.serviceType, payment.transportMode)
+    : null;
 
   return (
     <main>
       <section className="py-16 lg:py-20">
         <Container>
-          <div className="mx-auto max-w-2xl rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
+          <div className="mx-auto max-w-2xl rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
             <CheckCircle2 aria-hidden="true" className="h-10 w-10 text-emerald-600" />
             <h1 className="mt-5 font-heading text-3xl font-bold tracking-tight text-[#0B1C3A]">
-              Payment is being securely confirmed.
+              {modeCopy
+                ? `${modeCopy.bookingReceivedTitle}.`
+                : "Payment is being securely confirmed."}
             </h1>
             <p className="mt-4 text-base leading-8 text-slate-600">
-              Stripe redirects here after Checkout. Final fulfillment is handled
-              by the verified webhook, so this page never creates duplicate
-              orders or labels.
+              {modeCopy
+                ? modeCopy.paymentSuccessLead
+                : "Stripe redirects here after Checkout. Final fulfillment is handled by the verified webhook, so this page never creates duplicate orders or labels."}
             </p>
 
             {payment ? (
-              <div className="mt-6 rounded-[28px] border border-[#0B1C3A]/10 bg-[#0B1C3A] p-6 text-white shadow-sm">
+              <div className="mt-6 rounded-[24px] border border-[#0B1C3A]/10 bg-[#0B1C3A] p-6 text-white shadow-sm">
                 <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
-                  Booking {payment.bookingId}
+                  {modeCopy?.paymentSummaryTitle ?? "Payment summary"}
                 </p>
                 <div className="mt-4 grid gap-4 text-sm text-slate-200 sm:grid-cols-2">
+                  <div>
+                    <p className="font-semibold text-white">Booking</p>
+                    <p className="mt-1 break-all">{payment.bookingId}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-white">Transport mode</p>
+                    <p className="mt-1">{modeMeta?.label}</p>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-white">Service type</p>
+                    <p className="mt-1">{serviceLabel}</p>
+                  </div>
                   <div>
                     <p className="font-semibold text-white">Payment status</p>
                     <p className="mt-1 capitalize">
@@ -89,7 +115,7 @@ export default async function BookingSuccessPage({
                   href={`/label/${payment.bookingId}`}
                   className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
                 >
-                  Open shipping label
+                  Open {modeMeta?.label.toLowerCase() ?? "shipping"} label
                 </Link>
               ) : null}
               <Link

@@ -279,6 +279,7 @@ export interface Database {
           recipient_email: string | null;
           recipient_phone: string | null;
           service_type: string;
+          transport_mode: "air" | "road" | "freight";
           package_type: string | null;
           weight_kg: number;
           declared_value: number;
@@ -316,6 +317,7 @@ export interface Database {
           recipient_email?: string | null;
           recipient_phone?: string | null;
           service_type: string;
+          transport_mode?: "air" | "road" | "freight";
           package_type?: string | null;
           weight_kg: number;
           declared_value?: number;
@@ -352,6 +354,7 @@ export interface Database {
           recipient_email?: string | null;
           recipient_phone?: string | null;
           service_type?: string;
+          transport_mode?: "air" | "road" | "freight";
           package_type?: string | null;
           weight_kg?: number;
           declared_value?: number;

@@ -704,6 +704,38 @@ The topbar is intentionally admin-only and does not include public marketing
 CTAs. Quote review includes a header-level CSV export action generated from the
 already loaded admin quote data.
 
+## Mode-Aware Public Quote and Booking Patch
+
+The public `/quote` and `/book` flows now use the same Air, Road, and Freight
+transport-mode model as admin shipments, tracking, and labels.
+
+Public quote behavior:
+
+- Step 1 selects transport mode: Air, Road, or Freight.
+- Step 2 filters service type options by mode.
+- Step 3 captures customer, origin, destination, package/cargo, declared value,
+  and weight details with mode-aware wording.
+- Quote calculation stores the selected `transport_mode`, stores the
+  mode-aware service code, and still maps to legacy Express/Economy pricing
+  rules for backward-compatible pricing.
+- Quote summaries show transport mode, service type, origin, destination,
+  pricing breakdown, total, and a mode-aware booking link.
+
+Public booking behavior:
+
+- `/book` accepts optional `quoteId`, `transportMode`, and `serviceType` query
+  params so quote-to-booking handoff preserves mode and service selection.
+- The booking form filters service types by selected mode and saves both
+  `transport_mode` and the mode-aware service code.
+- Booking summaries, confirmation copy, Stripe Checkout line-item text, and
+  `/book/success` and `/book/cancel` payment summaries show transport mode and
+  friendly service labels instead of raw parcel-only wording.
+
+Run `supabase db push` to apply
+`supabase/migrations/009_public_quote_transport_modes.sql`, which adds
+`quotes.transport_mode`, a mode check constraint, and a quote mode/service
+index.
+
 ## Routes
 
 Public:

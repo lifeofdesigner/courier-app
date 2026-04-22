@@ -15,6 +15,7 @@ import type {
 import { normalizePaymentStatus } from "@/types/payment";
 import {
   activeShipmentStatuses,
+  formatModeAwareServiceType,
   normalizeModeAwareServiceType,
   normalizeShipmentStatus,
   normalizeTransportMode,
@@ -69,6 +70,7 @@ type QuoteRow = {
   destination_city: string;
   destination_country: string;
   service_type: string;
+  transport_mode: string | null;
   total: number | string;
   currency: string;
   status: string;
@@ -278,6 +280,8 @@ function mapShipment({
 }
 
 function mapQuote(row: QuoteRow): AdminQuoteRow {
+  const transportMode = normalizeTransportMode(row.transport_mode);
+
   return {
     id: row.id,
     userId: row.user_id,
@@ -287,7 +291,7 @@ function mapQuote(row: QuoteRow): AdminQuoteRow {
     originCountry: row.origin_country,
     destinationCity: row.destination_city,
     destinationCountry: row.destination_country,
-    serviceType: row.service_type,
+    serviceType: formatModeAwareServiceType(row.service_type, transportMode),
     total: Number(row.total),
     currency: row.currency,
     status: row.status,
@@ -296,13 +300,15 @@ function mapQuote(row: QuoteRow): AdminQuoteRow {
 }
 
 function mapBooking(row: BookingRow): AdminBookingRow {
+  const transportMode = normalizeTransportMode(row.transport_mode);
+
   return {
     id: row.id,
     userId: row.user_id,
     senderName: row.sender_name,
     senderEmail: row.sender_email,
     recipientName: row.recipient_name,
-    serviceType: row.service_type,
+    serviceType: formatModeAwareServiceType(row.service_type, transportMode),
     status: row.status,
     paymentStatus: normalizePaymentStatus(row.payment_status),
     amountDue: Number(row.amount_due),
@@ -796,6 +802,7 @@ export async function getAdminQuotes(limit = 50): Promise<AdminQuoteRow[]> {
       destination_city,
       destination_country,
       service_type,
+      transport_mode,
       total,
       currency,
       status,

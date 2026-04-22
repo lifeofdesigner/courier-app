@@ -12,6 +12,7 @@ import type {
 import type { PaymentStatus } from "@/types/payment";
 import {
   activeShipmentStatuses,
+  formatModeAwareServiceType,
   normalizeModeAwareServiceType,
   normalizeShipmentStatus,
   normalizeTransportMode,
@@ -45,6 +46,7 @@ type ShipmentRow = {
 type QuoteRow = {
   id: string;
   service_type: string;
+  transport_mode: string | null;
   origin_city: string;
   origin_country: string;
   destination_city: string;
@@ -58,6 +60,7 @@ type QuoteRow = {
 type BookingRow = {
   id: string;
   service_type: string;
+  transport_mode: string | null;
   status: string;
   payment_status: string;
   amount_due: number | string;
@@ -133,9 +136,11 @@ function mapShipment(row: ShipmentRow): ShipmentTableItem {
 }
 
 function mapQuote(row: QuoteRow): QuoteTableItem {
+  const transportMode = normalizeTransportMode(row.transport_mode);
+
   return {
     id: row.id,
-    serviceType: row.service_type,
+    serviceType: formatModeAwareServiceType(row.service_type, transportMode),
     originCity: row.origin_city,
     originCountry: row.origin_country,
     destinationCity: row.destination_city,
@@ -148,9 +153,11 @@ function mapQuote(row: QuoteRow): QuoteTableItem {
 }
 
 function mapBooking(row: BookingRow): BookingListItem {
+  const transportMode = normalizeTransportMode(row.transport_mode);
+
   return {
     id: row.id,
-    serviceType: row.service_type,
+    serviceType: formatModeAwareServiceType(row.service_type, transportMode),
     status: row.status,
     paymentStatus: normalizePaymentStatus(row.payment_status),
     amountDue: Number(row.amount_due),
@@ -288,6 +295,7 @@ export async function getDashboardOverviewData(): Promise<DashboardOverviewData>
       `
       id,
       service_type,
+      transport_mode,
       origin_city,
       origin_country,
       destination_city,
@@ -386,6 +394,7 @@ export async function getDashboardShipments(): Promise<ShipmentTableItem[]> {
       booking_id,
       tracking_number,
       service_type,
+      transport_mode,
       status,
       origin_city,
       origin_country,
@@ -423,6 +432,7 @@ export async function getDashboardQuotes(): Promise<QuoteTableItem[]> {
       `
       id,
       service_type,
+      transport_mode,
       origin_city,
       origin_country,
       destination_city,
