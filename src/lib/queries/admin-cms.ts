@@ -38,6 +38,7 @@ const homepageTargets = {
   hero: { section: "homepage", key: "hero" },
   trackingPromo: { section: "homepage", key: "trackingPromo" },
   services: { section: "homepage", key: "services" },
+  enhancements: { section: "homepage", key: "enhancements" },
   trust: { section: "homepage", key: "trust" },
   coverage: { section: "homepage", key: "coverage" },
   testimonials: { section: "homepage", key: "testimonials" },
@@ -569,6 +570,11 @@ export async function getAdminCmsEditorData(): Promise<AdminCmsEditorData> {
         rows,
         ...homepageTargets.services,
         fallback: homepageFallbackContent.services,
+      }),
+      enhancements: createEditorSection({
+        rows,
+        ...homepageTargets.enhancements,
+        fallback: homepageFallbackContent.enhancements,
       }),
       trust: createEditorSection({
         rows,

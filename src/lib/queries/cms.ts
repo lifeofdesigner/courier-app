@@ -15,6 +15,7 @@ export const HOMEPAGE_CONTENT_KEYS = [
   "hero",
   "trackingPromo",
   "services",
+  "enhancements",
   "trust",
   "coverage",
   "testimonials",

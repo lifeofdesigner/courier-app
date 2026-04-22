@@ -5,6 +5,9 @@ import {
   FAQPreview,
   HomeCta,
   HomeHero,
+  HomepageWorkflow,
+  ModeQuoteCta,
+  ModeServiceShowcase,
   MotionSection,
   SeoJsonLd,
   ServicePreview,
@@ -48,6 +51,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function HomePage() {
   const content = await getHomePageContent();
+  const { enhancements } = content;
   const motion = content.hero.motion ?? {
     scrollEffect: "fade-up" as const,
     textEffect: "rise" as const,
@@ -63,21 +67,35 @@ export default async function HomePage() {
         <TrackingPromo content={content.trackingPromo} />
       </MotionSection>
       <MotionSection {...motion} delayMs={90}>
-        <ServicePreview content={content.services} />
+        {enhancements.visibility.modeServices ? (
+          <ModeServiceShowcase content={enhancements.modeServices} />
+        ) : (
+          <ServicePreview content={content.services} />
+        )}
       </MotionSection>
       <MotionSection {...motion} delayMs={120}>
-        <TrustSection content={content.trust} />
+        {enhancements.visibility.workflow ? (
+          <HomepageWorkflow content={enhancements.workflow} />
+        ) : null}
       </MotionSection>
       <MotionSection {...motion} delayMs={150}>
-        <CoverageSection content={content.coverage} />
+        <TrustSection content={content.trust} />
       </MotionSection>
       <MotionSection {...motion} delayMs={180}>
-        <SocialProof content={content.testimonials} />
+        <CoverageSection content={content.coverage} />
       </MotionSection>
       <MotionSection {...motion} delayMs={210}>
-        <FAQPreview content={content.faqPreview} />
+        {enhancements.visibility.quoteCta ? (
+          <ModeQuoteCta content={enhancements.quoteCta} />
+        ) : null}
       </MotionSection>
       <MotionSection {...motion} delayMs={240}>
+        <SocialProof content={content.testimonials} />
+      </MotionSection>
+      <MotionSection {...motion} delayMs={270}>
+        <FAQPreview content={content.faqPreview} />
+      </MotionSection>
+      <MotionSection {...motion} delayMs={300}>
         <HomeCta content={content.cta} />
       </MotionSection>
     </main>

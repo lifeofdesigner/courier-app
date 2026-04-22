@@ -1,4 +1,5 @@
 import {
+  Plane,
   Building2,
   CheckCircle2,
   Clock3,
@@ -20,6 +21,7 @@ export type CmsIconProps = {
 };
 
 const iconMap = {
+  air: Plane,
   building: Building2,
   "check-circle": CheckCircle2,
   clock: Clock3,

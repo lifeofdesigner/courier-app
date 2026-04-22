@@ -80,9 +80,9 @@ export const homepageFallbackContent = {
   },
   services: {
     eyebrow: "Services",
-    title: "Courier options for everyday and urgent delivery needs.",
+    title: "Mode-aware courier options for urgent and planned freight.",
     description:
-      "Choose from fast local delivery, scheduled pickup support, and managed shipments for parcels that need extra coordination.",
+      "Choose from air cargo, road delivery, and managed freight services with clear language before a quote or booking starts.",
     cta: {
       label: "View services",
       href: "/services",
@@ -90,27 +90,156 @@ export const homepageFallbackContent = {
     },
     items: [
       {
-        title: "Same-day courier",
+        title: "Air cargo",
         description:
-          "Priority delivery for documents, retail orders, parts, and urgent business parcels moving across town.",
+          "Express, standard, and priority air cargo support for time-sensitive movement across longer lanes.",
         href: "/services",
-        icon: "clock",
+        icon: "air",
       },
       {
-        title: "Scheduled pickup",
+        title: "Road delivery",
         description:
-          "One-time or recurring collections with predictable pickup windows and clear handoff expectations.",
+          "Same-day, regional, and standard road service for local routes, depots, and planned collections.",
         href: "/services",
         icon: "truck",
       },
       {
-        title: "Business deliveries",
+        title: "Freight handling",
         description:
-          "Managed courier support for teams sending multi-piece shipments, customer orders, and branch transfers.",
+          "LTL, full truckload, pallet, and consolidated freight options for larger cargo and appointment-led handoffs.",
         href: "/services",
-        icon: "building",
+        icon: "warehouse",
       },
     ],
+  },
+  enhancements: {
+    visibility: {
+      modeServices: true,
+      workflow: true,
+      quoteCta: true,
+    },
+    modeServices: {
+      eyebrow: "Transport modes",
+      title: "Choose the lane before the shipment moves.",
+      description:
+        "Give customers a clear service path from the homepage, with visual cards for air, road, and freight movement.",
+      items: [
+        {
+          mode: "air",
+          eyebrow: "Air cargo",
+          title: "Priority movement for urgent cargo.",
+          description:
+            "Airport-aware service wording, cargo details, declared value, and customs-ready handoffs for time-sensitive routes.",
+          href: "/quote?transportMode=air",
+          ctaLabel: "Quote air cargo",
+          icon: "air",
+          highlights: ["Express Air", "Standard Air", "Priority Air Cargo"],
+          image: {
+            src: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=1200&q=85",
+            alt: "Cargo aircraft prepared for air shipment",
+          },
+        },
+        {
+          mode: "road",
+          eyebrow: "Road delivery",
+          title: "Route-led courier coverage for local and regional lanes.",
+          description:
+            "Depot-aware road delivery for same-day pickups, regional movement, and dependable scheduled service.",
+          href: "/quote?transportMode=road",
+          ctaLabel: "Quote road delivery",
+          icon: "truck",
+          highlights: ["Same-Day Road", "Regional Road", "Standard Road"],
+          image: {
+            src: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1200&q=85",
+            alt: "Road freight truck moving on a highway",
+          },
+        },
+        {
+          mode: "freight",
+          eyebrow: "Freight",
+          title: "Cargo and pallet movement with appointment-ready details.",
+          description:
+            "Freight support for pallets, LTL, full truckload, and consolidated cargo that needs heavier coordination.",
+          href: "/quote?transportMode=freight",
+          ctaLabel: "Quote freight",
+          icon: "warehouse",
+          highlights: [
+            "LTL Freight",
+            "Full Truckload",
+            "Pallet Freight",
+            "Consolidated Freight",
+          ],
+          image: {
+            src: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=1200&q=85",
+            alt: "Stacked freight containers at a logistics terminal",
+          },
+        },
+      ],
+    },
+    workflow: {
+      eyebrow: "How it works",
+      title: "From shipment intent to proof of delivery.",
+      description:
+        "The public journey now matches the operational model: choose a mode, quote the right service, book the pickup, then track every milestone.",
+      badgeLabel: "Operations flow",
+      badgeValue: "4 steps",
+      image: {
+        src: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1400&q=85",
+        alt: "Logistics warehouse team preparing shipments",
+      },
+      steps: [
+        {
+          title: "Select a transport mode",
+          description:
+            "Start with air, road, or freight so every service option and form label makes business sense.",
+          icon: "route",
+        },
+        {
+          title: "Get a mode-aware quote",
+          description:
+            "Share origin, destination, cargo, declared value, and weight to calculate a cleaner estimate.",
+          icon: "check-circle",
+        },
+        {
+          title: "Book the pickup",
+          description:
+            "Confirm contacts, pickup timing, access notes, and payment details before operations takes over.",
+          icon: "truck",
+        },
+        {
+          title: "Track and print records",
+          description:
+            "Customers can follow shipment milestones and keep a printable copy for internal or recipient reference.",
+          icon: "package-check",
+        },
+      ],
+    },
+    quoteCta: {
+      eyebrow: "Start a quote",
+      title: "Choose a shipment mode and move straight into the right quote flow.",
+      description:
+        "Give customers a confident first step with service language that matches air cargo, road delivery, or freight handling.",
+      modes: [
+        {
+          mode: "air",
+          title: "Air cargo quote",
+          description: "For urgent cargo, airport-aware routing, and customs-ready details.",
+          href: "/quote?transportMode=air",
+        },
+        {
+          mode: "road",
+          title: "Road delivery quote",
+          description: "For local, regional, and scheduled route-based courier movement.",
+          href: "/quote?transportMode=road",
+        },
+        {
+          mode: "freight",
+          title: "Freight quote",
+          description: "For pallets, LTL, truckload, and appointment-led cargo.",
+          href: "/quote?transportMode=freight",
+        },
+      ],
+    },
   },
   trust: {
     eyebrow: "Why customers choose us",

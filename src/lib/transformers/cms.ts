@@ -7,6 +7,7 @@ import type {
 } from "@/types/cms";
 
 const iconSchema = z.enum([
+  "air",
   "building",
   "check-circle",
   "clock",
@@ -81,6 +82,64 @@ const faqPreviewItemSchema = z.object({
   href: z.string().min(1).optional(),
 });
 
+const homepageModeSchema = z.enum(["air", "road", "freight"]);
+
+const homepageModeServiceSchema = z.object({
+  mode: homepageModeSchema,
+  eyebrow: z.string().min(1),
+  title: z.string().min(1),
+  description: z.string().min(1),
+  href: z.string().min(1),
+  ctaLabel: z.string().min(1),
+  icon: iconSchema,
+  highlights: z.array(z.string().min(1)).min(1),
+  image: cmsImageSchema.optional(),
+});
+
+const homepageWorkflowStepSchema = z.object({
+  title: z.string().min(1),
+  description: z.string().min(1),
+  icon: iconSchema,
+});
+
+const homepageEnhancementsSchema = z.object({
+  visibility: z.object({
+    modeServices: z.boolean(),
+    workflow: z.boolean(),
+    quoteCta: z.boolean(),
+  }),
+  modeServices: z.object({
+    eyebrow: z.string().min(1),
+    title: z.string().min(1),
+    description: z.string().min(1),
+    items: z.array(homepageModeServiceSchema).min(1),
+  }),
+  workflow: z.object({
+    eyebrow: z.string().min(1),
+    title: z.string().min(1),
+    description: z.string().min(1),
+    steps: z.array(homepageWorkflowStepSchema).min(1),
+    image: cmsImageSchema.optional(),
+    badgeLabel: z.string().min(1),
+    badgeValue: z.string().min(1),
+  }),
+  quoteCta: z.object({
+    eyebrow: z.string().min(1),
+    title: z.string().min(1),
+    description: z.string().min(1),
+    modes: z
+      .array(
+        z.object({
+          mode: homepageModeSchema,
+          title: z.string().min(1),
+          description: z.string().min(1),
+          href: z.string().min(1),
+        }),
+      )
+      .min(1),
+  }),
+});
+
 const homepageSectionSchemas = {
   hero: z.object({
     eyebrow: z.string().min(1),
@@ -138,6 +197,7 @@ const homepageSectionSchemas = {
       )
       .min(1),
   }),
+  enhancements: homepageEnhancementsSchema,
   trust: z.object({
     eyebrow: z.string().min(1),
     title: z.string().min(1),
@@ -233,6 +293,9 @@ export function mergeHomepageContentRows(
         break;
       case "services":
         content.services = parsed.data as HomePageContent["services"];
+        break;
+      case "enhancements":
+        content.enhancements = parsed.data as HomePageContent["enhancements"];
         break;
       case "trust":
         content.trust = parsed.data as HomePageContent["trust"];

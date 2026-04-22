@@ -1,4 +1,5 @@
 export type CmsIconName =
+  | "air"
   | "building"
   | "check-circle"
   | "clock"
@@ -15,6 +16,7 @@ export type HomepageContentKey =
   | "hero"
   | "trackingPromo"
   | "services"
+  | "enhancements"
   | "trust"
   | "coverage"
   | "testimonials"
@@ -125,6 +127,70 @@ export interface ServicePreviewSectionContent {
   items: ServicePreviewItem[];
 }
 
+export type HomepageModeCode = "air" | "road" | "freight";
+
+export interface HomepageModeServiceCard {
+  mode: HomepageModeCode;
+  eyebrow: string;
+  title: string;
+  description: string;
+  href: string;
+  ctaLabel: string;
+  icon: CmsIconName;
+  highlights: string[];
+  image?: CmsImage;
+}
+
+export interface HomepageModeServicesContent {
+  eyebrow: string;
+  title: string;
+  description: string;
+  items: HomepageModeServiceCard[];
+}
+
+export interface HomepageWorkflowStep {
+  title: string;
+  description: string;
+  icon: CmsIconName;
+}
+
+export interface HomepageWorkflowContent {
+  eyebrow: string;
+  title: string;
+  description: string;
+  steps: HomepageWorkflowStep[];
+  image?: CmsImage;
+  badgeLabel: string;
+  badgeValue: string;
+}
+
+export interface HomepageQuoteModeOption {
+  mode: HomepageModeCode;
+  title: string;
+  description: string;
+  href: string;
+}
+
+export interface HomepageQuoteCtaContent {
+  eyebrow: string;
+  title: string;
+  description: string;
+  modes: HomepageQuoteModeOption[];
+}
+
+export interface HomepageEnhancementVisibility {
+  modeServices: boolean;
+  workflow: boolean;
+  quoteCta: boolean;
+}
+
+export interface HomepageEnhancementsContent {
+  visibility: HomepageEnhancementVisibility;
+  modeServices: HomepageModeServicesContent;
+  workflow: HomepageWorkflowContent;
+  quoteCta: HomepageQuoteCtaContent;
+}
+
 export interface TrustMetric {
   value: string;
   label: string;
@@ -206,6 +272,7 @@ export interface HomePageContent {
   hero: HeroSectionContent;
   trackingPromo: TrackingPromoContent;
   services: ServicePreviewSectionContent;
+  enhancements: HomepageEnhancementsContent;
   trust: TrustSectionContent;
   coverage: CoverageBlurb;
   testimonials: SocialProofContent;

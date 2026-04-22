@@ -51,6 +51,7 @@ const selectedModeOptionClassName =
 
 export type QuoteFormProps = {
   isConfigured: boolean;
+  initialTransportMode?: TransportMode;
 };
 
 function FieldError({ errors }: { errors?: string[] }) {
@@ -120,10 +121,16 @@ function TextInput({
   );
 }
 
-export function QuoteForm({ isConfigured }: QuoteFormProps) {
-  const [transportMode, setTransportMode] = useState<TransportMode>("road");
+export function QuoteForm({
+  isConfigured,
+  initialTransportMode = "road",
+}: QuoteFormProps) {
+  const normalizedInitialMode = normalizeTransportMode(initialTransportMode);
+  const [transportMode, setTransportMode] = useState<TransportMode>(
+    normalizedInitialMode,
+  );
   const [serviceType, setServiceType] = useState<ModeAwareServiceType>(
-    getDefaultModeAwareServiceType("road"),
+    getDefaultModeAwareServiceType(normalizedInitialMode),
   );
   const [state, formAction, isPending] = useActionState(
     calculateQuoteAction,

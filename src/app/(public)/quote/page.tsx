@@ -4,6 +4,7 @@ import { Container } from "@/components/layout";
 import { QuoteForm } from "@/components/quote";
 import { hasSupabasePublicEnv } from "@/lib/env";
 import { createPageMetadata } from "@/lib/seo";
+import { normalizeTransportMode } from "@/types/shipment";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Get a Mode-Aware Courier Quote",
@@ -18,7 +19,20 @@ export const metadata: Metadata = createPageMetadata({
   ],
 });
 
-export default function GetQuotePage() {
+type GetQuotePageProps = {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+};
+
+function readSearchParam(value: string | string[] | undefined) {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+export default async function GetQuotePage({ searchParams }: GetQuotePageProps) {
+  const params = await searchParams;
+  const initialTransportMode = normalizeTransportMode(
+    readSearchParam(params?.transportMode ?? params?.mode),
+  );
+
   return (
     <main>
       <section className="py-16 lg:py-20">
@@ -37,7 +51,10 @@ export default function GetQuotePage() {
             </p>
           </div>
           <div className="mt-10">
-            <QuoteForm isConfigured={hasSupabasePublicEnv()} />
+            <QuoteForm
+              initialTransportMode={initialTransportMode}
+              isConfigured={hasSupabasePublicEnv()}
+            />
           </div>
         </Container>
       </section>

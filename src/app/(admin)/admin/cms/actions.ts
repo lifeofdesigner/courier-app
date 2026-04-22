@@ -15,6 +15,8 @@ import type {
   FAQPageContent,
   FooterContent,
   HeroSectionContent,
+  HomepageEnhancementsContent,
+  HomepageModeCode,
   HomepageScrollEffect,
   HomepageTextEffect,
   ServicePreviewSectionContent,
@@ -49,6 +51,7 @@ const editorFormSchema = z.object({
 });
 
 const cmsIconNames = [
+  "air",
   "building",
   "check-circle",
   "clock",
@@ -61,6 +64,8 @@ const cmsIconNames = [
   "truck",
   "warehouse",
 ] as const satisfies readonly CmsIconName[];
+
+const homepageModeCodes = ["air", "road", "freight"] as const satisfies readonly HomepageModeCode[];
 
 const homepageScrollEffects = [
   "none",
@@ -100,6 +105,18 @@ function getIcon(formData: FormData, key: string, fallback: CmsIconName) {
 
   return cmsIconNames.includes(value as CmsIconName)
     ? (value as CmsIconName)
+    : fallback;
+}
+
+function getHomepageMode(
+  formData: FormData,
+  key: string,
+  fallback: HomepageModeCode,
+): HomepageModeCode {
+  const value = getString(formData, key);
+
+  return homepageModeCodes.includes(value as HomepageModeCode)
+    ? (value as HomepageModeCode)
     : fallback;
 }
 
@@ -301,6 +318,155 @@ function readFaqItems(formData: FormData, name: string) {
       ...(href ? { href } : {}),
     };
   }).filter((item) => item.question || item.answer);
+}
+
+async function buildHomepageEnhancementsPayload(
+  formData: FormData,
+): Promise<HomepageEnhancementsContent> {
+  const modeServiceItems: HomepageEnhancementsContent["modeServices"]["items"] =
+    [];
+
+  for (
+    let index = 0;
+    index < getCount(formData, "enhancements.modeServices.items");
+    index += 1
+  ) {
+    const title = getString(
+      formData,
+      `enhancements.modeServices.items.${index}.title`,
+    ).trim();
+    const mode = getHomepageMode(
+      formData,
+      `enhancements.modeServices.items.${index}.mode`,
+      "road",
+    );
+    const image = await readCmsImage({
+      formData,
+      name: `enhancements.modeServices.items.${index}.image`,
+      folder: "homepage/mode-services",
+      defaultAlt: title || `${mode} service image`,
+    });
+
+    const item = {
+      mode,
+      eyebrow: getString(
+        formData,
+        `enhancements.modeServices.items.${index}.eyebrow`,
+      ).trim(),
+      title,
+      description: getString(
+        formData,
+        `enhancements.modeServices.items.${index}.description`,
+      ).trim(),
+      href: getString(
+        formData,
+        `enhancements.modeServices.items.${index}.href`,
+      ).trim(),
+      ctaLabel: getString(
+        formData,
+        `enhancements.modeServices.items.${index}.ctaLabel`,
+      ).trim(),
+      icon: getIcon(
+        formData,
+        `enhancements.modeServices.items.${index}.icon`,
+        mode === "air" ? "air" : mode === "freight" ? "warehouse" : "truck",
+      ),
+      highlights: splitLines(
+        getString(
+          formData,
+          `enhancements.modeServices.items.${index}.highlights`,
+        ),
+      ),
+      ...(image ? { image } : {}),
+    };
+
+    if (item.eyebrow && item.title && item.description && item.href) {
+      modeServiceItems.push(item);
+    }
+  }
+
+  const workflowImage = await readCmsImage({
+    formData,
+    name: "enhancements.workflow.image",
+    folder: "homepage/workflow",
+    defaultAlt: "Courier workflow image",
+  });
+
+  return {
+    visibility: {
+      modeServices: getBoolean(formData, "enhancements.visibility.modeServices"),
+      workflow: getBoolean(formData, "enhancements.visibility.workflow"),
+      quoteCta: getBoolean(formData, "enhancements.visibility.quoteCta"),
+    },
+    modeServices: {
+      eyebrow: getString(formData, "enhancements.modeServices.eyebrow").trim(),
+      title: getString(formData, "enhancements.modeServices.title").trim(),
+      description: getString(
+        formData,
+        "enhancements.modeServices.description",
+      ).trim(),
+      items: modeServiceItems,
+    },
+    workflow: {
+      eyebrow: getString(formData, "enhancements.workflow.eyebrow").trim(),
+      title: getString(formData, "enhancements.workflow.title").trim(),
+      description: getString(
+        formData,
+        "enhancements.workflow.description",
+      ).trim(),
+      badgeLabel: getString(formData, "enhancements.workflow.badgeLabel").trim(),
+      badgeValue: getString(formData, "enhancements.workflow.badgeValue").trim(),
+      steps: Array.from(
+        { length: getCount(formData, "enhancements.workflow.steps") },
+        (_, index) => ({
+          title: getString(
+            formData,
+            `enhancements.workflow.steps.${index}.title`,
+          ).trim(),
+          description: getString(
+            formData,
+            `enhancements.workflow.steps.${index}.description`,
+          ).trim(),
+          icon: getIcon(
+            formData,
+            `enhancements.workflow.steps.${index}.icon`,
+            "route",
+          ),
+        }),
+      ).filter((item) => item.title || item.description),
+      ...(workflowImage ? { image: workflowImage } : {}),
+    },
+    quoteCta: {
+      eyebrow: getString(formData, "enhancements.quoteCta.eyebrow").trim(),
+      title: getString(formData, "enhancements.quoteCta.title").trim(),
+      description: getString(
+        formData,
+        "enhancements.quoteCta.description",
+      ).trim(),
+      modes: Array.from(
+        { length: getCount(formData, "enhancements.quoteCta.modes") },
+        (_, index) => ({
+          mode: getHomepageMode(
+            formData,
+            `enhancements.quoteCta.modes.${index}.mode`,
+            "road",
+          ),
+          title: getString(
+            formData,
+            `enhancements.quoteCta.modes.${index}.title`,
+          ).trim(),
+          description: getString(
+            formData,
+            `enhancements.quoteCta.modes.${index}.description`,
+          ).trim(),
+          href: getString(
+            formData,
+            `enhancements.quoteCta.modes.${index}.href`,
+          ).trim(),
+        }),
+      ).filter((item) => item.title || item.description || item.href),
+    },
+  };
 }
 
 async function buildSiteIdentityPayload(
@@ -677,6 +843,8 @@ async function buildEditorPayload(formType: string, formData: FormData) {
       return buildTrackingPromoPayload(formData);
     case "homepage.services":
       return buildHomepageServicesPayload(formData);
+    case "homepage.enhancements":
+      return buildHomepageEnhancementsPayload(formData);
     case "homepage.trust":
       return {
         eyebrow: getString(formData, "trust.eyebrow").trim(),

@@ -11,8 +11,11 @@ import type {
   AdminHomepageCmsSections,
 } from "@/types/admin";
 import type {
+  CmsIconName,
   HeroSectionContent,
   HeroSlideContent,
+  HomepageEnhancementsContent,
+  HomepageModeCode,
   HomepageScrollEffect,
   HomepageTextEffect,
 } from "@/types/cms";
@@ -27,7 +30,11 @@ type SectionCardProps<T> = {
   children: ReactNode;
 };
 
-const iconOptions = [
+const iconOptions: {
+  label: string;
+  value: CmsIconName;
+}[] = [
+  { label: "Air", value: "air" },
   { label: "Building", value: "building" },
   { label: "Check circle", value: "check-circle" },
   { label: "Clock", value: "clock" },
@@ -39,6 +46,15 @@ const iconOptions = [
   { label: "Shield check", value: "shield-check" },
   { label: "Truck", value: "truck" },
   { label: "Warehouse", value: "warehouse" },
+];
+
+const modeOptions: {
+  label: string;
+  value: HomepageModeCode;
+}[] = [
+  { label: "Air", value: "air" },
+  { label: "Road", value: "road" },
+  { label: "Freight", value: "freight" },
 ];
 
 const scrollEffectOptions: {
@@ -149,6 +165,50 @@ function CmsSelectField<T extends string>({
   );
 }
 
+function CmsCheckboxField({
+  label,
+  name,
+  defaultChecked,
+  helpText,
+}: {
+  label: string;
+  name: string;
+  defaultChecked: boolean;
+  helpText?: string;
+}) {
+  return (
+    <label className="flex gap-3 rounded-2xl border border-slate-200 bg-white p-4 text-sm font-semibold text-[#2b1d16]">
+      <input
+        name={name}
+        type="checkbox"
+        value="true"
+        defaultChecked={defaultChecked}
+        className="mt-1 h-4 w-4 rounded border-slate-300 text-[#b0825f] focus:ring-[#b0825f]"
+      />
+      <span>
+        <span className="block">{label}</span>
+        {helpText ? (
+          <span className="mt-1 block text-xs font-normal leading-5 text-slate-500">
+            {helpText}
+          </span>
+        ) : null}
+      </span>
+    </label>
+  );
+}
+
+function getModeServiceItems(enhancements: HomepageEnhancementsContent) {
+  return enhancements.modeServices.items.length > 0
+    ? enhancements.modeServices.items
+    : [];
+}
+
+function getQuoteModes(enhancements: HomepageEnhancementsContent) {
+  return enhancements.quoteCta.modes.length > 0
+    ? enhancements.quoteCta.modes
+    : [];
+}
+
 function SectionCard<T>({
   title,
   description,
@@ -211,6 +271,9 @@ export function HomepageCmsForm({ sections }: HomepageCmsFormProps) {
   const heroSlides = getHeroSlideDefaults(hero);
   const trackingPromo = sections.trackingPromo.value;
   const services = sections.services.value;
+  const enhancements = sections.enhancements.value;
+  const modeServiceItems = getModeServiceItems(enhancements);
+  const quoteModes = getQuoteModes(enhancements);
   const trust = sections.trust.value;
   const coverage = sections.coverage.value;
   const testimonials = sections.testimonials.value;
@@ -443,6 +506,261 @@ export function HomepageCmsForm({ sections }: HomepageCmsFormProps) {
               { name: "description", label: "Description", type: "textarea" },
             ]}
           />
+        </SectionCard>
+
+        <SectionCard
+          title="Homepage Upgrades"
+          description="Premium homepage blocks: mode service image cards, workflow section, and mode selector quote call-to-action."
+          formType="homepage.enhancements"
+          section={sections.enhancements}
+        >
+          <fieldset className="rounded-[24px] border border-slate-200 bg-white p-4">
+            <legend className="px-2 text-sm font-semibold text-[#2b1d16]">
+              Public section visibility
+            </legend>
+            <div className="mt-4 grid gap-4 md:grid-cols-3">
+              <CmsCheckboxField
+                label="Show mode service cards"
+                name="enhancements.visibility.modeServices"
+                defaultChecked={enhancements.visibility.modeServices}
+              />
+              <CmsCheckboxField
+                label="Show workflow section"
+                name="enhancements.visibility.workflow"
+                defaultChecked={enhancements.visibility.workflow}
+              />
+              <CmsCheckboxField
+                label="Show quote mode selector"
+                name="enhancements.visibility.quoteCta"
+                defaultChecked={enhancements.visibility.quoteCta}
+              />
+            </div>
+          </fieldset>
+
+          <fieldset className="rounded-[24px] border border-slate-200 bg-white p-4">
+            <legend className="px-2 text-sm font-semibold text-[#2b1d16]">
+              Mode service image cards
+            </legend>
+            <div className="mt-4 grid gap-5 md:grid-cols-2">
+              <CmsTextField
+                label="Eyebrow"
+                name="enhancements.modeServices.eyebrow"
+                defaultValue={enhancements.modeServices.eyebrow}
+              />
+              <CmsTextField
+                label="Headline"
+                name="enhancements.modeServices.title"
+                defaultValue={enhancements.modeServices.title}
+              />
+            </div>
+            <div className="mt-5">
+              <CmsTextareaField
+                label="Subtitle"
+                name="enhancements.modeServices.description"
+                defaultValue={enhancements.modeServices.description}
+              />
+            </div>
+            <input
+              type="hidden"
+              name="enhancements.modeServices.items.__count"
+              value={modeServiceItems.length}
+            />
+            <div className="mt-5 space-y-5">
+              {modeServiceItems.map((item, index) => (
+                <div
+                  key={`${item.mode}-${index}`}
+                  className="rounded-[20px] border border-slate-200 bg-slate-50/70 p-4"
+                >
+                  <h3 className="text-sm font-bold text-[#2b1d16]">
+                    {item.mode.toUpperCase()} card
+                  </h3>
+                  <div className="mt-4 grid gap-5 md:grid-cols-2">
+                    <CmsSelectField
+                      label="Transport mode"
+                      name={`enhancements.modeServices.items.${index}.mode`}
+                      defaultValue={item.mode}
+                      options={modeOptions}
+                    />
+                    <CmsSelectField
+                      label="Icon"
+                      name={`enhancements.modeServices.items.${index}.icon`}
+                      defaultValue={item.icon}
+                      options={iconOptions}
+                    />
+                    <CmsTextField
+                      label="Eyebrow"
+                      name={`enhancements.modeServices.items.${index}.eyebrow`}
+                      defaultValue={item.eyebrow}
+                    />
+                    <CmsTextField
+                      label="Headline"
+                      name={`enhancements.modeServices.items.${index}.title`}
+                      defaultValue={item.title}
+                    />
+                    <CmsTextField
+                      label="Button text"
+                      name={`enhancements.modeServices.items.${index}.ctaLabel`}
+                      defaultValue={item.ctaLabel}
+                    />
+                    <CmsTextField
+                      label="Button link"
+                      name={`enhancements.modeServices.items.${index}.href`}
+                      defaultValue={item.href}
+                    />
+                  </div>
+                  <div className="mt-5 grid gap-5 md:grid-cols-2">
+                    <CmsTextareaField
+                      label="Description"
+                      name={`enhancements.modeServices.items.${index}.description`}
+                      defaultValue={item.description}
+                      rows={4}
+                    />
+                    <CmsTextareaField
+                      label="Highlights"
+                      name={`enhancements.modeServices.items.${index}.highlights`}
+                      defaultValue={item.highlights.join("\n")}
+                      helpText="Enter one service type per line."
+                      rows={4}
+                    />
+                  </div>
+                  <div className="mt-5">
+                    <CmsImageField
+                      label={`${item.mode.toUpperCase()} service image`}
+                      name={`enhancements.modeServices.items.${index}.image`}
+                      defaultImage={item.image}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset className="rounded-[24px] border border-slate-200 bg-white p-4">
+            <legend className="px-2 text-sm font-semibold text-[#2b1d16]">
+              Workflow section
+            </legend>
+            <div className="mt-4 grid gap-5 md:grid-cols-2">
+              <CmsTextField
+                label="Eyebrow"
+                name="enhancements.workflow.eyebrow"
+                defaultValue={enhancements.workflow.eyebrow}
+              />
+              <CmsTextField
+                label="Headline"
+                name="enhancements.workflow.title"
+                defaultValue={enhancements.workflow.title}
+              />
+              <CmsTextField
+                label="Badge label"
+                name="enhancements.workflow.badgeLabel"
+                defaultValue={enhancements.workflow.badgeLabel}
+              />
+              <CmsTextField
+                label="Badge value"
+                name="enhancements.workflow.badgeValue"
+                defaultValue={enhancements.workflow.badgeValue}
+              />
+            </div>
+            <div className="mt-5">
+              <CmsTextareaField
+                label="Subtitle"
+                name="enhancements.workflow.description"
+                defaultValue={enhancements.workflow.description}
+              />
+            </div>
+            <div className="mt-5">
+              <CmsImageField
+                label="Workflow image"
+                name="enhancements.workflow.image"
+                defaultImage={enhancements.workflow.image}
+              />
+            </div>
+            <div className="mt-5">
+              <CmsRepeatableList
+                label="Workflow steps"
+                name="enhancements.workflow.steps"
+                addLabel="Add workflow step"
+                emptyItem={{ title: "", description: "", icon: "route" }}
+                items={enhancements.workflow.steps.map((item) => ({
+                  title: item.title,
+                  description: item.description,
+                  icon: item.icon,
+                }))}
+                fields={[
+                  { name: "title", label: "Title" },
+                  { name: "icon", label: "Icon", type: "select", options: iconOptions },
+                  { name: "description", label: "Description", type: "textarea" },
+                ]}
+              />
+            </div>
+          </fieldset>
+
+          <fieldset className="rounded-[24px] border border-slate-200 bg-white p-4">
+            <legend className="px-2 text-sm font-semibold text-[#2b1d16]">
+              Quote mode selector
+            </legend>
+            <div className="mt-4 grid gap-5 md:grid-cols-2">
+              <CmsTextField
+                label="Eyebrow"
+                name="enhancements.quoteCta.eyebrow"
+                defaultValue={enhancements.quoteCta.eyebrow}
+              />
+              <CmsTextField
+                label="Headline"
+                name="enhancements.quoteCta.title"
+                defaultValue={enhancements.quoteCta.title}
+              />
+            </div>
+            <div className="mt-5">
+              <CmsTextareaField
+                label="Subtitle"
+                name="enhancements.quoteCta.description"
+                defaultValue={enhancements.quoteCta.description}
+              />
+            </div>
+            <input
+              type="hidden"
+              name="enhancements.quoteCta.modes.__count"
+              value={quoteModes.length}
+            />
+            <div className="mt-5 grid gap-5 lg:grid-cols-3">
+              {quoteModes.map((mode, index) => (
+                <div
+                  key={`${mode.mode}-${index}`}
+                  className="rounded-[20px] border border-slate-200 bg-slate-50/70 p-4"
+                >
+                  <CmsSelectField
+                    label="Transport mode"
+                    name={`enhancements.quoteCta.modes.${index}.mode`}
+                    defaultValue={mode.mode}
+                    options={modeOptions}
+                  />
+                  <div className="mt-4">
+                    <CmsTextField
+                      label="Title"
+                      name={`enhancements.quoteCta.modes.${index}.title`}
+                      defaultValue={mode.title}
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <CmsTextField
+                      label="Link"
+                      name={`enhancements.quoteCta.modes.${index}.href`}
+                      defaultValue={mode.href}
+                    />
+                  </div>
+                  <div className="mt-4">
+                    <CmsTextareaField
+                      label="Description"
+                      name={`enhancements.quoteCta.modes.${index}.description`}
+                      defaultValue={mode.description}
+                      rows={4}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </fieldset>
         </SectionCard>
 
         <SectionCard

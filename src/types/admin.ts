@@ -12,6 +12,7 @@ import type {
   FAQPageContent,
   FooterContent,
   HeroSectionContent,
+  HomepageEnhancementsContent,
   ServicePreviewSectionContent,
   ServicesPageContent,
   SiteIdentityContent,
@@ -267,6 +268,7 @@ export interface AdminHomepageCmsSections {
   hero: AdminCmsEditorSection<HeroSectionContent>;
   trackingPromo: AdminCmsEditorSection<TrackingPromoContent>;
   services: AdminCmsEditorSection<ServicePreviewSectionContent>;
+  enhancements: AdminCmsEditorSection<HomepageEnhancementsContent>;
   trust: AdminCmsEditorSection<TrustSectionContent>;
   coverage: AdminCmsEditorSection<CoverageBlurb>;
   testimonials: AdminCmsEditorSection<SocialProofContent>;
