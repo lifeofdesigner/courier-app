@@ -1,4 +1,9 @@
 import type { AdminShipmentDetail } from "@/types/admin";
+import {
+  formatModeAwareServiceType,
+  getModeAwareServiceMeta,
+  getTransportModeMeta,
+} from "@/types/shipment";
 
 export type ShipmentPackageCardProps = {
   shipment: AdminShipmentDetail;
@@ -21,14 +26,30 @@ function DetailRow({ label, value }: { label: string; value: string }) {
 }
 
 export function ShipmentPackageCard({ shipment }: ShipmentPackageCardProps) {
+  const transportMode = getTransportModeMeta(shipment.transportMode);
+  const serviceMeta = getModeAwareServiceMeta(shipment.serviceType, {
+    mode: shipment.transportMode,
+  });
+
   return (
     <section className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
       <h2 className="text-xl font-bold tracking-tight text-[#0B1C3A]">
         Package details
       </h2>
       <div className="mt-4">
+        <DetailRow label="Transport mode" value={transportMode.label} />
         <DetailRow label="Package type" value={shipment.packageType ?? "Parcel"} />
-        <DetailRow label="Service" value={shipment.serviceType} />
+        <DetailRow
+          label={`${transportMode.label} service`}
+          value={formatModeAwareServiceType(
+            shipment.serviceType,
+            shipment.transportMode,
+          )}
+        />
+        <DetailRow
+          label="Service category"
+          value={serviceMeta.pricingTier}
+        />
         <DetailRow label="Weight" value={`${shipment.weightKg} kg`} />
         <DetailRow
           label="Declared value"

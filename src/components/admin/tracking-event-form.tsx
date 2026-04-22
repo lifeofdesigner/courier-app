@@ -13,6 +13,7 @@ import {
   getShipmentStatusMeta,
   getShipmentStatusOptions,
   transportModeDefinitions,
+  type ShipmentStatus,
   type TransportMode,
 } from "@/types/shipment";
 
@@ -67,6 +68,9 @@ export function TrackingEventForm({
   );
   const [fallbackTransportMode, setFallbackTransportMode] =
     useState<TransportMode>("road");
+  const [status, setStatus] = useState<ShipmentStatus>(
+    shipment?.status ?? "in_transit",
+  );
   const transportMode =
     selectedShipment?.transportMode ?? fallbackTransportMode;
   const statusOptions = useMemo(
@@ -74,12 +78,14 @@ export function TrackingEventForm({
     [transportMode],
   );
   const currentStatusOption =
-    selectedShipment &&
-    !statusOptions.some((status) => status.code === selectedShipment.status)
-      ? getShipmentStatusMeta(selectedShipment.status, {
+    !statusOptions.some((option) => option.code === status)
+      ? getShipmentStatusMeta(status, {
           mode: transportMode,
         })
       : null;
+  const selectedStatusMeta = getShipmentStatusMeta(status, {
+    mode: transportMode,
+  });
   const action =
     mode === "shipment-status"
       ? updateShipmentStatusAction
@@ -134,7 +140,15 @@ export function TrackingEventForm({
               name="orderId"
               className={inputClassName}
               defaultValue=""
-              onChange={(event) => setSelectedShipmentId(event.target.value)}
+              onChange={(event) => {
+                const nextShipmentId = event.target.value;
+                const nextShipment = shipments.find(
+                  (row) => row.id === nextShipmentId,
+                );
+
+                setSelectedShipmentId(nextShipmentId);
+                setStatus(nextShipment?.status ?? "in_transit");
+              }}
             >
               <option value="" disabled>
                 Select a shipment
@@ -183,9 +197,17 @@ export function TrackingEventForm({
               name="transportMode"
               className={inputClassName}
               value={fallbackTransportMode}
-              onChange={(event) =>
-                setFallbackTransportMode(event.target.value as TransportMode)
-              }
+              onChange={(event) => {
+                const nextMode = event.target.value as TransportMode;
+
+                setFallbackTransportMode(nextMode);
+
+                if (!getShipmentStatusOptions(nextMode).some(
+                  (option) => option.code === status,
+                )) {
+                  setStatus("in_transit");
+                }
+              }}
             >
               {transportModeDefinitions.map((item) => (
                 <option key={item.code} value={item.code}>
@@ -206,7 +228,8 @@ export function TrackingEventForm({
             id={`${mode}-status`}
             name="status"
             className={inputClassName}
-            defaultValue={selectedShipment?.status ?? "in_transit"}
+            value={status}
+            onChange={(event) => setStatus(event.target.value as ShipmentStatus)}
           >
             {currentStatusOption ? (
               <option value={currentStatusOption.code}>
@@ -232,7 +255,7 @@ export function TrackingEventForm({
             id={`${mode}-label`}
             name="label"
             className={inputClassName}
-            placeholder="Received at Origin Facility"
+            placeholder={selectedStatusMeta.label}
           />
           <FieldError errors={state.fieldErrors?.label} />
         </div>

@@ -1,5 +1,9 @@
 import type { PaymentStatus } from "@/types/payment";
-import type { ShipmentStatus, TransportMode } from "@/types/shipment";
+import type {
+  ModeAwareServiceType,
+  ShipmentStatus,
+  TransportMode,
+} from "@/types/shipment";
 import type {
   AboutPageContent,
   ContactInfoContent,
@@ -57,7 +61,7 @@ export interface AdminShipmentRow {
   senderEmail: string | null;
   recipientName: string;
   recipientEmail: string | null;
-  serviceType: string;
+  serviceType: ModeAwareServiceType;
   packageType: string | null;
   transportMode: TransportMode;
   status: ShipmentStatus;
@@ -139,7 +143,7 @@ export interface AdminShipmentDetail {
   bookingId: string | null;
   trackingNumber: string;
   referenceCode: string | null;
-  serviceType: string;
+  serviceType: ModeAwareServiceType;
   packageType: string | null;
   transportMode: TransportMode;
   status: ShipmentStatus;

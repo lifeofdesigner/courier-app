@@ -18,6 +18,141 @@ export const transportModeDefinitions = [
 
 export type TransportMode = (typeof transportModeDefinitions)[number]["code"];
 
+export type PricingServiceTier = "Express" | "Economy";
+
+export type ModeAwareServiceDefinition = {
+  code: string;
+  label: string;
+  description: string;
+  transportMode: TransportMode;
+  pricingTier: PricingServiceTier;
+  estimatedTransitDays: number;
+};
+
+export const modeAwareServiceDefinitions = {
+  air: [
+    {
+      code: "express_air",
+      label: "Express Air",
+      description:
+        "Fast airport-to-airport movement for time-sensitive shipments.",
+      transportMode: "air",
+      pricingTier: "Express",
+      estimatedTransitDays: 2,
+    },
+    {
+      code: "standard_air",
+      label: "Standard Air",
+      description: "Balanced air service for planned parcel and cargo moves.",
+      transportMode: "air",
+      pricingTier: "Economy",
+      estimatedTransitDays: 4,
+    },
+    {
+      code: "priority_air_cargo",
+      label: "Priority Air Cargo",
+      description: "Priority handling for commercial air cargo shipments.",
+      transportMode: "air",
+      pricingTier: "Express",
+      estimatedTransitDays: 1,
+    },
+  ],
+  road: [
+    {
+      code: "same_day_road",
+      label: "Same-Day Road",
+      description: "Direct road courier service for urgent local movements.",
+      transportMode: "road",
+      pricingTier: "Express",
+      estimatedTransitDays: 1,
+    },
+    {
+      code: "regional_road",
+      label: "Regional Road",
+      description: "Regional courier service through road depots and hubs.",
+      transportMode: "road",
+      pricingTier: "Economy",
+      estimatedTransitDays: 2,
+    },
+    {
+      code: "standard_road",
+      label: "Standard Road",
+      description: "Standard road network service for routine shipments.",
+      transportMode: "road",
+      pricingTier: "Economy",
+      estimatedTransitDays: 4,
+    },
+  ],
+  freight: [
+    {
+      code: "ltl_freight",
+      label: "LTL Freight",
+      description: "Less-than-truckload freight for shared linehaul moves.",
+      transportMode: "freight",
+      pricingTier: "Economy",
+      estimatedTransitDays: 5,
+    },
+    {
+      code: "full_truckload",
+      label: "Full Truckload",
+      description: "Dedicated truckload movement for larger freight.",
+      transportMode: "freight",
+      pricingTier: "Express",
+      estimatedTransitDays: 3,
+    },
+    {
+      code: "pallet_freight",
+      label: "Pallet Freight",
+      description: "Freight handling for palletized shipments.",
+      transportMode: "freight",
+      pricingTier: "Economy",
+      estimatedTransitDays: 5,
+    },
+    {
+      code: "consolidated_freight",
+      label: "Consolidated Freight",
+      description: "Consolidated freight service for cost-efficient moves.",
+      transportMode: "freight",
+      pricingTier: "Economy",
+      estimatedTransitDays: 7,
+    },
+  ],
+} as const satisfies Record<
+  TransportMode,
+  readonly ModeAwareServiceDefinition[]
+>;
+
+export const allModeAwareServiceDefinitions = [
+  ...modeAwareServiceDefinitions.air,
+  ...modeAwareServiceDefinitions.road,
+  ...modeAwareServiceDefinitions.freight,
+] as const;
+
+export type ModeAwareServiceType =
+  (typeof allModeAwareServiceDefinitions)[number]["code"];
+
+export type LegacyServiceType = PricingServiceTier;
+
+export type ShipmentServiceTypeInput =
+  | ModeAwareServiceType
+  | LegacyServiceType
+  | string;
+
+export type ModeAwareServiceMeta = {
+  code: ModeAwareServiceType;
+  label: string;
+  description: string;
+  transportMode: TransportMode;
+  pricingTier: PricingServiceTier;
+  estimatedTransitDays: number;
+  isLegacy: boolean;
+  originalCode: string;
+};
+
+export const modeAwareServiceTypes = Array.from(
+  new Set(allModeAwareServiceDefinitions.map((service) => service.code)),
+) as [ModeAwareServiceType, ...ModeAwareServiceType[]];
+
 export type ShipmentStatusDefinition = {
   code: string;
   label: string;
@@ -325,7 +460,35 @@ const definitionByCode = new Map(
   allShipmentStatusDefinitions.map((status) => [status.code, status]),
 );
 
+const serviceDefinitionByCode = new Map(
+  allModeAwareServiceDefinitions.map((service) => [service.code, service]),
+);
+
 const transportModeSet = new Set<string>(transportModes);
+
+const defaultServiceTypeByMode = {
+  air: "standard_air",
+  road: "standard_road",
+  freight: "consolidated_freight",
+} as const satisfies Record<TransportMode, ModeAwareServiceType>;
+
+const legacyServiceTypeMap = {
+  air: {
+    Express: "express_air",
+    Economy: "standard_air",
+  },
+  road: {
+    Express: "same_day_road",
+    Economy: "standard_road",
+  },
+  freight: {
+    Express: "full_truckload",
+    Economy: "consolidated_freight",
+  },
+} as const satisfies Record<
+  TransportMode,
+  Record<LegacyServiceType, ModeAwareServiceType>
+>;
 
 export function normalizeTransportMode(mode: string | null | undefined) {
   const normalized = mode?.trim().toLowerCase() ?? "";
@@ -342,6 +505,112 @@ export function getTransportModeMeta(mode: string | null | undefined) {
     transportModeDefinitions.find((definition) => definition.code === normalized) ??
     transportModeDefinitions[1]
   );
+}
+
+function normalizeLegacyServiceTier(
+  serviceType: string,
+): LegacyServiceType | null {
+  const normalized = serviceType.trim().toLowerCase();
+
+  if (normalized === "express") {
+    return "Express";
+  }
+
+  if (normalized === "economy") {
+    return "Economy";
+  }
+
+  return null;
+}
+
+export function getModeAwareServiceOptions(
+  mode: string | null | undefined,
+): ModeAwareServiceDefinition[] {
+  const normalizedMode = normalizeTransportMode(mode);
+
+  return [...modeAwareServiceDefinitions[normalizedMode]];
+}
+
+export function getDefaultModeAwareServiceType(
+  mode: string | null | undefined,
+): ModeAwareServiceType {
+  return defaultServiceTypeByMode[normalizeTransportMode(mode)];
+}
+
+export function normalizeModeAwareServiceType(
+  serviceType: ShipmentServiceTypeInput,
+  options?: {
+    mode?: string | null;
+  },
+): ModeAwareServiceType {
+  const originalCode = serviceType.trim();
+  const mode = normalizeTransportMode(options?.mode);
+
+  if (serviceDefinitionByCode.has(originalCode as ModeAwareServiceType)) {
+    return originalCode as ModeAwareServiceType;
+  }
+
+  const legacyTier = normalizeLegacyServiceTier(originalCode);
+
+  if (legacyTier) {
+    return legacyServiceTypeMap[mode][legacyTier];
+  }
+
+  return defaultServiceTypeByMode[mode];
+}
+
+export function isModeAwareServiceTypeForMode(
+  serviceType: ShipmentServiceTypeInput,
+  mode: string | null | undefined,
+) {
+  const normalizedMode = normalizeTransportMode(mode);
+  const normalizedServiceType = normalizeModeAwareServiceType(serviceType, {
+    mode: normalizedMode,
+  });
+
+  return modeAwareServiceDefinitions[normalizedMode].some(
+    (service) => service.code === normalizedServiceType,
+  );
+}
+
+export function getModeAwareServiceMeta(
+  serviceType: ShipmentServiceTypeInput,
+  options?: {
+    mode?: string | null;
+  },
+): ModeAwareServiceMeta {
+  const originalCode = serviceType.trim();
+  const normalizedCode = normalizeModeAwareServiceType(originalCode, options);
+  const definition =
+    serviceDefinitionByCode.get(normalizedCode) ??
+    serviceDefinitionByCode.get(defaultServiceTypeByMode.road);
+
+  return {
+    code: normalizedCode,
+    label: definition?.label ?? "Standard Road",
+    description:
+      definition?.description ??
+      "Standard road network service for routine shipments.",
+    transportMode: definition?.transportMode ?? "road",
+    pricingTier: definition?.pricingTier ?? "Economy",
+    estimatedTransitDays: definition?.estimatedTransitDays ?? 4,
+    isLegacy: originalCode !== normalizedCode,
+    originalCode,
+  };
+}
+
+export function getPricingServiceTypeForModeAwareService(
+  serviceType: ShipmentServiceTypeInput,
+  mode?: string | null,
+): PricingServiceTier {
+  return getModeAwareServiceMeta(serviceType, { mode }).pricingTier;
+}
+
+export function formatModeAwareServiceType(
+  serviceType: ShipmentServiceTypeInput,
+  mode?: string | null,
+) {
+  return getModeAwareServiceMeta(serviceType, { mode }).label;
 }
 
 export function getShipmentStatusOptions(

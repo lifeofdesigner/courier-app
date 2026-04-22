@@ -554,6 +554,19 @@ Supported transport modes:
 - `road` - Road
 - `freight` - Freight
 
+Mode-aware service types:
+
+- `express_air` - Express Air
+- `standard_air` - Standard Air
+- `priority_air_cargo` - Priority Air Cargo
+- `same_day_road` - Same-Day Road
+- `regional_road` - Regional Road
+- `standard_road` - Standard Road
+- `ltl_freight` - LTL Freight
+- `full_truckload` - Full Truckload
+- `pallet_freight` - Pallet Freight
+- `consolidated_freight` - Consolidated Freight
+
 Common shipment statuses:
 
 - `shipment_created` - Shipment Created
@@ -616,6 +629,11 @@ Legacy status rows remain supported at the display layer:
 The migration `supabase/migrations/007_shipping_transport_modes.sql` adds the
 nullable-compatible `transport_mode` defaults, check constraints, and indexes
 needed for mode-aware shipment operations.
+
+The migration `supabase/migrations/008_mode_aware_service_types.sql` keeps
+`orders.service_type` and `bookings.service_type` compatible with legacy
+Express/Economy rows while documenting the new service codes and adding small
+transport-mode/service indexes for admin shipment operations.
 
 ## Routes
 

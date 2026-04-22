@@ -12,6 +12,7 @@ import type {
 import type { PaymentStatus } from "@/types/payment";
 import {
   activeShipmentStatuses,
+  normalizeModeAwareServiceType,
   normalizeShipmentStatus,
   normalizeTransportMode,
 } from "@/types/shipment";
@@ -114,7 +115,9 @@ function mapShipment(row: ShipmentRow): ShipmentTableItem {
     id: row.id,
     bookingId: row.booking_id,
     trackingNumber: row.tracking_number,
-    serviceType: row.service_type,
+    serviceType: normalizeModeAwareServiceType(row.service_type, {
+      mode: row.transport_mode,
+    }),
     transportMode: normalizeTransportMode(row.transport_mode),
     status: normalizeShipmentStatus(row.status, {
       mode: row.transport_mode,

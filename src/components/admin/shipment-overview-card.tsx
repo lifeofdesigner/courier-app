@@ -1,7 +1,11 @@
 import { TrackingStatusBadge } from "@/components/tracking";
 import type { AdminShipmentDetail } from "@/types/admin";
 import { formatPaymentStatus } from "@/types/payment";
-import { getShipmentStatusMeta, getTransportModeMeta } from "@/types/shipment";
+import {
+  formatModeAwareServiceType,
+  getShipmentStatusMeta,
+  getTransportModeMeta,
+} from "@/types/shipment";
 
 export type ShipmentOverviewCardProps = {
   shipment: AdminShipmentDetail;
@@ -70,7 +74,13 @@ export function ShipmentOverviewCard({ shipment }: ShipmentOverviewCardProps) {
       </div>
 
       <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-6">
-        <DetailItem label="Service" value={shipment.serviceType} />
+        <DetailItem
+          label="Service"
+          value={formatModeAwareServiceType(
+            shipment.serviceType,
+            shipment.transportMode,
+          )}
+        />
         <DetailItem label="Mode" value={transportMode.label} />
         <DetailItem label="Current milestone" value={statusMeta.label} />
         <DetailItem label="Label" value={labelStatus} />

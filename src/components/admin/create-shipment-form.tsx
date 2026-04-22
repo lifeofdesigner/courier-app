@@ -8,7 +8,13 @@ import { createShipmentAction } from "@/app/(admin)/admin/shipments/actions";
 import type { AdminActionState } from "@/types/admin";
 import { formatPaymentStatus, paymentStatuses } from "@/types/payment";
 import {
+  getDefaultModeAwareServiceType,
+  getModeAwareServiceMeta,
+  getModeAwareServiceOptions,
   getShipmentStatusOptions,
+  getTransportModeMeta,
+  type ModeAwareServiceType,
+  type ShipmentStatus,
   transportModeDefinitions,
   type TransportMode,
 } from "@/types/shipment";
@@ -133,16 +139,57 @@ function AddressFields({
   );
 }
 
+function packagePlaceholder(mode: TransportMode) {
+  if (mode === "air") {
+    return "Documents, parcel, or air cargo";
+  }
+
+  if (mode === "freight") {
+    return "Pallet, crate, or consolidated freight";
+  }
+
+  return "Parcel, satchel, or multi-piece shipment";
+}
+
 export function CreateShipmentForm() {
   const [transportMode, setTransportMode] = useState<TransportMode>("road");
+  const [serviceType, setServiceType] = useState<ModeAwareServiceType>(
+    getDefaultModeAwareServiceType("road"),
+  );
+  const [shipmentStatus, setShipmentStatus] =
+    useState<ShipmentStatus>("shipment_created");
   const [state, formAction, isPending] = useActionState(
     createShipmentAction,
     initialState,
+  );
+  const serviceOptions = useMemo(
+    () => getModeAwareServiceOptions(transportMode),
+    [transportMode],
   );
   const statusOptions = useMemo(
     () => getShipmentStatusOptions(transportMode),
     [transportMode],
   );
+  const transportModeMeta = getTransportModeMeta(transportMode);
+  const serviceMeta = getModeAwareServiceMeta(serviceType, {
+    mode: transportMode,
+  });
+  const statusMeta = statusOptions.find(
+    (status) => status.code === shipmentStatus,
+  );
+
+  function handleTransportModeChange(nextMode: TransportMode) {
+    const nextServiceType = getDefaultModeAwareServiceType(nextMode);
+
+    setTransportMode(nextMode);
+    setServiceType(nextServiceType);
+
+    if (!getShipmentStatusOptions(nextMode).some(
+      (status) => status.code === shipmentStatus,
+    )) {
+      setShipmentStatus("shipment_created");
+    }
+  }
 
   return (
     <form action={formAction} className="space-y-6">
@@ -224,23 +271,6 @@ export function CreateShipmentForm() {
       <FormSection title="Service and package">
         <div className="space-y-2">
           <label
-            htmlFor="serviceType"
-            className="block text-sm font-semibold text-[#0B1C3A]"
-          >
-            Service type
-          </label>
-          <select
-            id="serviceType"
-            name="serviceType"
-            className={inputClassName}
-            defaultValue="Express"
-          >
-            <option value="Express">Express</option>
-            <option value="Economy">Economy</option>
-          </select>
-        </div>
-        <div className="space-y-2">
-          <label
             htmlFor="transportMode"
             className="block text-sm font-semibold text-[#0B1C3A]"
           >
@@ -252,7 +282,7 @@ export function CreateShipmentForm() {
             className={inputClassName}
             value={transportMode}
             onChange={(event) =>
-              setTransportMode(event.target.value as TransportMode)
+              handleTransportModeChange(event.target.value as TransportMode)
             }
           >
             {transportModeDefinitions.map((mode) => (
@@ -261,12 +291,42 @@ export function CreateShipmentForm() {
               </option>
             ))}
           </select>
+          <p className="text-xs leading-5 text-slate-500">
+            {transportModeMeta.description}
+          </p>
+          <FieldError errors={state.fieldErrors?.transportMode} />
+        </div>
+        <div className="space-y-2">
+          <label
+            htmlFor="serviceType"
+            className="block text-sm font-semibold text-[#0B1C3A]"
+          >
+            Service type
+          </label>
+          <select
+            id="serviceType"
+            name="serviceType"
+            className={inputClassName}
+            value={serviceType}
+            onChange={(event) =>
+              setServiceType(event.target.value as ModeAwareServiceType)
+            }
+          >
+            {serviceOptions.map((service) => (
+              <option key={service.code} value={service.code}>
+                {service.label}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs leading-5 text-slate-500">
+            {serviceMeta.description}
+          </p>
+          <FieldError errors={state.fieldErrors?.serviceType} />
         </div>
         <TextInput
           label="Package type"
           name="packageType"
-          placeholder="Parcel"
-          defaultValue="Parcel"
+          placeholder={packagePlaceholder(transportMode)}
           errors={state.fieldErrors?.packageType}
         />
         <TextInput
@@ -387,7 +447,10 @@ export function CreateShipmentForm() {
             id="shipmentStatus"
             name="shipmentStatus"
             className={inputClassName}
-            defaultValue="shipment_created"
+            value={shipmentStatus}
+            onChange={(event) =>
+              setShipmentStatus(event.target.value as ShipmentStatus)
+            }
           >
             {statusOptions.map((status) => (
               <option key={status.code} value={status.code}>
@@ -395,6 +458,10 @@ export function CreateShipmentForm() {
               </option>
             ))}
           </select>
+          <p className="text-xs leading-5 text-slate-500">
+            {statusMeta?.description ??
+              "Choose the initial operational milestone for this shipment."}
+          </p>
         </div>
       </FormSection>
 

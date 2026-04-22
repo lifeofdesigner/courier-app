@@ -1,6 +1,10 @@
 import type { AppUserProfile } from "@/types/auth";
 import type { PaymentStatus } from "@/types/payment";
-import type { ShipmentStatus, TransportMode } from "@/types/shipment";
+import type {
+  ModeAwareServiceType,
+  ShipmentStatus,
+  TransportMode,
+} from "@/types/shipment";
 
 export interface DashboardStats {
   totalShipments: number;
@@ -21,7 +25,7 @@ export interface ShipmentTableItem {
   id: string;
   bookingId: string | null;
   trackingNumber: string;
-  serviceType: string;
+  serviceType: ModeAwareServiceType;
   transportMode: TransportMode;
   status: ShipmentStatus;
   originCity: string;

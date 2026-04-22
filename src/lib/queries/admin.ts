@@ -15,6 +15,7 @@ import type {
 import { normalizePaymentStatus } from "@/types/payment";
 import {
   activeShipmentStatuses,
+  normalizeModeAwareServiceType,
   normalizeShipmentStatus,
   normalizeTransportMode,
   type TransportMode,
@@ -247,7 +248,9 @@ function mapShipment({
     senderEmail: booking?.sender_email ?? null,
     recipientName: booking?.recipient_name ?? shipment.recipient_name,
     recipientEmail: booking?.recipient_email ?? null,
-    serviceType: shipment.service_type,
+    serviceType: normalizeModeAwareServiceType(shipment.service_type, {
+      mode: transportMode,
+    }),
     packageType: shipment.package_type,
     transportMode,
     status: normalizeShipmentStatus(shipment.status, { mode: transportMode }),
@@ -598,7 +601,9 @@ export async function getAdminShipmentDetail(
     bookingId: shipment.booking_id,
     trackingNumber: shipment.tracking_number,
     referenceCode: shipment.reference_code,
-    serviceType: shipment.service_type,
+    serviceType: normalizeModeAwareServiceType(shipment.service_type, {
+      mode: transportMode,
+    }),
     packageType: shipment.package_type,
     transportMode,
     status: normalizeShipmentStatus(shipment.status, { mode: transportMode }),

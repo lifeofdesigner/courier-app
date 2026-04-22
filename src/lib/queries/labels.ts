@@ -1,6 +1,12 @@
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import { company } from "@/constants/site";
 import type { PaymentStatus } from "@/types/payment";
+import {
+  normalizeModeAwareServiceType,
+  normalizeTransportMode,
+  type ModeAwareServiceType,
+  type TransportMode,
+} from "@/types/shipment";
 
 export type ShippingLabelData = {
   companyName: string;
@@ -30,7 +36,8 @@ export type ShippingLabelData = {
     postalCode: string | null;
     country: string;
   };
-  serviceType: string;
+  serviceType: ModeAwareServiceType;
+  transportMode: TransportMode;
   packageType: string | null;
   weightKg: number;
   declaredValue: number;
@@ -49,6 +56,7 @@ type BookingRow = {
   recipient_name: string;
   recipient_phone: string | null;
   service_type: string;
+  transport_mode: string | null;
   package_type: string | null;
   weight_kg: number | string;
   declared_value: number | string;
@@ -73,6 +81,8 @@ type OrderRow = {
   id: string;
   tracking_number: string;
   reference_code: string | null;
+  service_type: string;
+  transport_mode: string | null;
 };
 
 function mapAddress(row: AddressRow) {
@@ -110,6 +120,7 @@ export async function getShippingLabelData(
       recipient_name,
       recipient_phone,
       service_type,
+      transport_mode,
       package_type,
       weight_kg,
       declared_value,
@@ -130,7 +141,7 @@ export async function getShippingLabelData(
   const typedBooking = booking as BookingRow;
   const { data: order, error: orderError } = await supabase
     .from("orders")
-    .select("id, tracking_number, reference_code")
+    .select("id, tracking_number, reference_code, service_type, transport_mode")
     .eq("booking_id", bookingId)
     .single();
 
@@ -180,6 +191,9 @@ export async function getShippingLabelData(
   }
 
   const typedOrder = order as OrderRow;
+  const transportMode = normalizeTransportMode(
+    typedOrder.transport_mode ?? typedBooking.transport_mode,
+  );
 
   return {
     companyName: company.name,
@@ -193,7 +207,11 @@ export async function getShippingLabelData(
     recipientPhone: typedBooking.recipient_phone,
     origin: mapAddress(pickupAddress),
     destination: mapAddress(deliveryAddress),
-    serviceType: typedBooking.service_type,
+    serviceType: normalizeModeAwareServiceType(
+      typedOrder.service_type ?? typedBooking.service_type,
+      { mode: transportMode },
+    ),
+    transportMode,
     packageType: typedBooking.package_type,
     weightKg: Number(typedBooking.weight_kg),
     declaredValue: Number(typedBooking.declared_value),

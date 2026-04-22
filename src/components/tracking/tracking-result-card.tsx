@@ -3,6 +3,7 @@ import Link from "next/link";
 
 import { TrackingStatusBadge } from "@/components/tracking/tracking-status-badge";
 import {
+  formatModeAwareServiceType,
   getShipmentStatusMeta,
   getTransportModeMeta,
   type ShipmentRecord,
@@ -65,7 +66,11 @@ export function TrackingResultCard({ shipment }: TrackingResultCardProps) {
           <PackageCheck aria-hidden="true" className="h-5 w-5 text-[#FF6B2B]" />
           <p className="mt-3 text-sm font-semibold text-[#0B1C3A]">Service</p>
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            {transportMode.label} - {shipment.serviceType}
+            {transportMode.label} -{" "}
+            {formatModeAwareServiceType(
+              shipment.serviceType,
+              shipment.transportMode,
+            )}
             {shipment.packageType ? ` - ${shipment.packageType}` : ""}
           </p>
         </div>

@@ -10,7 +10,11 @@ import { findCustomerUserIdByEmail } from "@/lib/queries/admin";
 import type { AdminActionState } from "@/types/admin";
 import { paymentStatuses } from "@/types/payment";
 import {
+  getModeAwareServiceMeta,
+  getPricingServiceTypeForModeAwareService,
   getShipmentStatusMeta,
+  isModeAwareServiceTypeForMode,
+  modeAwareServiceTypes,
   shipmentStatuses,
   transportModes,
   type ShipmentStatus,
@@ -37,41 +41,66 @@ const addressSchema = z.object({
   country: z.string().trim().min(1, "Enter a country."),
 });
 
-const createShipmentSchema = z.object({
-  customerEmail: optionalEmailSchema,
-  unassignedCustomer: z.boolean(),
-  senderName: z.string().trim().min(1, "Enter the sender name."),
-  senderEmail: z.string().trim().email("Enter a valid sender email."),
-  senderPhone: z.string().trim().optional(),
-  recipientName: z.string().trim().min(1, "Enter the recipient name."),
-  recipientEmail: optionalEmailSchema,
-  recipientPhone: z.string().trim().optional(),
-  serviceType: z.enum(["Express", "Economy"]),
-  transportMode: z.enum(transportModes),
-  packageType: z.string().trim().min(1, "Enter a package type."),
-  weightKg: z.coerce.number().positive("Weight must be greater than 0."),
-  declaredValue: z.coerce
-    .number()
-    .min(0, "Declared value cannot be negative."),
-  currency: z.string().trim().min(1, "Choose a currency."),
-  pickupDate: z.string().trim().min(1, "Choose a pickup date."),
-  pickupWindow: z.string().trim().min(1, "Choose a pickup window."),
-  specialInstructions: z.string().trim().optional(),
-  paymentStatus: z.enum(paymentStatuses),
-  shipmentStatus: z.enum(shipmentStatuses),
-  pickup: addressSchema,
-  delivery: addressSchema,
-});
+const createShipmentSchema = z
+  .object({
+    customerEmail: optionalEmailSchema,
+    unassignedCustomer: z.boolean(),
+    senderName: z.string().trim().min(1, "Enter the sender name."),
+    senderEmail: z.string().trim().email("Enter a valid sender email."),
+    senderPhone: z.string().trim().optional(),
+    recipientName: z.string().trim().min(1, "Enter the recipient name."),
+    recipientEmail: optionalEmailSchema,
+    recipientPhone: z.string().trim().optional(),
+    serviceType: z.enum(modeAwareServiceTypes),
+    transportMode: z.enum(transportModes),
+    packageType: z.string().trim().min(1, "Enter a package type."),
+    weightKg: z.coerce.number().positive("Weight must be greater than 0."),
+    declaredValue: z.coerce
+      .number()
+      .min(0, "Declared value cannot be negative."),
+    currency: z.string().trim().min(1, "Choose a currency."),
+    pickupDate: z.string().trim().min(1, "Choose a pickup date."),
+    pickupWindow: z.string().trim().min(1, "Choose a pickup window."),
+    specialInstructions: z.string().trim().optional(),
+    paymentStatus: z.enum(paymentStatuses),
+    shipmentStatus: z.enum(shipmentStatuses),
+    pickup: addressSchema,
+    delivery: addressSchema,
+  })
+  .superRefine((data, context) => {
+    if (!isModeAwareServiceTypeForMode(data.serviceType, data.transportMode)) {
+      context.addIssue({
+        code: "custom",
+        path: ["serviceType"],
+        message: "Choose a service type for the selected transport mode.",
+      });
+    }
+  });
 
-const shipmentStatusSchema = z.object({
-  orderId: z.string().trim().min(1, "Select a shipment."),
-  transportMode: z.enum(transportModes).optional(),
-  status: z.enum(shipmentStatuses),
-  label: z.string().trim().optional(),
-  description: z.string().trim().optional(),
-  locationName: z.string().trim().optional(),
-  eventTime: z.string().trim().optional(),
-});
+const shipmentStatusSchema = z
+  .object({
+    orderId: z.string().trim().min(1, "Select a shipment."),
+    transportMode: z.enum(transportModes).optional(),
+    serviceType: z.enum(modeAwareServiceTypes).optional(),
+    status: z.enum(shipmentStatuses),
+    label: z.string().trim().optional(),
+    description: z.string().trim().optional(),
+    locationName: z.string().trim().optional(),
+    eventTime: z.string().trim().optional(),
+  })
+  .superRefine((data, context) => {
+    if (
+      data.serviceType &&
+      data.transportMode &&
+      !isModeAwareServiceTypeForMode(data.serviceType, data.transportMode)
+    ) {
+      context.addIssue({
+        code: "custom",
+        path: ["serviceType"],
+        message: "Choose a service type for the selected transport mode.",
+      });
+    }
+  });
 
 function getString(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -131,9 +160,15 @@ function generateTrackingNumber() {
   return `AC${dateStamp}${suffix}`;
 }
 
-function estimatedDeliveryDate(pickupDate: string, serviceType: string) {
+function estimatedDeliveryDate(
+  pickupDate: string,
+  serviceType: string,
+  transportMode: string,
+) {
   const date = new Date(`${pickupDate}T00:00:00.000Z`);
-  const transitDays = serviceType === "Express" ? 2 : 5;
+  const transitDays = getModeAwareServiceMeta(serviceType, {
+    mode: transportMode,
+  }).estimatedTransitDays;
 
   if (Number.isNaN(date.getTime())) {
     return null;
@@ -270,6 +305,10 @@ export async function createShipmentAction(
         ? null
         : await findCustomerUserIdByEmail(customerEmail);
     const now = new Date().toISOString();
+    const pricingServiceType = getPricingServiceTypeForModeAwareService(
+      parsed.data.serviceType,
+      parsed.data.transportMode,
+    );
     const amountDue = await calculateBookingAmountDue({
       quoteId: null,
       senderName: parsed.data.senderName,
@@ -278,7 +317,7 @@ export async function createShipmentAction(
       recipientName: parsed.data.recipientName,
       recipientEmail: parsed.data.recipientEmail,
       recipientPhone: parsed.data.recipientPhone,
-      serviceType: parsed.data.serviceType,
+      serviceType: pricingServiceType,
       packageType: parsed.data.packageType,
       weightKg: parsed.data.weightKg,
       declaredValue: parsed.data.declaredValue,
@@ -376,6 +415,7 @@ export async function createShipmentAction(
         estimated_delivery_date: estimatedDeliveryDate(
           parsed.data.pickupDate,
           parsed.data.serviceType,
+          parsed.data.transportMode,
         ),
         created_at: now,
         updated_at: now,
@@ -452,6 +492,7 @@ export async function updateShipmentStatusAction(
   const parsed = shipmentStatusSchema.safeParse({
     orderId: getString(formData, "orderId"),
     transportMode: getString(formData, "transportMode") || undefined,
+    serviceType: getString(formData, "serviceType") || undefined,
     status: getString(formData, "status"),
     label: getString(formData, "label"),
     description: getString(formData, "description"),
@@ -476,6 +517,7 @@ export async function updateShipmentStatusAction(
       optionalValue(parsed.data.description) ??
       statusMeta.description;
 
+    const now = new Date().toISOString();
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .update({
@@ -483,7 +525,10 @@ export async function updateShipmentStatusAction(
         ...(parsed.data.transportMode
           ? { transport_mode: parsed.data.transportMode }
           : {}),
-        updated_at: new Date().toISOString(),
+        ...(parsed.data.serviceType
+          ? { service_type: parsed.data.serviceType }
+          : {}),
+        updated_at: now,
       })
       .eq("id", parsed.data.orderId)
       .select("id, booking_id, tracking_number")
@@ -498,12 +543,20 @@ export async function updateShipmentStatusAction(
       tracking_number: string;
     };
 
-    if (parsed.data.transportMode && typedOrder.booking_id) {
+    if (
+      typedOrder.booking_id &&
+      (parsed.data.transportMode || parsed.data.serviceType)
+    ) {
       await supabase
         .from("bookings")
         .update({
-          transport_mode: parsed.data.transportMode,
-          updated_at: new Date().toISOString(),
+          ...(parsed.data.transportMode
+            ? { transport_mode: parsed.data.transportMode }
+            : {}),
+          ...(parsed.data.serviceType
+            ? { service_type: parsed.data.serviceType }
+            : {}),
+          updated_at: now,
         })
         .eq("id", typedOrder.booking_id);
     }
@@ -554,6 +607,7 @@ export async function updateShipmentStatusOnlyAction(
 ): Promise<AdminActionState> {
   const status = getString(formData, "status") as ShipmentStatus;
   const transportMode = getString(formData, "transportMode");
+  const serviceType = getString(formData, "serviceType");
   const statusMeta = getShipmentStatusMeta(status, {
     mode: transportMode,
   });
@@ -561,6 +615,7 @@ export async function updateShipmentStatusOnlyAction(
 
   nextFormData.set("orderId", getString(formData, "orderId"));
   nextFormData.set("transportMode", transportMode);
+  nextFormData.set("serviceType", serviceType);
   nextFormData.set("status", status);
   nextFormData.set("label", statusMeta.label);
   nextFormData.set("description", statusMeta.description);

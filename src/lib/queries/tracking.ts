@@ -5,6 +5,7 @@ import type {
   TrackingEventItem,
 } from "@/types/shipment";
 import {
+  normalizeModeAwareServiceType,
   normalizeShipmentStatus,
   normalizeTransportMode,
 } from "@/types/shipment";
@@ -52,7 +53,9 @@ function mapShipment(row: OrderRow): ShipmentRecord {
     bookingId: row.booking_id,
     trackingNumber: row.tracking_number,
     referenceCode: row.reference_code,
-    serviceType: row.service_type,
+    serviceType: normalizeModeAwareServiceType(row.service_type, {
+      mode: row.transport_mode,
+    }),
     packageType: row.package_type,
     transportMode: normalizeTransportMode(row.transport_mode),
     originCountry: row.origin_country,

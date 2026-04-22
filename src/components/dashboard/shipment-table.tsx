@@ -7,6 +7,7 @@ import { DashboardEmptyState } from "@/components/dashboard/dashboard-empty-stat
 import { TrackingStatusBadge } from "@/components/tracking";
 import type { ShipmentTableItem } from "@/types/dashboard";
 import {
+  formatModeAwareServiceType,
   getShipmentStatusMeta,
   getTransportModeMeta,
   shipmentStatuses,
@@ -42,7 +43,10 @@ export function ShipmentTable({ shipments }: ShipmentTableProps) {
       const matchesStatus = status === "all" || shipment.status === status;
       const searchableText = [
         shipment.trackingNumber,
-        shipment.serviceType,
+        formatModeAwareServiceType(
+          shipment.serviceType,
+          shipment.transportMode,
+        ),
         shipment.originCity,
         shipment.originCountry,
         shipment.destinationCity,
@@ -121,7 +125,10 @@ export function ShipmentTable({ shipments }: ShipmentTableProps) {
                       </Link>
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">
-                      {shipment.serviceType}
+                      {formatModeAwareServiceType(
+                        shipment.serviceType,
+                        shipment.transportMode,
+                      )}
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">
                       {getTransportModeMeta(shipment.transportMode).label}

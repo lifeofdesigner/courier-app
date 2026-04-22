@@ -61,6 +61,19 @@ export const transportModeLabels = {
   freight: "Freight",
 } as const;
 
+export const modeAwareServiceTypeLabels = {
+  express_air: "Express Air",
+  standard_air: "Standard Air",
+  priority_air_cargo: "Priority Air Cargo",
+  same_day_road: "Same-Day Road",
+  regional_road: "Regional Road",
+  standard_road: "Standard Road",
+  ltl_freight: "LTL Freight",
+  full_truckload: "Full Truckload",
+  pallet_freight: "Pallet Freight",
+  consolidated_freight: "Consolidated Freight",
+} as const;
+
 export const ctaLabels = {
   track: "Track Shipment",
   quote: "Get a Quote",

@@ -1,22 +1,42 @@
-import type { ShipmentStatus, TransportMode } from "@/lib/shipping/statuses";
+import type {
+  ModeAwareServiceType,
+  ShipmentStatus,
+  TransportMode,
+} from "@/lib/shipping/statuses";
 
 export type {
   LegacyShipmentStatus,
+  LegacyServiceType,
+  ModeAwareServiceDefinition,
+  ModeAwareServiceMeta,
+  ModeAwareServiceType,
+  PricingServiceTier,
   ShipmentStatus,
   ShipmentStatusInput,
   ShipmentStatusMeta,
+  ShipmentServiceTypeInput,
   TransportMode,
 } from "@/lib/shipping/statuses";
 export {
   activeShipmentStatuses,
   allShipmentStatusDefinitions,
+  allModeAwareServiceDefinitions,
   commonShipmentStatusDefinitions,
+  formatModeAwareServiceType,
   formatShipmentStatus,
+  getDefaultModeAwareServiceType,
+  getModeAwareServiceMeta,
+  getModeAwareServiceOptions,
+  getPricingServiceTypeForModeAwareService,
   getShipmentStatusMeta,
   getShipmentStatusOptions,
   getTransportModeMeta,
+  isModeAwareServiceTypeForMode,
   legacyShipmentStatusMap,
+  modeAwareServiceDefinitions,
+  modeAwareServiceTypes,
   modeShipmentStatusDefinitions,
+  normalizeModeAwareServiceType,
   normalizeShipmentStatus,
   normalizeTransportMode,
   transportModeDefinitions,
@@ -40,7 +60,7 @@ export interface ShipmentRecord {
   bookingId: string | null;
   trackingNumber: string;
   referenceCode: string | null;
-  serviceType: string;
+  serviceType: ModeAwareServiceType;
   packageType: string | null;
   transportMode: TransportMode;
   originCountry: string;

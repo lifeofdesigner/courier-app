@@ -6,13 +6,17 @@ import { z } from "zod";
 import { assertAdminAction } from "@/lib/auth/assert-admin-action";
 import { sendStatusEmail } from "@/lib/email/send-status-email";
 import type { AdminActionState } from "@/types/admin";
-import { shipmentStatuses, transportModes } from "@/types/shipment";
+import {
+  getShipmentStatusMeta,
+  shipmentStatuses,
+  transportModes,
+} from "@/types/shipment";
 
 const trackingEventSchema = z.object({
   orderId: z.string().trim().min(1, "Select a shipment."),
   transportMode: z.enum(transportModes).optional(),
   status: z.enum(shipmentStatuses),
-  label: z.string().trim().min(1, "Enter an event label."),
+  label: z.string().trim().optional(),
   description: z.string().trim().optional(),
   locationName: z.string().trim().optional(),
   eventTime: z.string().trim().min(1, "Choose an event time."),
@@ -71,14 +75,20 @@ export async function createTrackingEventAction(
   try {
     const { supabase } = adminContext;
     const eventTime = new Date(parsed.data.eventTime).toISOString();
+    const statusMeta = getShipmentStatusMeta(parsed.data.status, {
+      mode: parsed.data.transportMode,
+    });
+    const label = optionalValue(parsed.data.label) ?? statusMeta.label;
+    const description =
+      optionalValue(parsed.data.description) ?? statusMeta.description;
 
     const { error: eventError } = await supabase
       .from("tracking_events")
       .insert({
         order_id: parsed.data.orderId,
         status: parsed.data.status,
-        label: parsed.data.label,
-        description: optionalValue(parsed.data.description),
+        label,
+        description,
         location_name: optionalValue(parsed.data.locationName),
         event_time: eventTime,
       });
@@ -122,8 +132,8 @@ export async function createTrackingEventAction(
     await sendStatusEmail({
       orderId: parsed.data.orderId,
       status: parsed.data.status,
-      label: parsed.data.label,
-      description: optionalValue(parsed.data.description),
+      label,
+      description,
     });
 
     revalidatePath("/admin");

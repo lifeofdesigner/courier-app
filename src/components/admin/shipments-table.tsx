@@ -12,6 +12,7 @@ import {
   type PaymentStatus,
 } from "@/types/payment";
 import {
+  formatModeAwareServiceType,
   getShipmentStatusMeta,
   getTransportModeMeta,
   shipmentStatuses,
@@ -70,6 +71,10 @@ export function ShipmentsTable({ shipments }: ShipmentsTableProps) {
         shipment.senderEmail ?? "",
         shipment.recipientName,
         shipment.recipientEmail ?? "",
+        formatModeAwareServiceType(
+          shipment.serviceType,
+          shipment.transportMode,
+        ),
         getTransportModeMeta(shipment.transportMode).label,
         shipment.originCity,
         shipment.originCountry,
@@ -210,7 +215,10 @@ export function ShipmentsTable({ shipments }: ShipmentsTableProps) {
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">
                       <p className="font-semibold text-[#0B1C3A]">
-                        {shipment.serviceType}
+                        {formatModeAwareServiceType(
+                          shipment.serviceType,
+                          shipment.transportMode,
+                        )}
                       </p>
                       <p className="mt-1 text-xs text-slate-500">
                         {shipment.packageType ?? "Parcel"} - {shipment.weightKg}kg

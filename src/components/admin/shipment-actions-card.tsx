@@ -2,14 +2,19 @@
 
 import Link from "next/link";
 import { Clipboard, ExternalLink, FileText } from "lucide-react";
-import { useActionState, useState } from "react";
+import { useActionState, useMemo, useState } from "react";
 
 import { updateShipmentStatusOnlyAction } from "@/app/(admin)/admin/shipments/actions";
 import type { AdminActionState, AdminShipmentDetail } from "@/types/admin";
 import {
+  getDefaultModeAwareServiceType,
+  getModeAwareServiceMeta,
+  getModeAwareServiceOptions,
   getShipmentStatusMeta,
   getShipmentStatusOptions,
   transportModeDefinitions,
+  type ModeAwareServiceType,
+  type ShipmentStatus,
   type TransportMode,
 } from "@/types/shipment";
 
@@ -35,22 +40,47 @@ export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
   const [transportMode, setTransportMode] = useState<TransportMode>(
     shipment.transportMode,
   );
+  const [serviceType, setServiceType] = useState<ModeAwareServiceType>(
+    shipment.serviceType,
+  );
+  const [status, setStatus] = useState<ShipmentStatus>(shipment.status);
   const [state, formAction, isPending] = useActionState(
     updateShipmentStatusOnlyAction,
     initialState,
   );
   const [copyMessage, setCopyMessage] = useState("");
-  const statusOptions = getShipmentStatusOptions(transportMode);
+  const serviceOptions = useMemo(
+    () => getModeAwareServiceOptions(transportMode),
+    [transportMode],
+  );
+  const statusOptions = useMemo(
+    () => getShipmentStatusOptions(transportMode),
+    [transportMode],
+  );
+  const serviceMeta = getModeAwareServiceMeta(serviceType, {
+    mode: transportMode,
+  });
   const currentStatusOption = statusOptions.some(
-    (status) => status.code === shipment.status,
+    (option) => option.code === status,
   )
     ? null
-    : getShipmentStatusMeta(shipment.status, { mode: transportMode });
+    : getShipmentStatusMeta(status, { mode: transportMode });
 
   async function copyTrackingNumber() {
     await navigator.clipboard.writeText(shipment.trackingNumber);
     setCopyMessage("Tracking number copied.");
     window.setTimeout(() => setCopyMessage(""), 2500);
+  }
+
+  function handleTransportModeChange(nextMode: TransportMode) {
+    setTransportMode(nextMode);
+    setServiceType(getDefaultModeAwareServiceType(nextMode));
+
+    if (!getShipmentStatusOptions(nextMode).some(
+      (option) => option.code === status,
+    )) {
+      setStatus("shipment_created");
+    }
   }
 
   return (
@@ -85,7 +115,7 @@ export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
           className={inputClassName}
           value={transportMode}
           onChange={(event) =>
-            setTransportMode(event.target.value as TransportMode)
+            handleTransportModeChange(event.target.value as TransportMode)
           }
         >
           {transportModeDefinitions.map((mode) => (
@@ -94,6 +124,35 @@ export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
             </option>
           ))}
         </select>
+        <label
+          htmlFor="serviceType"
+          className="block text-sm font-semibold text-[#0B1C3A]"
+        >
+          Service type
+        </label>
+        <select
+          id="serviceType"
+          name="serviceType"
+          className={inputClassName}
+          value={serviceType}
+          onChange={(event) =>
+            setServiceType(event.target.value as ModeAwareServiceType)
+          }
+        >
+          {serviceOptions.some(
+            (service) => service.code === serviceType,
+          ) ? null : (
+            <option value={serviceMeta.code}>{serviceMeta.label}</option>
+          )}
+          {serviceOptions.map((service) => (
+            <option key={service.code} value={service.code}>
+              {service.label}
+            </option>
+          ))}
+        </select>
+        <p className="text-xs leading-5 text-slate-500">
+          {serviceMeta.description}
+        </p>
         <label
           htmlFor="status"
           className="block text-sm font-semibold text-[#0B1C3A]"
@@ -104,7 +163,8 @@ export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
           id="status"
           name="status"
           className={inputClassName}
-          defaultValue={shipment.status}
+          value={status}
+          onChange={(event) => setStatus(event.target.value as ShipmentStatus)}
         >
           {currentStatusOption ? (
             <option value={currentStatusOption.code}>

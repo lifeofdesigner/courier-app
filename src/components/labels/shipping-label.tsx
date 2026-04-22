@@ -3,6 +3,10 @@
 import { Printer } from "lucide-react";
 
 import type { ShippingLabelData } from "@/lib/queries/labels";
+import {
+  formatModeAwareServiceType,
+  getTransportModeMeta,
+} from "@/types/shipment";
 
 export type ShippingLabelProps = {
   label: ShippingLabelData;
@@ -59,6 +63,8 @@ function AddressBlock({
 }
 
 export function ShippingLabel({ label }: ShippingLabelProps) {
+  const transportMode = getTransportModeMeta(label.transportMode);
+
   return (
     <div className="mx-auto max-w-3xl bg-white p-6 text-slate-900 print:max-w-none print:p-0">
       <div className="mb-5 flex justify-end print:hidden">
@@ -109,8 +115,17 @@ export function ShippingLabel({ label }: ShippingLabelProps) {
 
         <div className="mt-6 grid gap-3 border-y-2 border-slate-900 py-4 text-sm sm:grid-cols-3">
           <div>
+            <p className="font-bold text-[#0B1C3A]">Transport mode</p>
+            <p className="mt-1 text-slate-700">{transportMode.label}</p>
+          </div>
+          <div>
             <p className="font-bold text-[#0B1C3A]">Service</p>
-            <p className="mt-1 text-slate-700">{label.serviceType}</p>
+            <p className="mt-1 text-slate-700">
+              {formatModeAwareServiceType(
+                label.serviceType,
+                label.transportMode,
+              )}
+            </p>
           </div>
           <div>
             <p className="font-bold text-[#0B1C3A]">Package</p>

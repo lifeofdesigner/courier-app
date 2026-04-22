@@ -1,6 +1,6 @@
 import type { ServiceType } from "@/types/quote";
 import type { PaymentStatus } from "@/types/payment";
-import type { TransportMode } from "@/types/shipment";
+import type { ModeAwareServiceType, TransportMode } from "@/types/shipment";
 
 export type BookingStatus = "requested" | "confirmed" | "completed" | "cancelled";
 
@@ -48,7 +48,7 @@ export interface BookingRecord {
   recipientName: string;
   recipientEmail: string | null;
   recipientPhone: string | null;
-  serviceType: ServiceType;
+  serviceType: ServiceType | ModeAwareServiceType;
   transportMode: TransportMode;
   packageType: string | null;
   weightKg: number;
