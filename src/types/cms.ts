@@ -59,6 +59,14 @@ export interface HeroVisualContent {
   image?: CmsImage;
 }
 
+export interface HeroSlideContent {
+  eyebrow: string;
+  title: string;
+  description: string;
+  statusLabel: string;
+  image?: CmsImage;
+}
+
 export interface HeroSectionContent {
   eyebrow: string;
   title: string;
@@ -68,6 +76,7 @@ export interface HeroSectionContent {
   stats: HeroStat[];
   visual: HeroVisualContent;
   image?: CmsImage;
+  slides?: HeroSlideContent[];
 }
 
 export interface TrackingPromoContent {

@@ -379,7 +379,7 @@ function mergeCmsValue<T>(fallback: T, value: unknown): T {
       return fallback;
     }
 
-    const merged: Record<string, unknown> = { ...fallback };
+    const merged: Record<string, unknown> = { ...value };
 
     for (const key of Object.keys(fallback)) {
       merged[key] = mergeCmsValue(

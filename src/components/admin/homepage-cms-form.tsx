@@ -10,6 +10,7 @@ import type {
   AdminCmsEditorSection,
   AdminHomepageCmsSections,
 } from "@/types/admin";
+import type { HeroSectionContent, HeroSlideContent } from "@/types/cms";
 import type { ReactNode } from "react";
 
 type SectionCardProps<T> = {
@@ -34,6 +35,58 @@ const iconOptions = [
   { label: "Truck", value: "truck" },
   { label: "Warehouse", value: "warehouse" },
 ];
+
+const fallbackSlideImages = [
+  {
+    src: "https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?auto=format&fit=crop&w=1800&q=85",
+    alt: "Freight truck moving along a highway at sunset",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1494412651409-8963ce7935a7?auto=format&fit=crop&w=1800&q=85",
+    alt: "Cargo containers stacked at a logistics terminal",
+  },
+  {
+    src: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1800&q=85",
+    alt: "Warehouse team preparing packages for dispatch",
+  },
+];
+
+function getHeroSlideDefaults(hero: HeroSectionContent): HeroSlideContent[] {
+  const fallbackSlides: HeroSlideContent[] = [
+    {
+      eyebrow: hero.eyebrow,
+      title: hero.title,
+      description: hero.description,
+      statusLabel: hero.visual.statusLabel,
+      image: hero.image ?? fallbackSlideImages[0],
+    },
+    {
+      eyebrow: hero.visual.eyebrow,
+      title: "Live shipment visibility from pickup to delivery.",
+      description: `${hero.visual.title} is moving on ${hero.visual.route}. Follow the same kind of checkpoints your customers expect from a modern courier partner.`,
+      statusLabel: hero.visual.statusLabel,
+      image: fallbackSlideImages[1],
+    },
+    {
+      eyebrow: "Logistics transportation",
+      title: "The bridge between urgent pickups and confident proof.",
+      description:
+        "Coordinate courier, cargo, and freight movement with clear service choices, customer-ready tracking, and operations support at every handoff.",
+      statusLabel: "Dispatch ready",
+      image: fallbackSlideImages[2],
+    },
+  ];
+
+  return fallbackSlides.map((fallbackSlide, index) => {
+    const savedSlide = hero.slides?.[index];
+
+    return {
+      ...fallbackSlide,
+      ...savedSlide,
+      image: savedSlide?.image ?? fallbackSlide.image,
+    };
+  });
+}
 
 function SectionCard<T>({
   title,
@@ -94,6 +147,7 @@ export type HomepageCmsFormProps = {
 
 export function HomepageCmsForm({ sections }: HomepageCmsFormProps) {
   const hero = sections.hero.value;
+  const heroSlides = getHeroSlideDefaults(hero);
   const trackingPromo = sections.trackingPromo.value;
   const services = sections.services.value;
   const trust = sections.trust.value;
@@ -116,7 +170,7 @@ export function HomepageCmsForm({ sections }: HomepageCmsFormProps) {
       <div className="mt-8 space-y-6">
         <SectionCard
           title="Hero"
-          description="Headline, intro copy, primary actions, stats, tracking visual, and hero image."
+          description="Headline, slider slides, primary actions, stats, tracking visual, and hero images."
           formType="homepage.hero"
           section={sections.hero}
           defaultOpen
@@ -139,6 +193,62 @@ export function HomepageCmsForm({ sections }: HomepageCmsFormProps) {
             name="hero.image"
             defaultImage={hero.image}
           />
+          <fieldset className="rounded-[24px] border border-slate-200 bg-white p-4">
+            <legend className="px-2 text-sm font-semibold text-[#2b1d16]">
+              Hero slider slides
+            </legend>
+            <p className="mt-2 text-xs leading-5 text-slate-500">
+              These three slides control the rotating homepage hero. The button
+              labels and links above are shared across the slider.
+            </p>
+            <input type="hidden" name="hero.slides.__count" value={heroSlides.length} />
+            <div className="mt-4 space-y-5">
+              {heroSlides.map((slide, index) => (
+                <div
+                  key={`hero-slide-${index}`}
+                  className="rounded-[20px] border border-slate-200 bg-slate-50/70 p-4"
+                >
+                  <h3 className="text-sm font-bold text-[#2b1d16]">
+                    Slide {index + 1}
+                  </h3>
+                  <div className="mt-4 grid gap-5 md:grid-cols-2">
+                    <CmsTextField
+                      label="Eyebrow"
+                      name={`hero.slides.${index}.eyebrow`}
+                      defaultValue={slide.eyebrow}
+                    />
+                    <CmsTextField
+                      label="Status label"
+                      name={`hero.slides.${index}.statusLabel`}
+                      defaultValue={slide.statusLabel}
+                    />
+                  </div>
+                  <div className="mt-5">
+                    <CmsTextField
+                      label="Headline"
+                      name={`hero.slides.${index}.title`}
+                      defaultValue={slide.title}
+                    />
+                  </div>
+                  <div className="mt-5">
+                    <CmsTextareaField
+                      label="Subtitle"
+                      name={`hero.slides.${index}.description`}
+                      defaultValue={slide.description}
+                      rows={3}
+                    />
+                  </div>
+                  <div className="mt-5">
+                    <CmsImageField
+                      label={`Slide ${index + 1} image`}
+                      name={`hero.slides.${index}.image`}
+                      defaultImage={slide.image}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </fieldset>
           <CmsRepeatableList
             label="Hero stats"
             name="hero.stats"

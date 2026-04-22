@@ -40,6 +40,14 @@ const heroStatSchema = z.object({
   description: z.string().min(1).optional(),
 });
 
+const heroSlideSchema = z.object({
+  eyebrow: z.string().min(1),
+  title: z.string().min(1),
+  description: z.string().min(1),
+  statusLabel: z.string().min(1),
+  image: cmsImageSchema.optional(),
+});
+
 const featureHighlightSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
@@ -93,6 +101,7 @@ const homepageSectionSchemas = {
       image: cmsImageSchema.optional(),
     }),
     image: cmsImageSchema.optional(),
+    slides: z.array(heroSlideSchema).min(1).optional(),
   }),
   trackingPromo: z.object({
     eyebrow: z.string().min(1),

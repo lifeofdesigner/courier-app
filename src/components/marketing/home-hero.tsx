@@ -12,7 +12,12 @@ import { useEffect, useMemo, useState } from "react";
 
 import { Container } from "@/components/layout/container";
 import { CmsIcon } from "@/components/marketing/cms-icon";
-import type { CmsImage, HeroSectionContent, HeroStat } from "@/types/cms";
+import type {
+  CmsImage,
+  HeroSectionContent,
+  HeroSlideContent,
+  HeroStat,
+} from "@/types/cms";
 
 export type HomeHeroProps = {
   content: HeroSectionContent;
@@ -55,6 +60,27 @@ function fallbackMetric(index: number): HeroStat {
   };
 }
 
+function resolveHeroSlide({
+  content,
+  metric,
+  slide,
+  index,
+}: {
+  content: HeroSectionContent;
+  metric: HeroStat;
+  slide: HeroSlideContent;
+  index: number;
+}): HeroSlide {
+  return {
+    eyebrow: slide.eyebrow || content.eyebrow,
+    title: slide.title || content.title,
+    description: slide.description || content.description,
+    image: slide.image ?? content.image ?? fallbackImages[index % fallbackImages.length],
+    statusLabel: slide.statusLabel || content.visual.statusLabel,
+    metric,
+  };
+}
+
 function buildSlides(content: HeroSectionContent): HeroSlide[] {
   const primaryImage = content.image ?? fallbackImages[0];
   const stats = content.stats.length > 0 ? content.stats : [
@@ -62,6 +88,17 @@ function buildSlides(content: HeroSectionContent): HeroSlide[] {
     fallbackMetric(1),
     fallbackMetric(2),
   ];
+
+  if (content.slides && content.slides.length > 0) {
+    return content.slides.map((slide, index) =>
+      resolveHeroSlide({
+        content,
+        metric: stats[index] ?? fallbackMetric(index),
+        slide,
+        index,
+      }),
+    );
+  }
 
   return [
     {

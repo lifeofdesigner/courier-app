@@ -195,6 +195,41 @@ function readHeroStats(formData: FormData, name: string) {
   })).filter((item) => item.label || item.value || item.description);
 }
 
+async function readHeroSlides(
+  formData: FormData,
+): Promise<NonNullable<HeroSectionContent["slides"]>> {
+  const slides: NonNullable<HeroSectionContent["slides"]> = [];
+
+  for (let index = 0; index < getCount(formData, "hero.slides"); index += 1) {
+    const title = getString(formData, `hero.slides.${index}.title`).trim();
+    const image = await readCmsImage({
+      formData,
+      name: `hero.slides.${index}.image`,
+      folder: "homepage/hero/slides",
+      defaultAlt: title || `Homepage hero slide ${index + 1}`,
+    });
+    const slide = {
+      eyebrow: getString(formData, `hero.slides.${index}.eyebrow`).trim(),
+      title,
+      description: getString(
+        formData,
+        `hero.slides.${index}.description`,
+      ).trim(),
+      statusLabel: getString(
+        formData,
+        `hero.slides.${index}.statusLabel`,
+      ).trim(),
+      ...(image ? { image } : {}),
+    };
+
+    if (slide.eyebrow && slide.title && slide.description && slide.statusLabel) {
+      slides.push(slide);
+    }
+  }
+
+  return slides;
+}
+
 function readFeatureHighlights(formData: FormData, name: string) {
   return Array.from({ length: getCount(formData, name) }, (_, index) => ({
     title: getString(formData, `${name}.${index}.title`).trim(),
@@ -267,6 +302,7 @@ async function buildHomepageHeroPayload(
     folder: "homepage/hero",
     defaultAlt: "Courier delivery hero image",
   });
+  const slides = await readHeroSlides(formData);
 
   return {
     eyebrow: getString(formData, "hero.eyebrow").trim(),
@@ -302,6 +338,7 @@ async function buildHomepageHeroPayload(
       ).filter((item) => item.title || item.description || item.meta),
     },
     ...(image ? { image } : {}),
+    ...(slides.length > 0 ? { slides } : {}),
   };
 }
 
