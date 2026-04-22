@@ -194,3 +194,104 @@ export interface CmsContentRow {
   published: boolean;
   updated_at: string | null;
 }
+
+export interface SiteIdentityContent {
+  siteName: string;
+  logo?: CmsImage;
+  favicon?: CmsImage;
+  supportEmail: string;
+  supportPhone: string;
+  operatingHours: string;
+  companyAddress: string;
+  footerNotice: string;
+}
+
+export interface ContactInfoContent {
+  eyebrow: string;
+  title: string;
+  description: string;
+  email: string;
+  phone: string;
+  operatingHours: string;
+  address: string;
+}
+
+export interface FooterContent {
+  notice: string;
+  supportEmail: string;
+  supportPhone: string;
+  operatingHours: string;
+  address: string;
+}
+
+export interface ServicesPageServiceItem {
+  title: string;
+  description: string;
+  icon: CmsIconName;
+  bullets: string[];
+}
+
+export interface ServicesPageWorkflowStep {
+  title: string;
+  description: string;
+}
+
+export interface ServicesPageContent {
+  hero: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    primaryCta: CmsLink;
+    secondaryCta: CmsLink;
+  };
+  services: ServicesPageServiceItem[];
+  workflow: {
+    title: string;
+    description: string;
+    steps: ServicesPageWorkflowStep[];
+  };
+  supportHighlights: FeatureHighlight[];
+  seo: SEOContent;
+}
+
+export interface AboutPageContent {
+  hero: {
+    eyebrow: string;
+    title: string;
+    description: string;
+  };
+  story: {
+    eyebrow: string;
+    title: string;
+    paragraphs: string[];
+    stats: TrustMetric[];
+  };
+  values: {
+    title: string;
+    description: string;
+    items: FeatureHighlight[];
+  };
+  reasons: string[];
+  cta: CTASectionContent;
+  seo: SEOContent;
+}
+
+export interface FAQGroupContent {
+  title: string;
+  items: FAQPreviewItem[];
+}
+
+export interface FAQPageContent {
+  hero: {
+    eyebrow: string;
+    title: string;
+    description: string;
+  };
+  groups: FAQGroupContent[];
+  supportCta: {
+    title: string;
+    description: string;
+    cta: CmsLink;
+  };
+  seo: SEOContent;
+}

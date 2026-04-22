@@ -4,14 +4,27 @@ import { Clock3, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
 import { Container } from "@/components/layout/container";
 import { Logo } from "@/components/layout/logo";
 import { company, footerNavigation, legalNavigation } from "@/constants/site";
+import { getPublicPageSettings } from "@/lib/queries/public-pages";
 
-export function SiteFooter() {
+function phoneHref(phone: string) {
+  const normalized = phone.replace(/[^\d+]/g, "");
+
+  return normalized ? `tel:${normalized}` : company.phoneHref;
+}
+
+export async function SiteFooter() {
+  const settings = await getPublicPageSettings();
+
   return (
     <footer className="bg-navy text-white">
       <Container className="py-14 sm:py-16">
         <div className="grid gap-10 lg:grid-cols-[1.1fr_1.6fr_0.9fr]">
           <div className="max-w-sm">
-            <Logo variant="inverse" />
+            <Logo
+              variant="inverse"
+              siteName={settings.siteIdentity.siteName}
+              logo={settings.siteIdentity.logo}
+            />
             <p className="mt-5 text-sm leading-6 text-slate-300">
               Professional courier and logistics services for teams that need
               dependable pickup, transparent tracking, and calm operational
@@ -23,7 +36,7 @@ export function SiteFooter() {
                   aria-hidden="true"
                   className="mt-0.5 h-5 w-5 shrink-0 text-primary"
                 />
-                <span>{company.trustStatement}</span>
+                <span>{settings.footerNotice.text}</span>
               </p>
             </div>
           </div>
@@ -60,34 +73,34 @@ export function SiteFooter() {
                   aria-hidden="true"
                   className="mt-1 h-4 w-4 shrink-0 text-primary"
                 />
-                <span>{company.address}</span>
+                <span>{settings.companyContact.address}</span>
               </p>
               <a
-                href={company.phoneHref}
+                href={phoneHref(settings.companyContact.phone)}
                 className="flex gap-3 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
               >
                 <Phone
                   aria-hidden="true"
                   className="mt-1 h-4 w-4 shrink-0 text-primary"
                 />
-                <span>{company.phone}</span>
+                <span>{settings.companyContact.phone}</span>
               </a>
               <a
-                href={company.emailHref}
+                href={`mailto:${settings.companyContact.email}`}
                 className="flex gap-3 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
               >
                 <Mail
                   aria-hidden="true"
                   className="mt-1 h-4 w-4 shrink-0 text-primary"
                 />
-                <span>{company.email}</span>
+                <span>{settings.companyContact.email}</span>
               </a>
               <p className="flex gap-3">
                 <Clock3
                   aria-hidden="true"
                   className="mt-1 h-4 w-4 shrink-0 text-primary"
                 />
-                <span>{company.hours}</span>
+                <span>{settings.supportHours.label}</span>
               </p>
             </div>
           </div>
@@ -96,8 +109,8 @@ export function SiteFooter() {
         <div className="mt-12 border-t border-white/10 pt-6">
           <div className="flex flex-col gap-5 text-sm text-slate-400 lg:flex-row lg:items-center lg:justify-between">
             <p>
-              &copy; {new Date().getFullYear()} {company.legalName}. All rights
-              reserved.
+              &copy; {new Date().getFullYear()} {settings.siteIdentity.siteName}.
+              All rights reserved.
             </p>
             <nav aria-label="Legal navigation">
               <ul className="flex flex-wrap gap-x-5 gap-y-2">

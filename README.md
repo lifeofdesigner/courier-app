@@ -495,6 +495,31 @@ git commit -m "Patch: separate customer admin login and developer bootstrap"
 git push origin main
 ```
 
+## Admin CMS UX Rebuild Patch
+
+The `/admin/cms` page now presents a field-based editor instead of raw
+section/key/JSON rows. Admins edit grouped content areas with plain labels,
+inline image pickers, preview states, per-section save buttons, and explicit
+Draft/Published controls.
+
+CMS groups now shown in the editor:
+
+- Site Identity
+- Homepage
+- Services Page
+- About Page
+- Contact Info
+- FAQ
+- Footer
+- SEO
+
+Homepage editing is split into Hero, Tracking Promo, Services Preview, Trust
+Section, Coverage Section, Testimonials / Social Proof, FAQ Preview, CTA, and
+homepage SEO. The server actions still write compatible `cms_content` payloads
+for the existing homepage model. Published site identity, contact, and footer
+records sync back into `site_settings` so current public contact/header/footer
+readers continue to work.
+
 ## Routes
 
 Public:

@@ -59,7 +59,7 @@ export function ContactPanel({ settings }: ContactPanelProps) {
           <MapPin aria-hidden="true" className="mt-1 h-5 w-5 text-[#FF6B2B]" />
           <span>
             <strong className="block text-[#0B1C3A]">Office</strong>
-            {company.addressLines.join(", ")}
+            {settings.companyContact.address}
           </span>
         </p>
       </div>

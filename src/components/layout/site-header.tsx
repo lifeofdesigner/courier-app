@@ -11,6 +11,7 @@ import {
   publicNavigation,
 } from "@/constants/site";
 import { getCurrentAuthState } from "@/lib/queries/auth";
+import { getPublicPageSettings } from "@/lib/queries/public-pages";
 import type { CurrentAuthState } from "@/lib/queries/auth";
 
 const secondaryActionButtonClasses =
@@ -34,9 +35,19 @@ function getHeaderAccountAction({ user, profileRole }: CurrentAuthState) {
   return accountCtas.customer;
 }
 
+function phoneHref(phone: string) {
+  const normalized = phone.replace(/[^\d+]/g, "");
+
+  return normalized ? `tel:${normalized}` : company.phoneHref;
+}
+
 export async function SiteHeader() {
-  const authState = await getCurrentAuthState();
+  const [authState, settings] = await Promise.all([
+    getCurrentAuthState(),
+    getPublicPageSettings(),
+  ]);
   const accountAction = getHeaderAccountAction(authState);
+  const supportPhone = settings.companyContact.phone;
 
   return (
     <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/95 shadow-sm shadow-slate-900/[0.03] backdrop-blur supports-[backdrop-filter]:bg-white/90">
@@ -44,18 +55,21 @@ export async function SiteHeader() {
         <Container className="flex h-10 items-center justify-between gap-4 text-xs font-semibold">
           <span className="truncate">{company.coverage}</span>
           <a
-            href={company.phoneHref}
+            href={phoneHref(supportPhone)}
             className="hidden shrink-0 items-center gap-2 rounded-md text-slate-100 transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary sm:flex"
           >
             <Phone aria-hidden="true" className="h-3.5 w-3.5 text-primary" />
-            {company.phone}
+            {supportPhone}
           </a>
         </Container>
       </div>
 
       <Container>
         <div className="relative flex h-20 items-center justify-between gap-6">
-          <Logo />
+          <Logo
+            siteName={settings.siteIdentity.siteName}
+            logo={settings.siteIdentity.logo}
+          />
 
           <nav aria-label="Primary navigation" className="hidden lg:block">
             <ul className="flex items-center gap-1.5">

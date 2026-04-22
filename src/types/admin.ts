@@ -1,4 +1,21 @@
 import type { PaymentStatus } from "@/types/payment";
+import type {
+  AboutPageContent,
+  ContactInfoContent,
+  CTASectionContent,
+  FAQPageContent,
+  FooterContent,
+  HeroSectionContent,
+  ServicePreviewSectionContent,
+  ServicesPageContent,
+  SiteIdentityContent,
+  SocialProofContent,
+  TrackingPromoContent,
+  TrustSectionContent,
+  CoverageBlurb,
+  FAQPreviewSectionContent,
+  SEOContent,
+} from "@/types/cms";
 
 export interface AdminActionState {
   success: boolean;
@@ -101,6 +118,38 @@ export interface AdminCmsRow {
   published: boolean;
   updatedAt: string;
   updatedBy: string | null;
+}
+
+export interface AdminCmsEditorSection<T> {
+  id: string | null;
+  section: string;
+  key: string;
+  value: T;
+  published: boolean;
+  updatedAt: string | null;
+}
+
+export interface AdminHomepageCmsSections {
+  hero: AdminCmsEditorSection<HeroSectionContent>;
+  trackingPromo: AdminCmsEditorSection<TrackingPromoContent>;
+  services: AdminCmsEditorSection<ServicePreviewSectionContent>;
+  trust: AdminCmsEditorSection<TrustSectionContent>;
+  coverage: AdminCmsEditorSection<CoverageBlurb>;
+  testimonials: AdminCmsEditorSection<SocialProofContent>;
+  faqPreview: AdminCmsEditorSection<FAQPreviewSectionContent>;
+  cta: AdminCmsEditorSection<CTASectionContent>;
+  seo: AdminCmsEditorSection<SEOContent>;
+}
+
+export interface AdminCmsEditorData {
+  rows: AdminCmsRow[];
+  siteIdentity: AdminCmsEditorSection<SiteIdentityContent>;
+  homepage: AdminHomepageCmsSections;
+  servicesPage: AdminCmsEditorSection<ServicesPageContent>;
+  aboutPage: AdminCmsEditorSection<AboutPageContent>;
+  contactInfo: AdminCmsEditorSection<ContactInfoContent>;
+  faqPage: AdminCmsEditorSection<FAQPageContent>;
+  footer: AdminCmsEditorSection<FooterContent>;
 }
 
 export interface SiteSettingRow {

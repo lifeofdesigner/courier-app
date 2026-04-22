@@ -2,6 +2,7 @@ import { cache } from "react";
 
 import { company, socialLinks } from "@/constants/site";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import type { CmsImage } from "@/types/cms";
 
 type SiteSettingQueryRow = {
   id: string;
@@ -12,9 +13,15 @@ type SiteSettingQueryRow = {
 };
 
 export type PublicPageSettings = {
+  siteIdentity: {
+    siteName: string;
+    logo: CmsImage | null;
+    favicon: CmsImage | null;
+  };
   companyContact: {
     phone: string;
     email: string;
+    address: string;
   };
   supportHours: {
     label: string;
@@ -30,9 +37,15 @@ export type PublicPageSettings = {
 };
 
 const fallbackSettings: PublicPageSettings = {
+  siteIdentity: {
+    siteName: company.name,
+    logo: null,
+    favicon: null,
+  },
   companyContact: {
     phone: company.phone,
     email: company.email,
+    address: company.address,
   },
   supportHours: {
     label: company.operatingHours,
@@ -53,6 +66,23 @@ function readString(value: unknown, fallback: string) {
     : fallback;
 }
 
+function readImage(value: unknown): CmsImage | null {
+  if (!isRecord(value)) {
+    return null;
+  }
+
+  const src = readString(value.src, "");
+
+  if (!src) {
+    return null;
+  }
+
+  return {
+    src,
+    alt: readString(value.alt, "Site image"),
+  };
+}
+
 function mergeSettings(rows: SiteSettingQueryRow[]): PublicPageSettings {
   const settings = structuredClone(fallbackSettings);
 
@@ -70,6 +100,19 @@ function mergeSettings(rows: SiteSettingQueryRow[]): PublicPageSettings {
         row.value.email,
         settings.companyContact.email,
       );
+      settings.companyContact.address = readString(
+        row.value.address,
+        settings.companyContact.address,
+      );
+    }
+
+    if (row.key === "site_identity") {
+      settings.siteIdentity.siteName = readString(
+        row.value.siteName,
+        settings.siteIdentity.siteName,
+      );
+      settings.siteIdentity.logo = readImage(row.value.logo);
+      settings.siteIdentity.favicon = readImage(row.value.favicon);
     }
 
     if (row.key === "support_hours") {
@@ -116,6 +159,7 @@ export const getPublicPageSettings = cache(
         .select("id, key, value, updated_at, updated_by")
         .in("key", [
           "company_contact",
+          "site_identity",
           "support_hours",
           "social_links",
           "footer_notice",
