@@ -42,6 +42,7 @@ export interface Database {
           reference_code: string | null;
           service_type: string;
           package_type: string | null;
+          transport_mode: "air" | "road" | "freight";
           origin_country: string;
           origin_city: string;
           destination_country: string;
@@ -67,6 +68,7 @@ export interface Database {
           reference_code?: string | null;
           service_type: string;
           package_type?: string | null;
+          transport_mode?: "air" | "road" | "freight";
           origin_country: string;
           origin_city: string;
           destination_country: string;
@@ -91,6 +93,7 @@ export interface Database {
           reference_code?: string | null;
           service_type?: string;
           package_type?: string | null;
+          transport_mode?: "air" | "road" | "freight";
           origin_country?: string;
           origin_city?: string;
           destination_country?: string;
@@ -154,6 +157,7 @@ export interface Database {
           destination_city: string;
           service_type: string;
           package_type: string | null;
+          transport_mode: "air" | "road" | "freight";
           weight_kg: number;
           declared_value: number;
           currency: string;
@@ -175,6 +179,7 @@ export interface Database {
           destination_city: string;
           service_type: string;
           package_type?: string | null;
+          transport_mode?: "air" | "road" | "freight";
           weight_kg: number;
           declared_value?: number;
           currency?: string;
@@ -195,6 +200,7 @@ export interface Database {
           destination_city?: string;
           service_type?: string;
           package_type?: string | null;
+          transport_mode?: "air" | "road" | "freight";
           weight_kg?: number;
           declared_value?: number;
           currency?: string;

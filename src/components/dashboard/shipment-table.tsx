@@ -6,7 +6,11 @@ import { useMemo, useState } from "react";
 import { DashboardEmptyState } from "@/components/dashboard/dashboard-empty-state";
 import { TrackingStatusBadge } from "@/components/tracking";
 import type { ShipmentTableItem } from "@/types/dashboard";
-import { shipmentStatusDefinitions } from "@/types/shipment";
+import {
+  getShipmentStatusMeta,
+  getTransportModeMeta,
+  shipmentStatuses,
+} from "@/types/shipment";
 
 export type ShipmentTableProps = {
   shipments: ShipmentTableItem[];
@@ -76,9 +80,9 @@ export function ShipmentTable({ shipments }: ShipmentTableProps) {
           className={inputClassName}
         >
           <option value="all">All statuses</option>
-          {shipmentStatusDefinitions.map((option) => (
-            <option key={option.code} value={option.code}>
-              {option.label}
+          {shipmentStatuses.map((option) => (
+            <option key={option} value={option}>
+              {getShipmentStatusMeta(option).label}
             </option>
           ))}
         </select>
@@ -97,6 +101,7 @@ export function ShipmentTable({ shipments }: ShipmentTableProps) {
                 <tr>
                   <th className="px-4 py-4">Tracking number</th>
                   <th className="px-4 py-4">Service</th>
+                  <th className="px-4 py-4">Mode</th>
                   <th className="px-4 py-4">Route</th>
                   <th className="px-4 py-4">Status</th>
                   <th className="px-4 py-4">ETA</th>
@@ -119,11 +124,17 @@ export function ShipmentTable({ shipments }: ShipmentTableProps) {
                       {shipment.serviceType}
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">
+                      {getTransportModeMeta(shipment.transportMode).label}
+                    </td>
+                    <td className="px-4 py-4 text-sm text-slate-700">
                       {shipment.originCity}, {shipment.originCountry} to{" "}
                       {shipment.destinationCity}, {shipment.destinationCountry}
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">
-                      <TrackingStatusBadge status={shipment.status} />
+                      <TrackingStatusBadge
+                        status={shipment.status}
+                        mode={shipment.transportMode}
+                      />
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">
                       {formatDate(shipment.estimatedDeliveryDate)}

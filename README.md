@@ -541,37 +541,81 @@ The migration `supabase/migrations/006_admin_shipment_workspace.sql` adds the
 narrow RLS correction needed for admins to insert linked booking records during
 manual shipment creation, plus operational indexes for shipment queues.
 
-## Shipping Status Terminology Patch
+## Mode-Aware Shipping Terminology Patch
 
-Shipment status display is centralized in `src/lib/shipping/statuses.ts`.
-Admin, customer dashboard, public tracking, tracking emails, and analytics now
-render courier terminology instead of raw stored codes.
+Shipment status display and transport-mode options are centralized in
+`src/lib/shipping/statuses.ts`. Admin, customer dashboard, public tracking,
+tracking emails, and analytics now render Air, Road, and Freight logistics
+terminology instead of raw stored codes.
 
-Canonical shipment statuses:
+Supported transport modes:
+
+- `air` - Air
+- `road` - Road
+- `freight` - Freight
+
+Common shipment statuses:
 
 - `shipment_created` - Shipment Created
+- `booking_confirmed` - Booking Confirmed
 - `pickup_scheduled` - Pickup Scheduled
 - `collected` - Collected by Courier
-- `received_at_origin_facility` - Received at Origin Facility
-- `departed_origin_facility` - Departed Origin Facility
 - `in_transit` - In Transit
-- `arrived_at_destination_facility` - Arrived at Destination Facility
-- `customs_clearance_in_progress` - Customs Clearance in Progress
-- `customs_cleared` - Customs Cleared
-- `out_for_delivery` - Out for Delivery
-- `delivered` - Delivered
-- `delivery_attempted` - Delivery Attempted
 - `exception` - Shipment Exception
 - `on_hold` - On Hold
+- `delivered` - Delivered
 - `returned_to_sender` - Returned to Sender
 - `cancelled` - Cancelled
+
+Air mode statuses:
+
+- `documentation_verified` - Documentation Verified
+- `tendered_to_airline` - Tendered to Airline
+- `departed_origin_airport` - Departed Origin Airport
+- `arrived_at_transit_airport` - Arrived at Transit Airport
+- `arrived_at_destination_airport` - Arrived at Destination Airport
+- `customs_clearance_in_progress` - Customs Clearance in Progress
+- `customs_cleared` - Customs Cleared
+- `handed_to_last_mile_courier` - Handed to Last-Mile Courier
+- `out_for_delivery` - Out for Delivery
+
+Road mode statuses:
+
+- `route_assigned` - Route Assigned
+- `departed_origin_depot` - Departed Origin Depot
+- `at_regional_hub` - At Regional Hub
+- `at_transit_hub` - At Transit Hub
+- `arrived_at_destination_depot` - Arrived at Destination Depot
+- `linehaul_in_progress` - Linehaul in Progress
+- `out_for_delivery` - Out for Delivery
+- `delivery_attempted` - Delivery Attempted
+
+Freight mode statuses:
+
+- `freight_booking_confirmed` - Freight Booking Confirmed
+- `cargo_received` - Cargo Received
+- `palletized_consolidated` - Palletized / Consolidated
+- `loaded_for_dispatch` - Loaded for Dispatch
+- `in_linehaul` - In Linehaul
+- `at_cross_dock_facility` - At Cross-Dock Facility
+- `awaiting_delivery_appointment` - Awaiting Delivery Appointment
+- `delivery_appointment_confirmed` - Delivery Appointment Confirmed
+- `unloaded_at_destination_facility` - Unloaded at Destination Facility
+- `proof_of_delivery_received` - Proof of Delivery Received
 
 Legacy status rows remain supported at the display layer:
 
 - `label_created` renders as `shipment_created`
 - `picked_up` renders as `collected`
-- `arrived_at_hub` renders as a facility milestone based on context
+- `arrived_at_hub` renders as the closest mode-specific hub milestone
 - `customs_clearance` renders as `customs_clearance_in_progress`
+- `received_at_origin_facility` renders as a mode-specific origin milestone
+- `departed_origin_facility` renders as a mode-specific departure milestone
+- `arrived_at_destination_facility` renders as a mode-specific destination milestone
+
+The migration `supabase/migrations/007_shipping_transport_modes.sql` adds the
+nullable-compatible `transport_mode` defaults, check constraints, and indexes
+needed for mode-aware shipment operations.
 
 ## Routes
 

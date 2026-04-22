@@ -18,9 +18,13 @@ function isAfter(dateValue: string, daysAgo: number) {
   return createdAt >= threshold;
 }
 
-function countShipmentsByStatus(rows: { status: string }[]) {
+function countShipmentsByStatus(
+  rows: { status: string; transport_mode: string | null }[],
+) {
   return rows.reduce<Record<string, number>>((counts, row) => {
-    const status = normalizeShipmentStatus(row.status);
+    const status = normalizeShipmentStatus(row.status, {
+      mode: row.transport_mode,
+    });
     counts[status] = (counts[status] ?? 0) + 1;
 
     return counts;
@@ -31,7 +35,7 @@ export async function getAdminAnalyticsData(): Promise<AdminAnalyticsData> {
   const { supabase } = await assertAdminAction();
   const [shipmentsResult, quotesResult, bookingsResult, usersResult] =
     await Promise.all([
-      supabase.from("orders").select("status"),
+      supabase.from("orders").select("status, transport_mode"),
       supabase.from("quotes").select("service_type"),
       supabase.from("bookings").select("status"),
       supabase
@@ -45,7 +49,10 @@ export async function getAdminAnalyticsData(): Promise<AdminAnalyticsData> {
 
   return {
     shipmentsByStatus: countShipmentsByStatus(
-      (shipmentsResult.data ?? []) as { status: string }[],
+      (shipmentsResult.data ?? []) as {
+        status: string;
+        transport_mode: string | null;
+      }[],
     ),
     quotesByServiceType: countByKey(
       (quotesResult.data ?? []) as { service_type: string }[],

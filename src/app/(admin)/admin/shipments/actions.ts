@@ -12,6 +12,7 @@ import { paymentStatuses } from "@/types/payment";
 import {
   getShipmentStatusMeta,
   shipmentStatuses,
+  transportModes,
   type ShipmentStatus,
 } from "@/types/shipment";
 
@@ -46,6 +47,7 @@ const createShipmentSchema = z.object({
   recipientEmail: optionalEmailSchema,
   recipientPhone: z.string().trim().optional(),
   serviceType: z.enum(["Express", "Economy"]),
+  transportMode: z.enum(transportModes),
   packageType: z.string().trim().min(1, "Enter a package type."),
   weightKg: z.coerce.number().positive("Weight must be greater than 0."),
   declaredValue: z.coerce
@@ -63,6 +65,7 @@ const createShipmentSchema = z.object({
 
 const shipmentStatusSchema = z.object({
   orderId: z.string().trim().min(1, "Select a shipment."),
+  transportMode: z.enum(transportModes).optional(),
   status: z.enum(shipmentStatuses),
   label: z.string().trim().optional(),
   description: z.string().trim().optional(),
@@ -241,6 +244,7 @@ export async function createShipmentAction(
     recipientEmail: getString(formData, "recipientEmail"),
     recipientPhone: getString(formData, "recipientPhone"),
     serviceType: getString(formData, "serviceType"),
+    transportMode: getString(formData, "transportMode"),
     packageType: getString(formData, "packageType"),
     weightKg: getString(formData, "weightKg"),
     declaredValue: getString(formData, "declaredValue"),
@@ -316,6 +320,7 @@ export async function createShipmentAction(
         recipient_email: optionalValue(parsed.data.recipientEmail),
         recipient_phone: optionalValue(parsed.data.recipientPhone),
         service_type: parsed.data.serviceType,
+        transport_mode: parsed.data.transportMode,
         package_type: parsed.data.packageType,
         weight_kg: parsed.data.weightKg,
         declared_value: parsed.data.declaredValue,
@@ -354,6 +359,7 @@ export async function createShipmentAction(
         reference_code: referenceCode,
         service_type: parsed.data.serviceType,
         package_type: parsed.data.packageType,
+        transport_mode: parsed.data.transportMode,
         origin_country: parsed.data.pickup.country,
         origin_city: parsed.data.pickup.city,
         destination_country: parsed.data.delivery.country,
@@ -394,7 +400,9 @@ export async function createShipmentAction(
         .eq("id", bookingId);
     }
 
-    const initialStatusMeta = getShipmentStatusMeta(parsed.data.shipmentStatus);
+    const initialStatusMeta = getShipmentStatusMeta(parsed.data.shipmentStatus, {
+      mode: parsed.data.transportMode,
+    });
 
     await supabase.from("tracking_events").insert({
       order_id: orderId,
@@ -443,6 +451,7 @@ export async function updateShipmentStatusAction(
 
   const parsed = shipmentStatusSchema.safeParse({
     orderId: getString(formData, "orderId"),
+    transportMode: getString(formData, "transportMode") || undefined,
     status: getString(formData, "status"),
     label: getString(formData, "label"),
     description: getString(formData, "description"),
@@ -459,7 +468,9 @@ export async function updateShipmentStatusAction(
     const eventTime = parsed.data.eventTime
       ? new Date(parsed.data.eventTime).toISOString()
       : new Date().toISOString();
-    const statusMeta = getShipmentStatusMeta(parsed.data.status);
+    const statusMeta = getShipmentStatusMeta(parsed.data.status, {
+      mode: parsed.data.transportMode,
+    });
     const label = optionalValue(parsed.data.label) ?? statusMeta.label;
     const description =
       optionalValue(parsed.data.description) ??
@@ -469,14 +480,32 @@ export async function updateShipmentStatusAction(
       .from("orders")
       .update({
         status: parsed.data.status,
+        ...(parsed.data.transportMode
+          ? { transport_mode: parsed.data.transportMode }
+          : {}),
         updated_at: new Date().toISOString(),
       })
       .eq("id", parsed.data.orderId)
-      .select("id, tracking_number")
+      .select("id, booking_id, tracking_number")
       .single();
 
     if (orderError || !order) {
       throw new Error("Shipment status could not be updated.");
+    }
+
+    const typedOrder = order as {
+      booking_id: string | null;
+      tracking_number: string;
+    };
+
+    if (parsed.data.transportMode && typedOrder.booking_id) {
+      await supabase
+        .from("bookings")
+        .update({
+          transport_mode: parsed.data.transportMode,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", typedOrder.booking_id);
     }
 
     const { error: eventError } = await supabase
@@ -501,7 +530,7 @@ export async function updateShipmentStatusAction(
       description,
     });
 
-    const trackingNumber = (order as { tracking_number: string }).tracking_number;
+    const trackingNumber = typedOrder.tracking_number;
     revalidateShipmentWorkspace(parsed.data.orderId, trackingNumber);
 
     return {
@@ -524,10 +553,14 @@ export async function updateShipmentStatusOnlyAction(
   formData: FormData,
 ): Promise<AdminActionState> {
   const status = getString(formData, "status") as ShipmentStatus;
-  const statusMeta = getShipmentStatusMeta(status);
+  const transportMode = getString(formData, "transportMode");
+  const statusMeta = getShipmentStatusMeta(status, {
+    mode: transportMode,
+  });
   const nextFormData = new FormData();
 
   nextFormData.set("orderId", getString(formData, "orderId"));
+  nextFormData.set("transportMode", transportMode);
   nextFormData.set("status", status);
   nextFormData.set("label", statusMeta.label);
   nextFormData.set("description", statusMeta.description);

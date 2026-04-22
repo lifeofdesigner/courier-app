@@ -6,6 +6,7 @@ import Link from "next/link";
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import type { AdminTrackingEventRow } from "@/types/admin";
 import { TrackingStatusBadge } from "@/components/tracking";
+import { getTransportModeMeta } from "@/types/shipment";
 
 export type TrackingEventsTableProps = {
   events: AdminTrackingEventRow[];
@@ -34,6 +35,7 @@ export function TrackingEventsTable({ events }: TrackingEventsTableProps) {
       [
         event.orderId,
         event.trackingNumber ?? "",
+        getTransportModeMeta(event.transportMode).label,
         event.status,
         event.label,
         event.description ?? "",
@@ -69,6 +71,7 @@ export function TrackingEventsTable({ events }: TrackingEventsTableProps) {
               <tr>
                 <th className="px-4 py-4">Shipment</th>
                 <th className="px-4 py-4">Status</th>
+                <th className="px-4 py-4">Mode</th>
                 <th className="px-4 py-4">Label</th>
                 <th className="px-4 py-4">Location</th>
                 <th className="px-4 py-4">Event time</th>
@@ -91,7 +94,13 @@ export function TrackingEventsTable({ events }: TrackingEventsTableProps) {
                     ) : null}
                   </td>
                   <td className="px-4 py-4 text-sm text-slate-700">
-                    <TrackingStatusBadge status={event.status} />
+                    <TrackingStatusBadge
+                      status={event.status}
+                      mode={event.transportMode}
+                    />
+                  </td>
+                  <td className="px-4 py-4 text-sm text-slate-700">
+                    {getTransportModeMeta(event.transportMode).label}
                   </td>
                   <td className="px-4 py-4 text-sm text-slate-700">
                     <p className="font-semibold text-[#0B1C3A]">

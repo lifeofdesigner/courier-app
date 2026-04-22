@@ -1,6 +1,7 @@
 import { TrackingEventForm } from "@/components/admin/tracking-event-form";
 import { TrackingStatusBadge } from "@/components/tracking";
 import type { AdminShipmentDetail, AdminTrackingEventRow } from "@/types/admin";
+import { getShipmentStatusMeta } from "@/types/shipment";
 
 export type ShipmentTimelineCardProps = {
   shipment: AdminShipmentDetail;
@@ -16,15 +17,23 @@ function formatDateTime(value: string) {
   }).format(new Date(value));
 }
 
-function TimelineItem({ event }: { event: AdminTrackingEventRow }) {
+function TimelineItem({
+  event,
+  mode,
+}: {
+  event: AdminTrackingEventRow;
+  mode: string;
+}) {
+  const statusMeta = getShipmentStatusMeta(event.status, { mode });
+
   return (
     <li className="relative pb-6 pl-7 last:pb-0">
       <span className="absolute left-0 top-1.5 h-3 w-3 rounded-full bg-[#FF6B2B]" />
       <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <p className="font-semibold text-[#0B1C3A]">{event.label}</p>
-            <TrackingStatusBadge status={event.status} />
+            <p className="font-semibold text-[#0B1C3A]">{statusMeta.label}</p>
+            <TrackingStatusBadge status={event.status} mode={mode} />
           </div>
           {event.description ? (
             <p className="mt-2 text-sm leading-6 text-slate-600">
@@ -55,7 +64,11 @@ export function ShipmentTimelineCard({ shipment }: ShipmentTimelineCardProps) {
         {shipment.trackingEvents.length > 0 ? (
           <ol className="mt-5 border-l border-slate-200">
             {shipment.trackingEvents.map((event) => (
-              <TimelineItem key={event.id} event={event} />
+              <TimelineItem
+                key={event.id}
+                event={event}
+                mode={shipment.transportMode}
+              />
             ))}
           </ol>
         ) : (

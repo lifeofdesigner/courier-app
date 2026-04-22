@@ -75,7 +75,10 @@ export default async function TrackShipmentPage({
             ) : result?.shipment ? (
               <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
                 <TrackingResultCard shipment={result.shipment} />
-                <TrackingTimeline events={result.events} />
+                <TrackingTimeline
+                  events={result.events}
+                  transportMode={result.shipment.transportMode}
+                />
               </div>
             ) : null}
           </div>

@@ -7,6 +7,7 @@ export type TrackingStatusEmailProps = {
   status: string;
   label: string;
   description?: string | null;
+  transportMode?: string | null;
   trackingUrl: string;
 };
 
@@ -16,9 +17,10 @@ export function TrackingStatusEmail({
   status,
   label,
   description,
+  transportMode,
   trackingUrl,
 }: TrackingStatusEmailProps) {
-  const statusMeta = getShipmentStatusMeta(status);
+  const statusMeta = getShipmentStatusMeta(status, { mode: transportMode });
 
   return (
     <div style={{ fontFamily: "Arial, sans-serif", color: "#0F172A" }}>

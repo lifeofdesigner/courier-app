@@ -5,10 +5,11 @@ import {
 
 export type TrackingStatusBadgeProps = {
   status: ShipmentStatusInput;
+  mode?: string | null;
 };
 
-export function TrackingStatusBadge({ status }: TrackingStatusBadgeProps) {
-  const statusMeta = getShipmentStatusMeta(status);
+export function TrackingStatusBadge({ status, mode }: TrackingStatusBadgeProps) {
+  const statusMeta = getShipmentStatusMeta(status, { mode });
 
   return (
     <span

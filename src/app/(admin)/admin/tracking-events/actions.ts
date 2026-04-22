@@ -6,10 +6,11 @@ import { z } from "zod";
 import { assertAdminAction } from "@/lib/auth/assert-admin-action";
 import { sendStatusEmail } from "@/lib/email/send-status-email";
 import type { AdminActionState } from "@/types/admin";
-import { shipmentStatuses } from "@/types/shipment";
+import { shipmentStatuses, transportModes } from "@/types/shipment";
 
 const trackingEventSchema = z.object({
   orderId: z.string().trim().min(1, "Select a shipment."),
+  transportMode: z.enum(transportModes).optional(),
   status: z.enum(shipmentStatuses),
   label: z.string().trim().min(1, "Enter an event label."),
   description: z.string().trim().optional(),
@@ -55,6 +56,7 @@ export async function createTrackingEventAction(
 
   const parsed = trackingEventSchema.safeParse({
     orderId: getString(formData, "orderId"),
+    transportMode: getString(formData, "transportMode") || undefined,
     status: getString(formData, "status"),
     label: getString(formData, "label"),
     description: getString(formData, "description"),
@@ -89,14 +91,32 @@ export async function createTrackingEventAction(
       .from("orders")
       .update({
         status: parsed.data.status,
+        ...(parsed.data.transportMode
+          ? { transport_mode: parsed.data.transportMode }
+          : {}),
         updated_at: new Date().toISOString(),
       })
       .eq("id", parsed.data.orderId)
-      .select("id, tracking_number")
+      .select("id, booking_id, tracking_number")
       .single();
 
     if (orderError || !order) {
       throw new Error("Tracking event saved, but shipment status sync failed.");
+    }
+
+    const typedOrder = order as {
+      booking_id: string | null;
+      tracking_number: string;
+    };
+
+    if (parsed.data.transportMode && typedOrder.booking_id) {
+      await supabase
+        .from("bookings")
+        .update({
+          transport_mode: parsed.data.transportMode,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", typedOrder.booking_id);
     }
 
     await sendStatusEmail({
@@ -111,9 +131,7 @@ export async function createTrackingEventAction(
     revalidatePath(`/admin/shipments/${parsed.data.orderId}`);
     revalidatePath("/admin/tracking-events");
     revalidatePath("/track");
-    revalidatePath(
-      `/track?tracking=${(order as { tracking_number: string }).tracking_number}`,
-    );
+    revalidatePath(`/track?tracking=${typedOrder.tracking_number}`);
 
     return {
       success: true,

@@ -13,6 +13,7 @@ import type { PaymentStatus } from "@/types/payment";
 import {
   activeShipmentStatuses,
   normalizeShipmentStatus,
+  normalizeTransportMode,
 } from "@/types/shipment";
 
 type ProfileRow = {
@@ -29,6 +30,7 @@ type ShipmentRow = {
   booking_id: string | null;
   tracking_number: string;
   service_type: string;
+  transport_mode: string | null;
   status: string;
   origin_city: string;
   origin_country: string;
@@ -113,7 +115,10 @@ function mapShipment(row: ShipmentRow): ShipmentTableItem {
     bookingId: row.booking_id,
     trackingNumber: row.tracking_number,
     serviceType: row.service_type,
-    status: normalizeShipmentStatus(row.status),
+    transportMode: normalizeTransportMode(row.transport_mode),
+    status: normalizeShipmentStatus(row.status, {
+      mode: row.transport_mode,
+    }),
     originCity: row.origin_city,
     originCountry: row.origin_country,
     destinationCity: row.destination_city,
@@ -259,6 +264,7 @@ export async function getDashboardOverviewData(): Promise<DashboardOverviewData>
       booking_id,
       tracking_number,
       service_type,
+      transport_mode,
       status,
       origin_city,
       origin_country,
@@ -299,6 +305,7 @@ export async function getDashboardOverviewData(): Promise<DashboardOverviewData>
       `
       id,
       service_type,
+      transport_mode,
       status,
       payment_status,
       amount_due,

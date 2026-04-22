@@ -1,5 +1,6 @@
 import { calculateQuoteBreakdown } from "@/lib/calculations/quotes";
 import { getPricingRules } from "@/lib/queries/quotes";
+import { normalizeTransportMode } from "@/lib/shipping/statuses";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   AddressInput,
@@ -27,6 +28,7 @@ type BookingRow = {
   recipient_phone: string | null;
   service_type: string;
   package_type: string | null;
+  transport_mode: string | null;
   weight_kg: number | string;
   declared_value: number | string;
   pickup_date: string;
@@ -82,6 +84,7 @@ function mapBooking(row: BookingRow): BookingRecord {
     recipientEmail: row.recipient_email,
     recipientPhone: row.recipient_phone,
     serviceType: toServiceType(row.service_type),
+    transportMode: normalizeTransportMode(row.transport_mode),
     packageType: row.package_type,
     weightKg: Number(row.weight_kg),
     declaredValue: Number(row.declared_value),
@@ -214,6 +217,7 @@ export async function insertBookingRequest({
       recipient_phone: optionalValue(input.recipientPhone),
       service_type: input.serviceType,
       package_type: input.packageType,
+      transport_mode: "road",
       weight_kg: input.weightKg,
       declared_value: input.declaredValue,
       pickup_date: input.pickupDate,

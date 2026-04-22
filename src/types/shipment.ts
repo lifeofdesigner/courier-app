@@ -1,18 +1,26 @@
-import type { ShipmentStatus } from "@/lib/shipping/statuses";
+import type { ShipmentStatus, TransportMode } from "@/lib/shipping/statuses";
 
 export type {
   LegacyShipmentStatus,
   ShipmentStatus,
   ShipmentStatusInput,
   ShipmentStatusMeta,
+  TransportMode,
 } from "@/lib/shipping/statuses";
 export {
   activeShipmentStatuses,
+  allShipmentStatusDefinitions,
+  commonShipmentStatusDefinitions,
   formatShipmentStatus,
   getShipmentStatusMeta,
+  getShipmentStatusOptions,
+  getTransportModeMeta,
   legacyShipmentStatusMap,
+  modeShipmentStatusDefinitions,
   normalizeShipmentStatus,
-  shipmentStatusDefinitions,
+  normalizeTransportMode,
+  transportModeDefinitions,
+  transportModes,
   shipmentStatuses,
 } from "@/lib/shipping/statuses";
 
@@ -34,6 +42,7 @@ export interface ShipmentRecord {
   referenceCode: string | null;
   serviceType: string;
   packageType: string | null;
+  transportMode: TransportMode;
   originCountry: string;
   originCity: string;
   destinationCountry: string;

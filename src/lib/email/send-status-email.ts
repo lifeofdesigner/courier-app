@@ -11,6 +11,7 @@ type StatusEmailOrderRow = {
   booking_id: string | null;
   tracking_number: string;
   recipient_name: string;
+  transport_mode: string | null;
 };
 
 type StatusEmailBookingRow = {
@@ -52,7 +53,7 @@ export async function sendStatusEmail({
 
   const { data: order } = await supabase
     .from("orders")
-    .select("id, booking_id, tracking_number, recipient_name")
+    .select("id, booking_id, tracking_number, recipient_name, transport_mode")
     .eq("id", orderId)
     .single();
 
@@ -102,6 +103,7 @@ export async function sendStatusEmail({
         status,
         label,
         description,
+        transportMode: typedOrder.transport_mode,
         trackingUrl: `${getSiteUrl()}/track?tracking=${typedOrder.tracking_number}`,
       }),
     });

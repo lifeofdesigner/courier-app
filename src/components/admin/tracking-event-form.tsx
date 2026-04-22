@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useMemo, useState } from "react";
 
 import { updateShipmentStatusAction } from "@/app/(admin)/admin/shipments/actions";
 import { createTrackingEventAction } from "@/app/(admin)/admin/tracking-events/actions";
@@ -9,11 +9,19 @@ import type {
   AdminShipmentDetail,
   AdminShipmentRow,
 } from "@/types/admin";
-import { formatShipmentStatus, shipmentStatuses } from "@/types/shipment";
+import {
+  getShipmentStatusMeta,
+  getShipmentStatusOptions,
+  transportModeDefinitions,
+  type TransportMode,
+} from "@/types/shipment";
 
 export type TrackingEventFormProps = {
   shipments?: AdminShipmentRow[];
-  shipment?: Pick<AdminShipmentDetail, "id" | "trackingNumber" | "status">;
+  shipment?: Pick<
+    AdminShipmentDetail,
+    "id" | "trackingNumber" | "status" | "transportMode"
+  >;
   mode: "shipment-status" | "tracking-event";
   title: string;
   description: string;
@@ -47,6 +55,31 @@ export function TrackingEventForm({
   title,
   description,
 }: TrackingEventFormProps) {
+  const [selectedShipmentId, setSelectedShipmentId] = useState(
+    shipment?.id ?? "",
+  );
+  const selectedShipment = useMemo(
+    () =>
+      shipment ??
+      shipments.find((row) => row.id === selectedShipmentId) ??
+      null,
+    [selectedShipmentId, shipment, shipments],
+  );
+  const [fallbackTransportMode, setFallbackTransportMode] =
+    useState<TransportMode>("road");
+  const transportMode =
+    selectedShipment?.transportMode ?? fallbackTransportMode;
+  const statusOptions = useMemo(
+    () => getShipmentStatusOptions(transportMode),
+    [transportMode],
+  );
+  const currentStatusOption =
+    selectedShipment &&
+    !statusOptions.some((status) => status.code === selectedShipment.status)
+      ? getShipmentStatusMeta(selectedShipment.status, {
+          mode: transportMode,
+        })
+      : null;
   const action =
     mode === "shipment-status"
       ? updateShipmentStatusAction
@@ -101,13 +134,14 @@ export function TrackingEventForm({
               name="orderId"
               className={inputClassName}
               defaultValue=""
+              onChange={(event) => setSelectedShipmentId(event.target.value)}
             >
               <option value="" disabled>
                 Select a shipment
               </option>
               {shipments.map((row) => (
                 <option key={row.id} value={row.id}>
-                  {row.trackingNumber} - {formatShipmentStatus(row.status)}
+                  {row.trackingNumber}
                 </option>
               ))}
             </select>
@@ -123,6 +157,46 @@ export function TrackingEventForm({
         </div>
         <div className="space-y-2">
           <label
+            htmlFor={`${mode}-transportMode`}
+            className="block text-sm font-semibold text-[#0B1C3A]"
+          >
+            Transport mode
+          </label>
+          {selectedShipment ? (
+            <>
+              <input
+                type="hidden"
+                name="transportMode"
+                value={selectedShipment.transportMode}
+              />
+              <div className="flex h-12 items-center rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-[#0B1C3A]">
+                {
+                  transportModeDefinitions.find(
+                    (item) => item.code === selectedShipment.transportMode,
+                  )?.label
+                }
+              </div>
+            </>
+          ) : (
+            <select
+              id={`${mode}-transportMode`}
+              name="transportMode"
+              className={inputClassName}
+              value={fallbackTransportMode}
+              onChange={(event) =>
+                setFallbackTransportMode(event.target.value as TransportMode)
+              }
+            >
+              {transportModeDefinitions.map((item) => (
+                <option key={item.code} value={item.code}>
+                  {item.label}
+                </option>
+              ))}
+            </select>
+          )}
+        </div>
+        <div className="space-y-2">
+          <label
             htmlFor={`${mode}-status`}
             className="block text-sm font-semibold text-[#0B1C3A]"
           >
@@ -132,11 +206,16 @@ export function TrackingEventForm({
             id={`${mode}-status`}
             name="status"
             className={inputClassName}
-            defaultValue={shipment?.status ?? "in_transit"}
+            defaultValue={selectedShipment?.status ?? "in_transit"}
           >
-            {shipmentStatuses.map((status) => (
-              <option key={status} value={status}>
-                {formatShipmentStatus(status)}
+            {currentStatusOption ? (
+              <option value={currentStatusOption.code}>
+                {currentStatusOption.label}
+              </option>
+            ) : null}
+            {statusOptions.map((status) => (
+              <option key={status.code} value={status.code}>
+                {status.label}
               </option>
             ))}
           </select>

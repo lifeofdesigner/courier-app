@@ -1,7 +1,7 @@
 import { TrackingStatusBadge } from "@/components/tracking";
 import type { AdminShipmentDetail } from "@/types/admin";
 import { formatPaymentStatus } from "@/types/payment";
-import { getShipmentStatusMeta } from "@/types/shipment";
+import { getShipmentStatusMeta, getTransportModeMeta } from "@/types/shipment";
 
 export type ShipmentOverviewCardProps = {
   shipment: AdminShipmentDetail;
@@ -34,7 +34,10 @@ function DetailItem({ label, value }: { label: string; value: string }) {
 
 export function ShipmentOverviewCard({ shipment }: ShipmentOverviewCardProps) {
   const labelStatus = shipment.labelUrl ? "Ready to print" : "Pending";
-  const statusMeta = getShipmentStatusMeta(shipment.status);
+  const statusMeta = getShipmentStatusMeta(shipment.status, {
+    mode: shipment.transportMode,
+  });
+  const transportMode = getTransportModeMeta(shipment.transportMode);
   const customer = shipment.customer
     ? shipment.customer.fullName ?? shipment.customer.id
     : "Unassigned";
@@ -56,15 +59,19 @@ export function ShipmentOverviewCard({ shipment }: ShipmentOverviewCardProps) {
           ) : null}
         </div>
         <div className="flex flex-wrap gap-2">
-          <TrackingStatusBadge status={shipment.status} />
+          <TrackingStatusBadge
+            status={shipment.status}
+            mode={shipment.transportMode}
+          />
           <span className="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white ring-1 ring-white/15">
             {formatPaymentStatus(shipment.paymentStatus)}
           </span>
         </div>
       </div>
 
-      <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-6">
         <DetailItem label="Service" value={shipment.serviceType} />
+        <DetailItem label="Mode" value={transportMode.label} />
         <DetailItem label="Current milestone" value={statusMeta.label} />
         <DetailItem label="Label" value={labelStatus} />
         <DetailItem label="Created" value={formatDate(shipment.createdAt)} />

@@ -4,7 +4,10 @@ import type {
   ShipmentRecord,
   TrackingEventItem,
 } from "@/types/shipment";
-import { normalizeShipmentStatus } from "@/types/shipment";
+import {
+  normalizeShipmentStatus,
+  normalizeTransportMode,
+} from "@/types/shipment";
 
 type OrderRow = {
   id: string;
@@ -13,6 +16,7 @@ type OrderRow = {
   reference_code: string | null;
   service_type: string;
   package_type: string | null;
+  transport_mode: string | null;
   origin_country: string;
   origin_city: string;
   destination_country: string;
@@ -50,6 +54,7 @@ function mapShipment(row: OrderRow): ShipmentRecord {
     referenceCode: row.reference_code,
     serviceType: row.service_type,
     packageType: row.package_type,
+    transportMode: normalizeTransportMode(row.transport_mode),
     originCountry: row.origin_country,
     originCity: row.origin_city,
     destinationCountry: row.destination_country,
@@ -60,7 +65,9 @@ function mapShipment(row: OrderRow): ShipmentRecord {
     weightKg: Number(row.weight_kg),
     declaredValue: Number(row.declared_value),
     currency: row.currency,
-    status: normalizeShipmentStatus(row.status),
+    status: normalizeShipmentStatus(row.status, {
+      mode: row.transport_mode,
+    }),
     labelUrl: row.label_url,
     labelGeneratedAt: row.label_generated_at,
     estimatedDeliveryDate: row.estimated_delivery_date,
@@ -69,11 +76,15 @@ function mapShipment(row: OrderRow): ShipmentRecord {
   };
 }
 
-function mapTrackingEvent(row: TrackingEventRow): TrackingEventItem {
+function mapTrackingEvent(
+  row: TrackingEventRow,
+  transportMode: string | null,
+): TrackingEventItem {
   return {
     id: row.id,
     orderId: row.order_id,
     status: normalizeShipmentStatus(row.status, {
+      mode: transportMode,
       arrivedAtHubAs: "received_at_origin_facility",
     }),
     label: row.label,
@@ -117,6 +128,7 @@ export async function getPublicTrackingResult(
       reference_code,
       service_type,
       package_type,
+      transport_mode,
       origin_country,
       origin_city,
       destination_country,
@@ -163,9 +175,13 @@ export async function getPublicTrackingResult(
     .eq("order_id", order.id)
     .order("event_time", { ascending: false });
 
+  const shipment = mapShipment(order as OrderRow);
+
   return {
-    shipment: mapShipment(order as OrderRow),
-    events: ((events ?? []) as TrackingEventRow[]).map(mapTrackingEvent),
+    shipment,
+    events: ((events ?? []) as TrackingEventRow[]).map((event) =>
+      mapTrackingEvent(event, shipment.transportMode),
+    ),
     notFound: false,
   };
 }

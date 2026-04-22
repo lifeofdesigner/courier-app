@@ -1,5 +1,5 @@
 import type { PaymentStatus } from "@/types/payment";
-import type { ShipmentStatus } from "@/types/shipment";
+import type { ShipmentStatus, TransportMode } from "@/types/shipment";
 import type {
   AboutPageContent,
   ContactInfoContent,
@@ -59,6 +59,7 @@ export interface AdminShipmentRow {
   recipientEmail: string | null;
   serviceType: string;
   packageType: string | null;
+  transportMode: TransportMode;
   status: ShipmentStatus;
   paymentStatus: PaymentStatus;
   originCity: string;
@@ -80,6 +81,7 @@ export interface AdminTrackingEventRow {
   orderId: string;
   trackingNumber: string | null;
   status: ShipmentStatus;
+  transportMode: TransportMode;
   label: string;
   description: string | null;
   locationName: string | null;
@@ -139,6 +141,7 @@ export interface AdminShipmentDetail {
   referenceCode: string | null;
   serviceType: string;
   packageType: string | null;
+  transportMode: TransportMode;
   status: ShipmentStatus;
   paymentStatus: PaymentStatus;
   originCity: string;

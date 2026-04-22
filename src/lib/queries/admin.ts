@@ -16,6 +16,8 @@ import { normalizePaymentStatus } from "@/types/payment";
 import {
   activeShipmentStatuses,
   normalizeShipmentStatus,
+  normalizeTransportMode,
+  type TransportMode,
 } from "@/types/shipment";
 
 type ShipmentRow = {
@@ -26,6 +28,7 @@ type ShipmentRow = {
   reference_code: string | null;
   service_type: string;
   package_type: string | null;
+  transport_mode: string | null;
   origin_country: string;
   origin_city: string;
   destination_country: string;
@@ -85,6 +88,7 @@ type BookingRow = {
   recipient_phone: string | null;
   service_type: string;
   package_type: string | null;
+  transport_mode: string | null;
   weight_kg: number | string;
   declared_value: number | string;
   pickup_date: string;
@@ -196,14 +200,17 @@ function customerLabel({
 function mapTrackingEvent(
   row: TrackingEventRow,
   trackingNumber: string | null,
+  transportMode: TransportMode,
 ): AdminTrackingEventRow {
   return {
     id: row.id,
     orderId: row.order_id,
     trackingNumber,
     status: normalizeShipmentStatus(row.status, {
+      mode: transportMode,
       arrivedAtHubAs: "received_at_origin_facility",
     }),
+    transportMode,
     label: row.label,
     description: row.description,
     locationName: row.location_name,
@@ -224,6 +231,9 @@ function mapShipment({
   const paymentStatus = normalizePaymentStatus(
     booking?.payment_status ?? "unpaid",
   );
+  const transportMode = normalizeTransportMode(
+    shipment.transport_mode ?? booking?.transport_mode,
+  );
 
   return {
     id: shipment.id,
@@ -239,7 +249,8 @@ function mapShipment({
     recipientEmail: booking?.recipient_email ?? null,
     serviceType: shipment.service_type,
     packageType: shipment.package_type,
-    status: normalizeShipmentStatus(shipment.status),
+    transportMode,
+    status: normalizeShipmentStatus(shipment.status, { mode: transportMode }),
     paymentStatus,
     originCity: shipment.origin_city,
     originCountry: shipment.origin_country,
@@ -349,6 +360,7 @@ async function getBookingsByIds(ids: string[]) {
       recipient_phone,
       service_type,
       package_type,
+      transport_mode,
       weight_kg,
       declared_value,
       pickup_date,
@@ -437,6 +449,7 @@ export async function getAdminShipments(limit = 100): Promise<AdminShipmentRow[]
       reference_code,
       service_type,
       package_type,
+      transport_mode,
       origin_country,
       origin_city,
       destination_country,
@@ -492,6 +505,7 @@ export async function getAdminShipmentDetail(
       reference_code,
       service_type,
       package_type,
+      transport_mode,
       origin_country,
       origin_city,
       destination_country,
@@ -575,6 +589,9 @@ export async function getAdminShipmentDetail(
   const deliveryAddress = booking?.delivery_address_id
     ? addresses.get(booking.delivery_address_id) ?? null
     : null;
+  const transportMode = normalizeTransportMode(
+    shipment.transport_mode ?? booking?.transport_mode,
+  );
 
   return {
     id: shipment.id,
@@ -583,7 +600,8 @@ export async function getAdminShipmentDetail(
     referenceCode: shipment.reference_code,
     serviceType: shipment.service_type,
     packageType: shipment.package_type,
-    status: normalizeShipmentStatus(shipment.status),
+    transportMode,
+    status: normalizeShipmentStatus(shipment.status, { mode: transportMode }),
     paymentStatus: normalizePaymentStatus(booking?.payment_status ?? "unpaid"),
     originCity: shipment.origin_city,
     originCountry: shipment.origin_country,
@@ -643,7 +661,7 @@ export async function getAdminShipmentDetail(
           country: shipment.destination_country,
         }),
     trackingEvents: ((eventsResult.data ?? []) as TrackingEventRow[]).map(
-      (event) => mapTrackingEvent(event, shipment.tracking_number),
+      (event) => mapTrackingEvent(event, shipment.tracking_number, transportMode),
     ),
   };
 }
@@ -675,18 +693,32 @@ export async function getAdminTrackingEvents(
     orderIds.length > 0
       ? await supabase
           .from("orders")
-          .select("id, tracking_number")
+          .select("id, tracking_number, transport_mode")
           .in("id", orderIds)
       : { data: [] };
-  const trackingNumbers = new Map(
-    ((orderData ?? []) as { id: string; tracking_number: string }[]).map(
-      (order) => [order.id, order.tracking_number],
-    ),
+  const orderLookup = new Map(
+    ((orderData ?? []) as {
+      id: string;
+      tracking_number: string;
+      transport_mode: string | null;
+    }[]).map((order) => [
+      order.id,
+      {
+        trackingNumber: order.tracking_number,
+        transportMode: normalizeTransportMode(order.transport_mode),
+      },
+    ]),
   );
 
-  return events.map((event) =>
-    mapTrackingEvent(event, trackingNumbers.get(event.order_id) ?? null),
-  );
+  return events.map((event) => {
+    const order = orderLookup.get(event.order_id);
+
+    return mapTrackingEvent(
+      event,
+      order?.trackingNumber ?? null,
+      order?.transportMode ?? "road",
+    );
+  });
 }
 
 export async function getAdminQuotes(limit = 50): Promise<AdminQuoteRow[]> {
@@ -735,6 +767,7 @@ export async function getAdminBookings(limit = 50): Promise<AdminBookingRow[]> {
       recipient_phone,
       service_type,
       package_type,
+      transport_mode,
       weight_kg,
       declared_value,
       pickup_date,

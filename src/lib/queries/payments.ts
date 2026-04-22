@@ -1,7 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 
+import { normalizeTransportMode } from "@/lib/shipping/statuses";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
 import type { PaymentStatus, PaymentSummary } from "@/types/payment";
+import type { TransportMode } from "@/types/shipment";
 
 export type PaymentBooking = {
   id: string;
@@ -11,6 +13,7 @@ export type PaymentBooking = {
   senderEmail: string;
   recipientName: string;
   serviceType: string;
+  transportMode: TransportMode;
   weightKg: number;
   declaredValue: number;
   status: string;
@@ -49,6 +52,7 @@ type PaymentBookingRow = {
   sender_email: string;
   recipient_name: string;
   service_type: string;
+  transport_mode: string | null;
   weight_kg: number | string;
   declared_value: number | string;
   status: string;
@@ -83,6 +87,7 @@ type FulfillmentBookingRow = {
   recipient_phone: string | null;
   service_type: string;
   package_type: string | null;
+  transport_mode: string | null;
   weight_kg: number | string;
   declared_value: number | string;
   amount_paid: number | string;
@@ -134,6 +139,7 @@ function mapPaymentBooking(row: PaymentBookingRow): PaymentBooking {
     senderEmail: row.sender_email,
     recipientName: row.recipient_name,
     serviceType: row.service_type,
+    transportMode: normalizeTransportMode(row.transport_mode),
     weightKg: Number(row.weight_kg),
     declaredValue: Number(row.declared_value),
     status: row.status,
@@ -185,6 +191,7 @@ export async function getBookingForPayment(
       sender_email,
       recipient_name,
       service_type,
+      transport_mode,
       weight_kg,
       declared_value,
       status,
@@ -342,6 +349,7 @@ async function getFulfillmentBooking(
       recipient_phone,
       service_type,
       package_type,
+      transport_mode,
       weight_kg,
       declared_value,
       amount_paid,
@@ -490,6 +498,7 @@ export async function createOrderAfterSuccessfulPaymentIfMissing({
       reference_code: referenceCode,
       service_type: booking.service_type,
       package_type: booking.package_type,
+      transport_mode: normalizeTransportMode(booking.transport_mode),
       origin_country: pickupAddress.country,
       origin_city: pickupAddress.city,
       destination_country: deliveryAddress.country,

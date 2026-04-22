@@ -6,7 +6,12 @@ import { useActionState, useState } from "react";
 
 import { updateShipmentStatusOnlyAction } from "@/app/(admin)/admin/shipments/actions";
 import type { AdminActionState, AdminShipmentDetail } from "@/types/admin";
-import { formatShipmentStatus, shipmentStatuses } from "@/types/shipment";
+import {
+  getShipmentStatusMeta,
+  getShipmentStatusOptions,
+  transportModeDefinitions,
+  type TransportMode,
+} from "@/types/shipment";
 
 export type ShipmentActionsCardProps = {
   shipment: AdminShipmentDetail;
@@ -27,11 +32,20 @@ const secondaryButtonClassName =
   "inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200";
 
 export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
+  const [transportMode, setTransportMode] = useState<TransportMode>(
+    shipment.transportMode,
+  );
   const [state, formAction, isPending] = useActionState(
     updateShipmentStatusOnlyAction,
     initialState,
   );
   const [copyMessage, setCopyMessage] = useState("");
+  const statusOptions = getShipmentStatusOptions(transportMode);
+  const currentStatusOption = statusOptions.some(
+    (status) => status.code === shipment.status,
+  )
+    ? null
+    : getShipmentStatusMeta(shipment.status, { mode: transportMode });
 
   async function copyTrackingNumber() {
     await navigator.clipboard.writeText(shipment.trackingNumber);
@@ -60,6 +74,27 @@ export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
       <form action={formAction} className="mt-5 space-y-3">
         <input type="hidden" name="orderId" value={shipment.id} />
         <label
+          htmlFor="transportMode"
+          className="block text-sm font-semibold text-[#0B1C3A]"
+        >
+          Transport mode
+        </label>
+        <select
+          id="transportMode"
+          name="transportMode"
+          className={inputClassName}
+          value={transportMode}
+          onChange={(event) =>
+            setTransportMode(event.target.value as TransportMode)
+          }
+        >
+          {transportModeDefinitions.map((mode) => (
+            <option key={mode.code} value={mode.code}>
+              {mode.label}
+            </option>
+          ))}
+        </select>
+        <label
           htmlFor="status"
           className="block text-sm font-semibold text-[#0B1C3A]"
         >
@@ -71,9 +106,14 @@ export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
           className={inputClassName}
           defaultValue={shipment.status}
         >
-          {shipmentStatuses.map((status) => (
-            <option key={status} value={status}>
-              {formatShipmentStatus(status)}
+          {currentStatusOption ? (
+            <option value={currentStatusOption.code}>
+              {currentStatusOption.label}
+            </option>
+          ) : null}
+          {statusOptions.map((status) => (
+            <option key={status.code} value={status.code}>
+              {status.label}
             </option>
           ))}
         </select>

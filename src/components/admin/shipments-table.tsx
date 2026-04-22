@@ -12,7 +12,8 @@ import {
   type PaymentStatus,
 } from "@/types/payment";
 import {
-  formatShipmentStatus,
+  getShipmentStatusMeta,
+  getTransportModeMeta,
   shipmentStatuses,
 } from "@/types/shipment";
 import type { AdminShipmentRow } from "@/types/admin";
@@ -69,6 +70,7 @@ export function ShipmentsTable({ shipments }: ShipmentsTableProps) {
         shipment.senderEmail ?? "",
         shipment.recipientName,
         shipment.recipientEmail ?? "",
+        getTransportModeMeta(shipment.transportMode).label,
         shipment.originCity,
         shipment.originCountry,
         shipment.destinationCity,
@@ -111,7 +113,7 @@ export function ShipmentsTable({ shipments }: ShipmentsTableProps) {
           <option value="all">All shipment statuses</option>
           {shipmentStatuses.map((status) => (
             <option key={status} value={status}>
-              {formatShipmentStatus(status)}
+              {getShipmentStatusMeta(status).label}
             </option>
           ))}
         </select>
@@ -147,6 +149,7 @@ export function ShipmentsTable({ shipments }: ShipmentsTableProps) {
                   <th className="px-4 py-4">Origin</th>
                   <th className="px-4 py-4">Destination</th>
                   <th className="px-4 py-4">Service type</th>
+                  <th className="px-4 py-4">Mode</th>
                   <th className="px-4 py-4">Shipment status</th>
                   <th className="px-4 py-4">Payment status</th>
                   <th className="px-4 py-4">Created date</th>
@@ -214,7 +217,15 @@ export function ShipmentsTable({ shipments }: ShipmentsTableProps) {
                       </p>
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">
-                      <TrackingStatusBadge status={shipment.status} />
+                      <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-700">
+                        {getTransportModeMeta(shipment.transportMode).label}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4 text-sm text-slate-700">
+                      <TrackingStatusBadge
+                        status={shipment.status}
+                        mode={shipment.transportMode}
+                      />
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">
                       <span

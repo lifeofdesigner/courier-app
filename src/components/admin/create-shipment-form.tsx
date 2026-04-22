@@ -2,12 +2,16 @@
 
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { useActionState } from "react";
+import { useActionState, useMemo, useState } from "react";
 
 import { createShipmentAction } from "@/app/(admin)/admin/shipments/actions";
 import type { AdminActionState } from "@/types/admin";
 import { formatPaymentStatus, paymentStatuses } from "@/types/payment";
-import { formatShipmentStatus, shipmentStatuses } from "@/types/shipment";
+import {
+  getShipmentStatusOptions,
+  transportModeDefinitions,
+  type TransportMode,
+} from "@/types/shipment";
 
 const initialState: AdminActionState = {
   success: false,
@@ -130,9 +134,14 @@ function AddressFields({
 }
 
 export function CreateShipmentForm() {
+  const [transportMode, setTransportMode] = useState<TransportMode>("road");
   const [state, formAction, isPending] = useActionState(
     createShipmentAction,
     initialState,
+  );
+  const statusOptions = useMemo(
+    () => getShipmentStatusOptions(transportMode),
+    [transportMode],
   );
 
   return (
@@ -228,6 +237,29 @@ export function CreateShipmentForm() {
           >
             <option value="Express">Express</option>
             <option value="Economy">Economy</option>
+          </select>
+        </div>
+        <div className="space-y-2">
+          <label
+            htmlFor="transportMode"
+            className="block text-sm font-semibold text-[#0B1C3A]"
+          >
+            Transport mode
+          </label>
+          <select
+            id="transportMode"
+            name="transportMode"
+            className={inputClassName}
+            value={transportMode}
+            onChange={(event) =>
+              setTransportMode(event.target.value as TransportMode)
+            }
+          >
+            {transportModeDefinitions.map((mode) => (
+              <option key={mode.code} value={mode.code}>
+                {mode.label}
+              </option>
+            ))}
           </select>
         </div>
         <TextInput
@@ -357,9 +389,9 @@ export function CreateShipmentForm() {
             className={inputClassName}
             defaultValue="shipment_created"
           >
-            {shipmentStatuses.map((status) => (
-              <option key={status} value={status}>
-                {formatShipmentStatus(status)}
+            {statusOptions.map((status) => (
+              <option key={status.code} value={status.code}>
+                {status.label}
               </option>
             ))}
           </select>

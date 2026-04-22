@@ -2,7 +2,11 @@ import { CalendarDays, MapPin, PackageCheck, Route } from "lucide-react";
 import Link from "next/link";
 
 import { TrackingStatusBadge } from "@/components/tracking/tracking-status-badge";
-import { getShipmentStatusMeta, type ShipmentRecord } from "@/types/shipment";
+import {
+  getShipmentStatusMeta,
+  getTransportModeMeta,
+  type ShipmentRecord,
+} from "@/types/shipment";
 
 export type TrackingResultCardProps = {
   shipment: ShipmentRecord;
@@ -21,7 +25,10 @@ function formatDate(value: string | null) {
 }
 
 export function TrackingResultCard({ shipment }: TrackingResultCardProps) {
-  const statusMeta = getShipmentStatusMeta(shipment.status);
+  const statusMeta = getShipmentStatusMeta(shipment.status, {
+    mode: shipment.transportMode,
+  });
+  const transportMode = getTransportModeMeta(shipment.transportMode);
 
   return (
     <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
@@ -39,7 +46,10 @@ export function TrackingResultCard({ shipment }: TrackingResultCardProps) {
             </p>
           ) : null}
         </div>
-        <TrackingStatusBadge status={shipment.status} />
+        <TrackingStatusBadge
+          status={shipment.status}
+          mode={shipment.transportMode}
+        />
       </div>
 
       <div className="mt-8 grid gap-5 lg:grid-cols-3">
@@ -55,7 +65,7 @@ export function TrackingResultCard({ shipment }: TrackingResultCardProps) {
           <PackageCheck aria-hidden="true" className="h-5 w-5 text-[#FF6B2B]" />
           <p className="mt-3 text-sm font-semibold text-[#0B1C3A]">Service</p>
           <p className="mt-2 text-sm leading-6 text-slate-600">
-            {shipment.serviceType}
+            {transportMode.label} - {shipment.serviceType}
             {shipment.packageType ? ` - ${shipment.packageType}` : ""}
           </p>
         </div>

@@ -55,6 +55,12 @@ export const blogCategoryLabels = {
   planning: "Shipping planning",
 } as const;
 
+export const transportModeLabels = {
+  air: "Air",
+  road: "Road",
+  freight: "Freight",
+} as const;
+
 export const ctaLabels = {
   track: "Track Shipment",
   quote: "Get a Quote",

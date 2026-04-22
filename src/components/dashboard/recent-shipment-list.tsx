@@ -53,7 +53,10 @@ export function RecentShipmentList({ shipments }: RecentShipmentListProps) {
               ETA {formatDate(shipment.estimatedDeliveryDate)}
             </p>
           </div>
-          <TrackingStatusBadge status={shipment.status} />
+          <TrackingStatusBadge
+            status={shipment.status}
+            mode={shipment.transportMode}
+          />
         </div>
       ))}
     </div>
