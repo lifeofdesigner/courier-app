@@ -17,14 +17,20 @@
   --color-navy: var(--navy);
   --color-primary: var(--primary);
   --color-text: var(--text);
-  --font-sans: Arial, Helvetica, sans-serif;
-  --font-heading: Arial, Helvetica, sans-serif;
+  --font-sans: var(--font-inter), Arial, Helvetica, sans-serif;
+  --font-heading: var(--font-plus-jakarta), var(--font-inter), Arial, Helvetica,
+    sans-serif;
 }
 
 body {
   background: var(--background);
   color: var(--text);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), Arial, Helvetica, sans-serif;
+  font-feature-settings:
+    "cv02" 1,
+    "cv03" 1,
+    "cv04" 1,
+    "cv11" 1;
   text-rendering: optimizeLegibility;
 }
 
@@ -72,7 +78,8 @@ summary::-webkit-details-marker {
 
 .prose :where(h2, h3) {
   color: var(--navy);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-plus-jakarta), var(--font-inter), Arial, Helvetica,
+    sans-serif;
   font-weight: 700;
   letter-spacing: 0;
   line-height: 1.2;

@@ -1,10 +1,23 @@
 import type { Metadata } from "next";
+import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 
 import { FooterCta, SiteFooter, SiteHeader } from "@/components/layout";
 import { ToastProvider } from "@/components/ui/toast";
 import { company, siteConfig } from "@/constants/site";
 import { getSiteUrl } from "@/lib/env";
 import "./globals.css";
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-plus-jakarta",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(getSiteUrl()),
@@ -70,7 +83,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full scroll-smooth">
+    <html
+      lang="en"
+      className={`${inter.variable} ${plusJakartaSans.variable} h-full scroll-smooth`}
+    >
       <body className="min-h-full bg-background text-text antialiased">
         <ToastProvider>
           <div className="flex min-h-screen flex-col">

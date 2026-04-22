@@ -136,7 +136,7 @@ export function HomeHero({ content }: HomeHeroProps) {
             <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#FF6B2B]">
               {activeSlide.eyebrow}
             </p>
-            <h1 className="mt-5 max-w-4xl text-4xl font-black leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-7xl">
+            <h1 className="mt-5 max-w-4xl font-heading text-4xl font-extrabold leading-[1.05] text-white sm:text-5xl lg:text-6xl xl:text-7xl">
               {activeSlide.title}
             </h1>
             <div className="mt-7 flex max-w-2xl gap-4">
@@ -205,7 +205,7 @@ export function HomeHero({ content }: HomeHeroProps) {
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#FF6B2B]">
                   {content.visual.eyebrow}
                 </p>
-                <p className="mt-2 text-lg font-black tracking-tight">
+                <p className="mt-2 font-heading text-lg font-bold">
                   {content.visual.title}
                 </p>
                 <p className="mt-1 text-sm font-medium text-slate-600">
