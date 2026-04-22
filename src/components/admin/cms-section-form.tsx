@@ -6,6 +6,7 @@ import {
   toggleCmsPublishAction,
   upsertCmsSectionAction,
 } from "@/app/(admin)/admin/cms/actions";
+import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AdminActionState, AdminCmsRow } from "@/types/admin";
 
 export type CmsSectionFormProps = {
@@ -44,11 +45,12 @@ export function CmsSectionForm({
     toggleCmsPublishAction,
     initialState,
   );
+  const formRef = usePreservedFormValues(upsertState.values);
   const payload = row ? JSON.stringify(row.value, null, 2) : "{\n  \n}";
 
   return (
     <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
-      <form action={upsertAction} className="space-y-5">
+      <form ref={formRef} action={upsertAction} className="space-y-5">
         <div className="grid gap-5 md:grid-cols-2">
           <div className="space-y-2">
             <label

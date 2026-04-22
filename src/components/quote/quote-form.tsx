@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useActionState, useMemo, useState } from "react";
+import { useActionState, useCallback, useMemo, useState } from "react";
 
 import {
   calculateQuoteAction,
@@ -11,11 +11,17 @@ import { QuoteBreakdownCard } from "@/components/quote/quote-breakdown-card";
 import { QuoteResultState } from "@/components/quote/quote-result-state";
 import { QuoteSummaryCard } from "@/components/quote/quote-summary-card";
 import {
+  usePreservedFormValues,
+} from "@/lib/forms/use-preserved-form-values";
+import type { PreservedFormValues } from "@/lib/forms/preserve";
+import {
   getDefaultModeAwareServiceType,
   getModeAwareServiceMeta,
   getModeAwareServiceOptions,
   getTransportModeMeta,
   getTransportModePublicCopy,
+  normalizeModeAwareServiceType,
+  normalizeTransportMode,
   transportModeDefinitions,
   type ModeAwareServiceType,
   type TransportMode,
@@ -133,6 +139,20 @@ export function QuoteForm({ isConfigured }: QuoteFormProps) {
   const serviceMeta = getModeAwareServiceMeta(serviceType, {
     mode: transportMode,
   });
+  const restoreControlledValues = useCallback((values: PreservedFormValues) => {
+    const nextMode = normalizeTransportMode(values.transportMode);
+    const nextServiceType = normalizeModeAwareServiceType(
+      values.serviceType ?? getDefaultModeAwareServiceType(nextMode),
+      { mode: nextMode },
+    );
+
+    setTransportMode(nextMode);
+    setServiceType(nextServiceType);
+  }, []);
+  const formRef = usePreservedFormValues(
+    state.values,
+    restoreControlledValues,
+  );
 
   function handleModeChange(nextMode: TransportMode) {
     setTransportMode(nextMode);
@@ -141,7 +161,7 @@ export function QuoteForm({ isConfigured }: QuoteFormProps) {
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_0.75fr]">
-      <form action={formAction} className="space-y-6">
+      <form ref={formRef} action={formAction} className="space-y-6">
         <input type="hidden" name="transportMode" value={transportMode} />
         {!isConfigured ? (
           <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">

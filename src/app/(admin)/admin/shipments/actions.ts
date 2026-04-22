@@ -6,6 +6,7 @@ import { z } from "zod";
 
 import { assertAdminAction } from "@/lib/auth/assert-admin-action";
 import { sendStatusEmail } from "@/lib/email/send-status-email";
+import { formDataToValues } from "@/lib/forms/preserve";
 import { calculateBookingAmountDue } from "@/lib/queries/bookings";
 import {
   findAdminCustomerByEmail,
@@ -136,7 +137,10 @@ function optionalValue(value: string | undefined) {
   return normalized && normalized.length > 0 ? normalized : null;
 }
 
-function validationState(error: z.ZodError): AdminActionState {
+function validationState(
+  error: z.ZodError,
+  formData: FormData,
+): AdminActionState {
   const fieldErrors: Record<string, string[]> = {};
 
   for (const issue of error.issues) {
@@ -148,6 +152,7 @@ function validationState(error: z.ZodError): AdminActionState {
     success: false,
     message: "Please review the highlighted fields.",
     fieldErrors,
+    values: formDataToValues(formData),
   };
 }
 
@@ -327,6 +332,7 @@ export async function createShipmentAction(
       success: false,
       message:
         error instanceof Error ? error.message : "Admin access is required.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -356,7 +362,7 @@ export async function createShipmentAction(
   });
 
   if (!parsed.success) {
-    return validationState(parsed.error);
+    return validationState(parsed.error, formData);
   }
 
   try {
@@ -374,6 +380,7 @@ export async function createShipmentAction(
         fieldErrors: {
           selectedCustomerId: ["Select a valid customer or clear selection."],
         },
+        values: formDataToValues(formData),
       };
     }
 
@@ -548,6 +555,7 @@ export async function createShipmentAction(
         error instanceof Error
           ? error.message
           : "The shipment could not be created.",
+      values: formDataToValues(formData),
     };
   }
 }
@@ -565,6 +573,7 @@ export async function updateShipmentStatusAction(
       success: false,
       message:
         error instanceof Error ? error.message : "Admin access is required.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -580,7 +589,7 @@ export async function updateShipmentStatusAction(
   });
 
   if (!parsed.success) {
-    return validationState(parsed.error);
+    return validationState(parsed.error, formData);
   }
 
   try {
@@ -676,6 +685,7 @@ export async function updateShipmentStatusAction(
         error instanceof Error
           ? error.message
           : "The shipment update could not be saved.",
+      values: formDataToValues(formData),
     };
   }
 }

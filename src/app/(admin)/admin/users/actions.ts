@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { assertAdminAction } from "@/lib/auth/assert-admin-action";
+import { formDataToValues } from "@/lib/forms/preserve";
 import type { AdminActionState } from "@/types/admin";
 
 const roleSchema = z.object({
@@ -30,6 +31,7 @@ export async function updateUserRoleAction(
       success: false,
       message:
         error instanceof Error ? error.message : "Admin access is required.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -43,6 +45,7 @@ export async function updateUserRoleAction(
       success: false,
       message: "Please choose a valid role.",
       fieldErrors: parsed.error.flatten().fieldErrors,
+      values: formDataToValues(formData),
     };
   }
 
@@ -53,6 +56,7 @@ export async function updateUserRoleAction(
       return {
         success: false,
         message: "You cannot remove your own admin role in this phase.",
+        values: formDataToValues(formData),
       };
     }
 
@@ -82,6 +86,7 @@ export async function updateUserRoleAction(
         error instanceof Error
           ? error.message
           : "The user role could not be updated.",
+      values: formDataToValues(formData),
     };
   }
 }

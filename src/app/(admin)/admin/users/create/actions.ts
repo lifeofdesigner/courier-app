@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { assertAdminAction } from "@/lib/auth/assert-admin-action";
+import { formDataToValues } from "@/lib/forms/preserve";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/service-role";
 import type { CreateUserActionState } from "@/types/admin";
 
@@ -57,6 +58,7 @@ export async function createAdminUserAction(
     return {
       success: false,
       message: "Admin access is required to create users.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -74,6 +76,7 @@ export async function createAdminUserAction(
       success: false,
       message: "Please review the highlighted fields.",
       fieldErrors: parsed.error.flatten().fieldErrors,
+      values: formDataToValues(formData),
     };
   }
 
@@ -87,6 +90,7 @@ export async function createAdminUserAction(
       success: false,
       message:
         "Supabase service-role configuration is required to create users.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -109,6 +113,7 @@ export async function createAdminUserAction(
     return {
       success: false,
       message: safeCreateUserError(createError?.message),
+      values: formDataToValues(formData),
     };
   }
 
@@ -129,6 +134,7 @@ export async function createAdminUserAction(
       success: false,
       message:
         "The auth user was created, but the public profile role could not be updated.",
+      values: formDataToValues(formData),
     };
   }
 

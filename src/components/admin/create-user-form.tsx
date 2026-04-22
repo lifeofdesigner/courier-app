@@ -4,6 +4,7 @@ import { useActionState } from "react";
 
 import { createAdminUserAction } from "@/app/(admin)/admin/users/create/actions";
 import { CreateUserSuccess } from "@/components/admin/create-user-success";
+import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { CreateUserActionState } from "@/types/admin";
 
 const initialState: CreateUserActionState = {
@@ -58,6 +59,7 @@ export function CreateUserForm() {
     createAdminUserAction,
     initialState,
   );
+  const formRef = usePreservedFormValues(state.values);
 
   return (
     <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
@@ -69,7 +71,7 @@ export function CreateUserForm() {
         </div>
       ) : null}
 
-      <form action={formAction} className="mt-8 space-y-5">
+      <form ref={formRef} action={formAction} className="mt-8 space-y-5">
         <div className="grid gap-5 md:grid-cols-2">
           <TextInput
             label="Full name"

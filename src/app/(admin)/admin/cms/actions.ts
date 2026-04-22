@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { assertAdminAction } from "@/lib/auth/assert-admin-action";
+import { formDataToValues } from "@/lib/forms/preserve";
 import { uploadCmsAsset } from "@/lib/storage/cms-assets";
 import type { AdminActionState } from "@/types/admin";
 import type {
@@ -791,6 +792,7 @@ export async function saveCmsEditorSectionAction(
       success: false,
       message:
         error instanceof Error ? error.message : "Admin access is required.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -805,6 +807,7 @@ export async function saveCmsEditorSectionAction(
       success: false,
       message: "This CMS section could not be saved.",
       fieldErrors: parsed.error.flatten().fieldErrors,
+      values: formDataToValues(formData),
     };
   }
 
@@ -829,6 +832,7 @@ export async function saveCmsEditorSectionAction(
       success: false,
       message:
         error instanceof Error ? error.message : "CMS section could not be saved.",
+      values: formDataToValues(formData),
     };
   }
 }
@@ -846,6 +850,7 @@ export async function upsertCmsSectionAction(
       success: false,
       message:
         error instanceof Error ? error.message : "Admin access is required.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -860,6 +865,7 @@ export async function upsertCmsSectionAction(
       success: false,
       message: "Please review the highlighted fields.",
       fieldErrors: parsed.error.flatten().fieldErrors,
+      values: formDataToValues(formData),
     };
   }
 
@@ -872,6 +878,7 @@ export async function upsertCmsSectionAction(
       fieldErrors: {
         payload: [payload.error],
       },
+      values: formDataToValues(formData),
     };
   }
 
@@ -894,6 +901,7 @@ export async function upsertCmsSectionAction(
       success: false,
       message:
         error instanceof Error ? error.message : "CMS section could not be saved.",
+      values: formDataToValues(formData),
     };
   }
 }

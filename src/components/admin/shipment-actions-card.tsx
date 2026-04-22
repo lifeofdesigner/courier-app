@@ -2,9 +2,11 @@
 
 import Link from "next/link";
 import { Clipboard, ExternalLink, FileText } from "lucide-react";
-import { useActionState, useMemo, useState } from "react";
+import { useActionState, useCallback, useMemo, useState } from "react";
 
 import { updateShipmentStatusOnlyAction } from "@/app/(admin)/admin/shipments/actions";
+import type { PreservedFormValues } from "@/lib/forms/preserve";
+import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AdminActionState, AdminShipmentDetail } from "@/types/admin";
 import {
   getDefaultModeAwareServiceType,
@@ -12,6 +14,9 @@ import {
   getModeAwareServiceOptions,
   getShipmentStatusMeta,
   getShipmentStatusOptions,
+  normalizeModeAwareServiceType,
+  normalizeShipmentStatus,
+  normalizeTransportMode,
   transportModeDefinitions,
   type ModeAwareServiceType,
   type ShipmentStatus,
@@ -49,6 +54,25 @@ export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
     initialState,
   );
   const [copyMessage, setCopyMessage] = useState("");
+  const restoreControlledValues = useCallback((values: PreservedFormValues) => {
+    if (values.transportMode) {
+      const nextMode = normalizeTransportMode(values.transportMode);
+      setTransportMode(nextMode);
+
+      if (values.serviceType) {
+        setServiceType(
+          normalizeModeAwareServiceType(values.serviceType, {
+            mode: nextMode,
+          }),
+        );
+      }
+
+      if (values.status) {
+        setStatus(normalizeShipmentStatus(values.status, { mode: nextMode }));
+      }
+    }
+  }, []);
+  const formRef = usePreservedFormValues(state.values, restoreControlledValues);
   const serviceOptions = useMemo(
     () => getModeAwareServiceOptions(transportMode),
     [transportMode],
@@ -101,7 +125,7 @@ export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
         </div>
       ) : null}
 
-      <form action={formAction} className="mt-5 space-y-3">
+      <form ref={formRef} action={formAction} className="mt-5 space-y-3">
         <input type="hidden" name="orderId" value={shipment.id} />
         <label
           htmlFor="transportMode"

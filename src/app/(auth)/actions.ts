@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { getSiteUrl } from "@/lib/env";
+import { formDataToValues } from "@/lib/forms/preserve";
 import { getUserProfileById } from "@/lib/queries/auth";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { AuthActionState } from "@/types/auth";
@@ -58,19 +59,24 @@ function sanitizeCustomerNextPath(nextPath: string | undefined) {
   return nextPath;
 }
 
-function validationState(error: z.ZodError): AuthActionState {
+function validationState(
+  error: z.ZodError,
+  formData: FormData,
+): AuthActionState {
   return {
     success: false,
     message: "Please review the highlighted fields.",
     fieldErrors: error.flatten().fieldErrors,
+    values: formDataToValues(formData),
   };
 }
 
-function missingSupabaseState(): AuthActionState {
+function missingSupabaseState(formData: FormData): AuthActionState {
   return {
     success: false,
     message:
       "Supabase is not configured yet. Add the public Supabase environment variables before using authentication.",
+    values: formDataToValues(formData),
   };
 }
 
@@ -85,13 +91,13 @@ export async function loginAction(
   });
 
   if (!parsed.success) {
-    return validationState(parsed.error);
+    return validationState(parsed.error, formData);
   }
 
   const supabase = await createSupabaseServerClient();
 
   if (!supabase) {
-    return missingSupabaseState();
+    return missingSupabaseState(formData);
   }
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -104,6 +110,7 @@ export async function loginAction(
       success: false,
       message:
         "We could not sign you in with those details. Check your email and password, then try again.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -120,13 +127,13 @@ export async function adminLoginAction(
   });
 
   if (!parsed.success) {
-    return validationState(parsed.error);
+    return validationState(parsed.error, formData);
   }
 
   const supabase = await createSupabaseServerClient();
 
   if (!supabase) {
-    return missingSupabaseState();
+    return missingSupabaseState(formData);
   }
 
   const { error } = await supabase.auth.signInWithPassword({
@@ -139,6 +146,7 @@ export async function adminLoginAction(
       success: false,
       message:
         "We could not sign you in with those admin credentials. Check the details, then try again.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -150,6 +158,7 @@ export async function adminLoginAction(
     return {
       success: false,
       message: "We could not verify this admin session. Please try again.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -162,6 +171,7 @@ export async function adminLoginAction(
       success: false,
       message:
         "This account does not have admin access. Use customer sign-in for dashboard access.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -181,13 +191,13 @@ export async function signUpAction(
   });
 
   if (!parsed.success) {
-    return validationState(parsed.error);
+    return validationState(parsed.error, formData);
   }
 
   const supabase = await createSupabaseServerClient();
 
   if (!supabase) {
-    return missingSupabaseState();
+    return missingSupabaseState(formData);
   }
 
   const { error } = await supabase.auth.signUp({
@@ -207,6 +217,7 @@ export async function signUpAction(
       success: false,
       message:
         "We could not create the account right now. Please check the details and try again.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -227,13 +238,13 @@ export async function forgotPasswordAction(
   });
 
   if (!parsed.success) {
-    return validationState(parsed.error);
+    return validationState(parsed.error, formData);
   }
 
   const supabase = await createSupabaseServerClient();
 
   if (!supabase) {
-    return missingSupabaseState();
+    return missingSupabaseState(formData);
   }
 
   const { error } = await supabase.auth.resetPasswordForEmail(
@@ -248,6 +259,7 @@ export async function forgotPasswordAction(
       success: false,
       message:
         "We could not prepare a reset email right now. Please try again shortly.",
+      values: formDataToValues(formData),
     };
   }
 

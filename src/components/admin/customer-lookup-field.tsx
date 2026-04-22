@@ -9,6 +9,7 @@ import type { CustomerSearchResult } from "@/types/admin";
 export type CustomerLookupFieldProps = {
   onCustomerChange?: (customer: CustomerSearchResult | null) => void;
   fieldError?: string[];
+  initialSelectedCustomer?: CustomerSearchResult | null;
 };
 
 const inputClassName =
@@ -24,12 +25,15 @@ function customerDisplayName(customer: CustomerSearchResult) {
 export function CustomerLookupField({
   onCustomerChange,
   fieldError,
+  initialSelectedCustomer = null,
 }: CustomerLookupFieldProps) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(
+    initialSelectedCustomer ? customerDisplayName(initialSelectedCustomer) : "",
+  );
   const [message, setMessage] = useState("");
   const [results, setResults] = useState<CustomerSearchResult[]>([]);
   const [selectedCustomer, setSelectedCustomer] =
-    useState<CustomerSearchResult | null>(null);
+    useState<CustomerSearchResult | null>(initialSelectedCustomer);
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {

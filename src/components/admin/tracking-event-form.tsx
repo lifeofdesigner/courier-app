@@ -1,9 +1,11 @@
 "use client";
 
-import { useActionState, useMemo, useState } from "react";
+import { useActionState, useCallback, useMemo, useState } from "react";
 
 import { updateShipmentStatusAction } from "@/app/(admin)/admin/shipments/actions";
 import { createTrackingEventAction } from "@/app/(admin)/admin/tracking-events/actions";
+import type { PreservedFormValues } from "@/lib/forms/preserve";
+import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type {
   AdminActionState,
   AdminShipmentDetail,
@@ -12,6 +14,8 @@ import type {
 import {
   getShipmentStatusMeta,
   getShipmentStatusOptions,
+  normalizeShipmentStatus,
+  normalizeTransportMode,
   transportModeDefinitions,
   type ShipmentStatus,
   type TransportMode,
@@ -91,9 +95,25 @@ export function TrackingEventForm({
       ? updateShipmentStatusAction
       : createTrackingEventAction;
   const [state, formAction, isPending] = useActionState(action, initialState);
+  const restoreControlledValues = useCallback((values: PreservedFormValues) => {
+    const nextMode = normalizeTransportMode(values.transportMode);
+
+    setSelectedShipmentId(values.orderId ?? "");
+    setFallbackTransportMode(nextMode);
+    setStatus(
+      normalizeShipmentStatus(values.status ?? "in_transit", {
+        mode: nextMode,
+      }),
+    );
+  }, []);
+  const formRef = usePreservedFormValues(
+    state.values,
+    restoreControlledValues,
+  );
 
   return (
     <form
+      ref={formRef}
       id="tracking-event"
       action={formAction}
       className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm"

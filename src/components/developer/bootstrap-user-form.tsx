@@ -4,6 +4,7 @@ import { useActionState } from "react";
 
 import { createBootstrapUserAction } from "@/app/developer/bootstrap-users/actions";
 import { BootstrapSuccessCard } from "@/components/developer/bootstrap-success-card";
+import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { CreateUserActionState } from "@/types/admin";
 
 const initialState: CreateUserActionState = {
@@ -61,6 +62,7 @@ export function BootstrapUserForm() {
     createBootstrapUserAction,
     initialState,
   );
+  const formRef = usePreservedFormValues(state.values);
 
   if (state.success) {
     return <BootstrapSuccessCard state={state} />;
@@ -84,7 +86,7 @@ export function BootstrapUserForm() {
         </div>
       ) : null}
 
-      <form action={formAction} className="mt-8 space-y-5">
+      <form ref={formRef} action={formAction} className="mt-8 space-y-5">
         <div className="grid gap-5 md:grid-cols-2">
           <TextInput
             label="Full name"

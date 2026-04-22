@@ -5,6 +5,7 @@ import { useActionState } from "react";
 
 import { loginAction } from "@/app/(auth)/actions";
 import { AuthMessage } from "@/components/auth/auth-message";
+import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AuthActionState } from "@/types/auth";
 
 const initialState: AuthActionState = {
@@ -28,9 +29,10 @@ export function LoginForm({ nextPath = "/dashboard", message }: LoginFormProps) 
     loginAction,
     initialState,
   );
+  const formRef = usePreservedFormValues(state.values);
 
   return (
-    <form action={formAction} className="space-y-5">
+    <form ref={formRef} action={formAction} className="space-y-5">
       <AuthMessage state={state.message ? state : null} message={message} />
       <input type="hidden" name="next" value={nextPath} />
       <div className="space-y-2">

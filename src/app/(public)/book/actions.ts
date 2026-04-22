@@ -3,6 +3,10 @@
 import { z } from "zod";
 
 import { sendBookingEmail } from "@/lib/email/send-booking-email";
+import {
+  formDataToValues,
+  type PreservedFormValues,
+} from "@/lib/forms/preserve";
 import { insertBookingRequest } from "@/lib/queries/bookings";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { BookingRecord } from "@/types/booking";
@@ -19,6 +23,7 @@ export type BookingActionState = {
   success: boolean;
   message: string;
   fieldErrors?: Record<string, string[]>;
+  values?: PreservedFormValues;
   booking?: BookingRecord;
 };
 
@@ -149,6 +154,7 @@ export async function createBookingAction(
       success: false,
       message: "Please review the highlighted fields.",
       fieldErrors: mapFieldErrors(parsed.error),
+      values: formDataToValues(formData),
     };
   }
 
@@ -159,6 +165,7 @@ export async function createBookingAction(
       success: false,
       message:
         "Supabase is not configured yet. Add the public Supabase environment variables before submitting bookings.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -196,6 +203,7 @@ export async function createBookingAction(
         error instanceof Error
           ? error.message
           : "The pickup request could not be submitted right now.",
+      values: formDataToValues(formData),
     };
   }
 }

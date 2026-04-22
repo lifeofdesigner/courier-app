@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 
 import { updateUserRoleAction } from "@/app/(admin)/admin/users/actions";
+import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AdminActionState, AdminUserRow } from "@/types/admin";
 
 export type UserRoleFormProps = {
@@ -19,9 +20,10 @@ export function UserRoleForm({ user }: UserRoleFormProps) {
     updateUserRoleAction,
     initialState,
   );
+  const formRef = usePreservedFormValues(state.values);
 
   return (
-    <form action={formAction} className="space-y-2">
+    <form ref={formRef} action={formAction} className="space-y-2">
       <input type="hidden" name="userId" value={user.id} />
       <div className="flex gap-2">
         <select

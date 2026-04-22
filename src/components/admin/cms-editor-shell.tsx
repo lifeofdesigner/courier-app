@@ -4,6 +4,7 @@ import { useActionState, useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
 import { saveCmsEditorSectionAction } from "@/app/(admin)/admin/cms/actions";
+import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AdminActionState } from "@/types/admin";
 
 export type CmsEditorShellProps = {
@@ -51,6 +52,7 @@ export function CmsManagedForm({
     saveCmsEditorSectionAction,
     initialState,
   );
+  const formRef = usePreservedFormValues(state.values);
 
   useEffect(() => {
     if (state.success) {
@@ -59,7 +61,12 @@ export function CmsManagedForm({
   }, [router, state.success]);
 
   return (
-    <form id={id} action={formAction} className={className ?? "space-y-6"}>
+    <form
+      ref={formRef}
+      id={id}
+      action={formAction}
+      className={className ?? "space-y-6"}
+    >
       <input type="hidden" name="formType" value={formType} />
       <input type="hidden" name="section" value={section} />
       <input type="hidden" name="key" value={cmsKey} />

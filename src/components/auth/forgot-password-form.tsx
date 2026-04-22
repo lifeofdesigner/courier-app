@@ -5,6 +5,7 @@ import { useActionState } from "react";
 
 import { forgotPasswordAction } from "@/app/(auth)/actions";
 import { AuthMessage } from "@/components/auth/auth-message";
+import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AuthActionState } from "@/types/auth";
 
 const initialState: AuthActionState = {
@@ -23,9 +24,10 @@ export function ForgotPasswordForm() {
     forgotPasswordAction,
     initialState,
   );
+  const formRef = usePreservedFormValues(state.values);
 
   return (
-    <form action={formAction} className="space-y-5">
+    <form ref={formRef} action={formAction} className="space-y-5">
       <AuthMessage state={state.message ? state : null} />
       <div className="space-y-2">
         <label htmlFor="email" className="block text-sm font-semibold text-[#0B1C3A]">

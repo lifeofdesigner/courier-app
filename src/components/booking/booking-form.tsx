@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { useActionState, useMemo, useState } from "react";
+import { useActionState, useCallback, useMemo, useState } from "react";
 
 import {
   createBookingAction,
@@ -9,6 +9,8 @@ import {
 } from "@/app/(public)/book/actions";
 import { BookingSuccessCard } from "@/components/booking/booking-success-card";
 import { BookingSummaryCard } from "@/components/booking/booking-summary-card";
+import type { PreservedFormValues } from "@/lib/forms/preserve";
+import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import {
   getDefaultModeAwareServiceType,
   getModeAwareServiceMeta,
@@ -204,6 +206,20 @@ export function BookingForm({
   const serviceMeta = getModeAwareServiceMeta(serviceType, {
     mode: transportMode,
   });
+  const restoreControlledValues = useCallback((values: PreservedFormValues) => {
+    const nextMode = normalizeTransportMode(values.transportMode);
+    const nextServiceType = initialServiceTypeForMode(
+      nextMode,
+      values.serviceType,
+    );
+
+    setTransportMode(nextMode);
+    setServiceType(nextServiceType);
+  }, []);
+  const formRef = usePreservedFormValues(
+    state.values,
+    restoreControlledValues,
+  );
 
   function handleModeChange(nextMode: TransportMode) {
     setTransportMode(nextMode);
@@ -212,7 +228,7 @@ export function BookingForm({
 
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_0.42fr] lg:items-start">
-      <form action={formAction} className="space-y-6">
+      <form ref={formRef} action={formAction} className="space-y-6">
         {quoteId ? <input type="hidden" name="quoteId" value={quoteId} /> : null}
         <input type="hidden" name="transportMode" value={transportMode} />
 

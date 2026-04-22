@@ -4,6 +4,10 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import {
+  formDataToValues,
+  type PreservedFormValues,
+} from "@/lib/forms/preserve";
+import {
   createSavedAddress,
   updateCurrentUserProfile,
 } from "@/lib/queries/addresses";
@@ -12,6 +16,7 @@ export type DashboardActionState = {
   success: boolean;
   message: string;
   fieldErrors?: Record<string, string[]>;
+  values?: PreservedFormValues;
 };
 
 const profileSchema = z.object({
@@ -45,11 +50,15 @@ function getString(formData: FormData, key: string) {
   return typeof value === "string" ? value : "";
 }
 
-function validationState(error: z.ZodError): DashboardActionState {
+function validationState(
+  error: z.ZodError,
+  formData: FormData,
+): DashboardActionState {
   return {
     success: false,
     message: "Please review the highlighted fields.",
     fieldErrors: error.flatten().fieldErrors,
+    values: formDataToValues(formData),
   };
 }
 
@@ -63,7 +72,7 @@ export async function updateProfileAction(
   });
 
   if (!parsed.success) {
-    return validationState(parsed.error);
+    return validationState(parsed.error, formData);
   }
 
   try {
@@ -79,6 +88,7 @@ export async function updateProfileAction(
     return {
       success: false,
       message: "Your profile could not be updated. Please try again.",
+      values: formDataToValues(formData),
     };
   }
 }
@@ -102,7 +112,7 @@ export async function createAddressAction(
   });
 
   if (!parsed.success) {
-    return validationState(parsed.error);
+    return validationState(parsed.error, formData);
   }
 
   try {
@@ -117,6 +127,7 @@ export async function createAddressAction(
     return {
       success: false,
       message: "The address could not be saved. Please try again.",
+      values: formDataToValues(formData),
     };
   }
 }

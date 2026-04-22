@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { assertAdminAction } from "@/lib/auth/assert-admin-action";
 import { sendStatusEmail } from "@/lib/email/send-status-email";
+import { formDataToValues } from "@/lib/forms/preserve";
 import type { AdminActionState } from "@/types/admin";
 import {
   getShipmentStatusMeta,
@@ -34,11 +35,15 @@ function optionalValue(value: string | undefined) {
   return normalized && normalized.length > 0 ? normalized : null;
 }
 
-function validationState(error: z.ZodError): AdminActionState {
+function validationState(
+  error: z.ZodError,
+  formData: FormData,
+): AdminActionState {
   return {
     success: false,
     message: "Please review the highlighted fields.",
     fieldErrors: error.flatten().fieldErrors,
+    values: formDataToValues(formData),
   };
 }
 
@@ -55,6 +60,7 @@ export async function createTrackingEventAction(
       success: false,
       message:
         error instanceof Error ? error.message : "Admin access is required.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -69,7 +75,7 @@ export async function createTrackingEventAction(
   });
 
   if (!parsed.success) {
-    return validationState(parsed.error);
+    return validationState(parsed.error, formData);
   }
 
   try {
@@ -154,6 +160,7 @@ export async function createTrackingEventAction(
         error instanceof Error
           ? error.message
           : "The tracking event could not be saved.",
+      values: formDataToValues(formData),
     };
   }
 }

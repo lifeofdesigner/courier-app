@@ -6,6 +6,7 @@ import {
   createAddressAction,
   type DashboardActionState,
 } from "@/app/(customer)/dashboard/profile/actions";
+import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 
 const initialState: DashboardActionState = {
   success: false,
@@ -48,9 +49,11 @@ export function AddressForm() {
     createAddressAction,
     initialState,
   );
+  const formRef = usePreservedFormValues(state.values);
 
   return (
     <form
+      ref={formRef}
       action={formAction}
       className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"
     >

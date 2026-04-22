@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 
 import { upsertSiteSettingAction } from "@/app/(admin)/admin/settings/actions";
+import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AdminActionState, SiteSettingRow } from "@/types/admin";
 
 export type SettingsFormProps = {
@@ -26,9 +27,11 @@ export function SettingsForm({ setting, defaultKey = "" }: SettingsFormProps) {
     upsertSiteSettingAction,
     initialState,
   );
+  const formRef = usePreservedFormValues(state.values);
 
   return (
     <form
+      ref={formRef}
       action={formAction}
       className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm"
     >

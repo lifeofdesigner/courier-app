@@ -3,6 +3,10 @@
 import { z } from "zod";
 
 import { calculateQuoteBreakdown } from "@/lib/calculations/quotes";
+import {
+  formDataToValues,
+  type PreservedFormValues,
+} from "@/lib/forms/preserve";
 import { getPricingRules, insertQuoteRecord } from "@/lib/queries/quotes";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { QuoteBreakdown, QuoteRecord } from "@/types/quote";
@@ -20,6 +24,7 @@ export type QuoteActionState = {
   success: boolean;
   message: string;
   fieldErrors?: Record<string, string[]>;
+  values?: PreservedFormValues;
   quote?: QuoteRecord;
   breakdown?: QuoteBreakdown;
 };
@@ -86,6 +91,7 @@ export async function calculateQuoteAction(
       success: false,
       message: "Please review the highlighted fields.",
       fieldErrors: parsed.error.flatten().fieldErrors,
+      values: formDataToValues(formData),
     };
   }
 
@@ -96,6 +102,7 @@ export async function calculateQuoteAction(
       success: false,
       message:
         "Supabase is not configured yet. Add the public Supabase environment variables before calculating quotes.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -142,6 +149,7 @@ export async function calculateQuoteAction(
         error instanceof Error
           ? error.message
           : "The quote could not be calculated right now.",
+      values: formDataToValues(formData),
     };
   }
 }

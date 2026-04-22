@@ -2,10 +2,12 @@
 
 import Link from "next/link";
 import type { ChangeEventHandler, ReactNode } from "react";
-import { useActionState, useMemo, useState } from "react";
+import { useActionState, useCallback, useMemo, useState } from "react";
 
 import { createShipmentAction } from "@/app/(admin)/admin/shipments/actions";
 import { CustomerLookupField } from "@/components/admin/customer-lookup-field";
+import type { PreservedFormValues } from "@/lib/forms/preserve";
+import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AdminActionState, CustomerSearchResult } from "@/types/admin";
 import { formatPaymentStatus, paymentStatuses } from "@/types/payment";
 import {
@@ -14,6 +16,9 @@ import {
   getModeAwareServiceOptions,
   getShipmentStatusOptions,
   getTransportModeMeta,
+  normalizeModeAwareServiceType,
+  normalizeShipmentStatus,
+  normalizeTransportMode,
   type ModeAwareServiceType,
   type ShipmentStatus,
   transportModeDefinitions,
@@ -188,6 +193,43 @@ export function CreateShipmentForm() {
   const statusMeta = statusOptions.find(
     (status) => status.code === shipmentStatus,
   );
+  const selectedCustomerFromState = useMemo<CustomerSearchResult | null>(() => {
+    const values = state.values;
+
+    if (!values?.selectedCustomerId) {
+      return null;
+    }
+
+    return {
+      id: values.selectedCustomerId,
+      fullName: values.selectedCustomerLabel || null,
+      email: values.selectedCustomerEmail || null,
+      phone: values.selectedCustomerPhone || null,
+      role: "customer",
+    };
+  }, [state.values]);
+  const restoreControlledValues = useCallback((values: PreservedFormValues) => {
+    const nextMode = normalizeTransportMode(values.transportMode);
+    const nextServiceType = normalizeModeAwareServiceType(
+      values.serviceType ?? getDefaultModeAwareServiceType(nextMode),
+      { mode: nextMode },
+    );
+    const nextStatus = normalizeShipmentStatus(
+      values.shipmentStatus ?? "shipment_created",
+      { mode: nextMode },
+    );
+
+    setTransportMode(nextMode);
+    setServiceType(nextServiceType);
+    setShipmentStatus(nextStatus);
+    setSenderName(values.senderName ?? "");
+    setSenderEmail(values.senderEmail ?? "");
+    setSenderPhone(values.senderPhone ?? "");
+  }, []);
+  const formRef = usePreservedFormValues(
+    state.values,
+    restoreControlledValues,
+  );
 
   function handleTransportModeChange(nextMode: TransportMode) {
     const nextServiceType = getDefaultModeAwareServiceType(nextMode);
@@ -213,7 +255,7 @@ export function CreateShipmentForm() {
   }
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form ref={formRef} action={formAction} className="space-y-6">
       {state.message ? (
         <div
           className={`rounded-2xl border px-4 py-3 text-sm ${
@@ -247,8 +289,10 @@ export function CreateShipmentForm() {
       <FormSection title="Customer">
         <div className="md:col-span-2">
           <CustomerLookupField
+            key={selectedCustomerFromState?.id ?? "empty-customer-lookup"}
             onCustomerChange={handleCustomerChange}
             fieldError={state.fieldErrors?.selectedCustomerId}
+            initialSelectedCustomer={selectedCustomerFromState}
           />
         </div>
       </FormSection>

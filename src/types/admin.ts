@@ -1,3 +1,4 @@
+import type { PreservedFormValues } from "@/lib/forms/preserve";
 import type { PaymentStatus } from "@/types/payment";
 import type {
   ModeAwareServiceType,
@@ -26,6 +27,7 @@ export interface AdminActionState {
   success: boolean;
   message: string;
   fieldErrors?: Record<string, string[]>;
+  values?: PreservedFormValues;
   createdShipmentId?: string;
   createdTrackingNumber?: string;
   createdBookingId?: string;
@@ -59,6 +61,7 @@ export interface CreateUserActionState {
   createdEmail?: string;
   createdRole?: "customer" | "admin";
   fieldErrors?: Record<string, string[]>;
+  values?: PreservedFormValues;
 }
 
 export interface AdminDashboardStats {

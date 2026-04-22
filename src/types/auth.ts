@@ -1,7 +1,10 @@
+import type { PreservedFormValues } from "@/lib/forms/preserve";
+
 export interface AuthActionState {
   success: boolean;
   message: string;
   fieldErrors?: Record<string, string[]>;
+  values?: PreservedFormValues;
   redirectTo?: string;
 }
 

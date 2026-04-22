@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { assertAdminAction } from "@/lib/auth/assert-admin-action";
+import { formDataToValues } from "@/lib/forms/preserve";
 import type { AdminActionState } from "@/types/admin";
 
 const settingSchema = z.object({
@@ -44,6 +45,7 @@ export async function upsertSiteSettingAction(
       success: false,
       message:
         error instanceof Error ? error.message : "Admin access is required.",
+      values: formDataToValues(formData),
     };
   }
 
@@ -57,6 +59,7 @@ export async function upsertSiteSettingAction(
       success: false,
       message: "Please review the highlighted fields.",
       fieldErrors: parsed.error.flatten().fieldErrors,
+      values: formDataToValues(formData),
     };
   }
 
@@ -69,6 +72,7 @@ export async function upsertSiteSettingAction(
       fieldErrors: {
         payload: [payload.error],
       },
+      values: formDataToValues(formData),
     };
   }
 
@@ -103,6 +107,7 @@ export async function upsertSiteSettingAction(
       success: false,
       message:
         error instanceof Error ? error.message : "Site setting could not be saved.",
+      values: formDataToValues(formData),
     };
   }
 }
