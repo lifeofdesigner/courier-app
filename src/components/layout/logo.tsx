@@ -51,8 +51,8 @@ export function Logo({
       {logo ? (
         <span
           className={cn(
-            "flex h-14 w-auto max-w-52 shrink-0 items-center justify-center overflow-hidden rounded-2xl border bg-white px-3 py-1.5 shadow-sm",
-            isInverse ? "border-white/15" : "border-slate-200",
+            "flex h-14 w-auto max-w-52 shrink-0 items-center justify-center overflow-hidden",
+            isInverse && "brightness-0 invert",
           )}
         >
           <Image
