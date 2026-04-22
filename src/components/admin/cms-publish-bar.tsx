@@ -51,7 +51,7 @@ export function CmsPublishBar({
   }, [router, state.success]);
 
   return (
-    <div className="rounded-[20px] border border-slate-200 bg-white p-4">
+    <div className="sticky top-4 z-10 rounded-[20px] border border-slate-200 bg-white/95 p-4 shadow-sm backdrop-blur">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <span
@@ -65,6 +65,9 @@ export function CmsPublishBar({
           </span>
           <p className="mt-2 text-xs font-medium text-slate-500">
             Updated {formatDate(updatedAt)}
+          </p>
+          <p className="mt-1 text-xs font-medium text-slate-500">
+            Save field changes before switching publish state.
           </p>
         </div>
         <form action={formAction}>

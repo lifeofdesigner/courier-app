@@ -37,7 +37,14 @@ export function ServicesPageCmsForm({ section }: ServicesPageCmsFormProps) {
         description="Edit services page hero copy, service cards, workflow steps, support highlights, and SEO."
         published={section.published}
       />
-      <div className="mt-6 space-y-5">
+      <div className="mt-8 space-y-8">
+        <CmsPublishBar
+          id={section.id}
+          section={section.section}
+          cmsKey={section.key}
+          published={section.published}
+          updatedAt={section.updatedAt}
+        />
         <CmsManagedForm
           formType="servicesPage.content"
           section={section.section}
@@ -144,13 +151,6 @@ export function ServicesPageCmsForm({ section }: ServicesPageCmsFormProps) {
             />
           </div>
         </CmsManagedForm>
-        <CmsPublishBar
-          id={section.id}
-          section={section.section}
-          cmsKey={section.key}
-          published={section.published}
-          updatedAt={section.updatedAt}
-        />
       </div>
     </section>
   );

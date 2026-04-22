@@ -10,12 +10,14 @@ import type {
   AdminCmsEditorSection,
   AdminHomepageCmsSections,
 } from "@/types/admin";
+import type { ReactNode } from "react";
 
 type SectionCardProps<T> = {
   title: string;
   description: string;
   formType: string;
   section: AdminCmsEditorSection<T>;
+  defaultOpen?: boolean;
   children: ReactNode;
 };
 
@@ -38,23 +40,35 @@ function SectionCard<T>({
   description,
   formType,
   section,
+  defaultOpen,
   children,
 }: SectionCardProps<T>) {
   return (
-    <article className="rounded-[24px] border border-slate-200 bg-slate-50/40 p-5">
-      <CmsSectionHeader
-        title={title}
-        description={description}
-        published={section.published}
-      />
-      <div className="mt-5 space-y-5">
-        <CmsManagedForm
-          formType={formType}
-          section={section.section}
-          cmsKey={section.key}
+    <details
+      className="rounded-[24px] border border-slate-200 bg-slate-50/50 p-5"
+      name="homepage-cms-panels"
+      open={defaultOpen}
+    >
+      <summary className="flex cursor-pointer items-center justify-between gap-4 border-b border-slate-200 pb-4">
+        <span>
+          <span className="block text-lg font-bold tracking-tight text-[#0B1C3A]">
+            {title}
+          </span>
+          <span className="mt-2 block max-w-3xl text-sm leading-6 text-slate-600">
+            {description}
+          </span>
+        </span>
+        <span
+          className={`inline-flex shrink-0 items-center rounded-full px-3 py-1 text-xs font-semibold ${
+            section.published
+              ? "bg-emerald-100 text-emerald-700"
+              : "bg-slate-100 text-slate-700"
+          }`}
         >
-          {children}
-        </CmsManagedForm>
+          {section.published ? "Published" : "Draft"}
+        </span>
+      </summary>
+      <div className="mt-6 space-y-6">
         <CmsPublishBar
           id={section.id}
           section={section.section}
@@ -62,8 +76,15 @@ function SectionCard<T>({
           published={section.published}
           updatedAt={section.updatedAt}
         />
+        <CmsManagedForm
+          formType={formType}
+          section={section.section}
+          cmsKey={section.key}
+        >
+          {children}
+        </CmsManagedForm>
       </div>
-    </article>
+    </details>
   );
 }
 
@@ -80,6 +101,7 @@ export function HomepageCmsForm({ sections }: HomepageCmsFormProps) {
   const testimonials = sections.testimonials.value;
   const faqPreview = sections.faqPreview.value;
   const cta = sections.cta.value;
+  const seo = sections.seo.value;
 
   return (
     <section
@@ -91,12 +113,13 @@ export function HomepageCmsForm({ sections }: HomepageCmsFormProps) {
         title="Homepage content"
         description="Edit each visible homepage block with labels that match the public page."
       />
-      <div className="mt-6 space-y-5">
+      <div className="mt-8 space-y-6">
         <SectionCard
           title="Hero"
           description="Headline, intro copy, primary actions, stats, tracking visual, and hero image."
           formType="homepage.hero"
           section={sections.hero}
+          defaultOpen
         >
           <div className="grid gap-5 md:grid-cols-2">
             <CmsTextField label="Eyebrow" name="hero.eyebrow" defaultValue={hero.eyebrow} />
@@ -404,8 +427,50 @@ export function HomepageCmsForm({ sections }: HomepageCmsFormProps) {
             <CmsLinkField label="Secondary button" name="cta.secondaryCta" defaultValue={cta.secondaryCta} />
           </div>
         </SectionCard>
+
+        <SectionCard
+          title="SEO"
+          description="Homepage search metadata and social sharing image."
+          formType="homepage.seo"
+          section={sections.seo}
+        >
+          <div className="grid gap-5 md:grid-cols-2">
+            <CmsTextField label="SEO title" name="seo.title" defaultValue={seo.title} />
+            <CmsTextField
+              label="Canonical path"
+              name="seo.canonicalPath"
+              defaultValue={seo.canonicalPath}
+            />
+          </div>
+          <CmsTextareaField
+            label="SEO description"
+            name="seo.description"
+            defaultValue={seo.description}
+          />
+          <CmsTextField
+            label="Keywords"
+            name="seo.keywords"
+            defaultValue={seo.keywords?.join(", ")}
+          />
+          <div className="grid gap-5 md:grid-cols-2">
+            <CmsTextField
+              label="Social title"
+              name="seo.openGraphTitle"
+              defaultValue={seo.openGraphTitle}
+            />
+            <CmsTextField
+              label="Social description"
+              name="seo.openGraphDescription"
+              defaultValue={seo.openGraphDescription}
+            />
+          </div>
+          <CmsImageField
+            label="Social sharing image"
+            name="seo.openGraphImage"
+            defaultImage={seo.openGraphImage}
+          />
+        </SectionCard>
       </div>
     </section>
   );
 }
-import type { ReactNode } from "react";

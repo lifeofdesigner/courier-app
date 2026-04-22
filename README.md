@@ -654,6 +654,23 @@ Linked customer behavior:
 
 This patch ends with lint, production build, commit, and push to GitHub.
 
+## Admin CMS Layout Polish Patch
+
+The admin CMS now uses a focused editing workspace instead of rendering every
+editor in one long page. The CMS sidebar selects one active section at a time,
+the editor canvas is wider, and major CMS blocks use more generous spacing.
+
+CMS usability improvements:
+
+- `/admin/cms` uses a sidebar plus single active editor layout.
+- Homepage content is grouped into collapsible subsections for Hero, Tracking
+  Promo, Services Preview, Trust, Coverage, Testimonials, FAQ Preview, CTA, and
+  SEO.
+- Save controls and publish/draft controls are visually stronger and sticky
+  within the active editing area.
+- Admin routes suppress the public header, footer CTA, and footer so the CMS
+  feels like a back-office interface rather than a public page.
+
 ## Routes
 
 Public:

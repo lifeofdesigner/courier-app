@@ -25,7 +25,14 @@ export function SeoCmsForm({ section }: SeoCmsFormProps) {
         description="Edit the metadata used by the homepage without exposing JSON."
         published={section.published}
       />
-      <div className="mt-6 space-y-5">
+      <div className="mt-8 space-y-8">
+        <CmsPublishBar
+          id={section.id}
+          section={section.section}
+          cmsKey={section.key}
+          published={section.published}
+          updatedAt={section.updatedAt}
+        />
         <CmsManagedForm
           formType="homepage.seo"
           section={section.section}
@@ -67,13 +74,6 @@ export function SeoCmsForm({ section }: SeoCmsFormProps) {
             defaultImage={content.openGraphImage}
           />
         </CmsManagedForm>
-        <CmsPublishBar
-          id={section.id}
-          section={section.section}
-          cmsKey={section.key}
-          published={section.published}
-          updatedAt={section.updatedAt}
-        />
       </div>
     </section>
   );

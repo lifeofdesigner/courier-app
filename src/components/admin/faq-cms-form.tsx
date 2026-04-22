@@ -33,7 +33,14 @@ export function FaqCmsForm({ section }: FaqCmsFormProps) {
         description="Edit FAQ page headings, grouped questions, support CTA, and search metadata."
         published={section.published}
       />
-      <div className="mt-6 space-y-5">
+      <div className="mt-8 space-y-8">
+        <CmsPublishBar
+          id={section.id}
+          section={section.section}
+          cmsKey={section.key}
+          published={section.published}
+          updatedAt={section.updatedAt}
+        />
         <CmsManagedForm
           formType="faqPage.content"
           section={section.section}
@@ -100,13 +107,6 @@ export function FaqCmsForm({ section }: FaqCmsFormProps) {
             />
           </div>
         </CmsManagedForm>
-        <CmsPublishBar
-          id={section.id}
-          section={section.section}
-          cmsKey={section.key}
-          published={section.published}
-          updatedAt={section.updatedAt}
-        />
       </div>
     </section>
   );

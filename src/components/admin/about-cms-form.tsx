@@ -35,7 +35,14 @@ export function AboutCmsForm({ section }: AboutCmsFormProps) {
         description="Edit company story, values, reasons to choose the courier, page CTA, and SEO."
         published={section.published}
       />
-      <div className="mt-6 space-y-5">
+      <div className="mt-8 space-y-8">
+        <CmsPublishBar
+          id={section.id}
+          section={section.section}
+          cmsKey={section.key}
+          published={section.published}
+          updatedAt={section.updatedAt}
+        />
         <CmsManagedForm
           formType="aboutPage.content"
           section={section.section}
@@ -158,13 +165,6 @@ export function AboutCmsForm({ section }: AboutCmsFormProps) {
             />
           </div>
         </CmsManagedForm>
-        <CmsPublishBar
-          id={section.id}
-          section={section.section}
-          cmsKey={section.key}
-          published={section.published}
-          updatedAt={section.updatedAt}
-        />
       </div>
     </section>
   );

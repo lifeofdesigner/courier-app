@@ -24,7 +24,14 @@ export function ContactCmsForm({ section }: ContactCmsFormProps) {
         description="Edit the support details used by the contact page and synced site settings."
         published={section.published}
       />
-      <div className="mt-6 space-y-5">
+      <div className="mt-8 space-y-8">
+        <CmsPublishBar
+          id={section.id}
+          section={section.section}
+          cmsKey={section.key}
+          published={section.published}
+          updatedAt={section.updatedAt}
+        />
         <CmsManagedForm
           formType="contact.info"
           section={section.section}
@@ -52,13 +59,6 @@ export function ContactCmsForm({ section }: ContactCmsFormProps) {
             defaultValue={content.address}
           />
         </CmsManagedForm>
-        <CmsPublishBar
-          id={section.id}
-          section={section.section}
-          cmsKey={section.key}
-          published={section.published}
-          updatedAt={section.updatedAt}
-        />
       </div>
     </section>
   );

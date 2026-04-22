@@ -12,6 +12,7 @@ export type AdminShellProps = {
     label: string;
     href: string;
   };
+  maxWidthClassName?: string;
   children: ReactNode;
 };
 
@@ -20,12 +21,13 @@ export function AdminShell({
   title,
   description,
   primaryAction,
+  maxWidthClassName = "max-w-7xl",
   children,
 }: AdminShellProps) {
   return (
-    <main className="bg-slate-50">
+    <main className="min-h-screen bg-slate-50">
       <section className="py-10 lg:py-12">
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className={`mx-auto w-full px-4 sm:px-6 lg:px-8 ${maxWidthClassName}`}>
           <div className="grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)]">
             <AdminSidebar />
             <div className="min-w-0 space-y-6">

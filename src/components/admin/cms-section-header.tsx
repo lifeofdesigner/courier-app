@@ -12,7 +12,7 @@ export function CmsSectionHeader({
   published,
 }: CmsSectionHeaderProps) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+    <div className="flex items-start justify-between gap-4 border-b border-slate-200 pb-4">
       <div>
         {eyebrow ? (
           <p className="text-xs font-bold uppercase tracking-wide text-[#FF6B2B]">

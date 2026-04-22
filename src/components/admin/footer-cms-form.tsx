@@ -24,7 +24,14 @@ export function FooterCmsForm({ section }: FooterCmsFormProps) {
         description="Edit the footer notice and support details without touching layout code."
         published={section.published}
       />
-      <div className="mt-6 space-y-5">
+      <div className="mt-8 space-y-8">
+        <CmsPublishBar
+          id={section.id}
+          section={section.section}
+          cmsKey={section.key}
+          published={section.published}
+          updatedAt={section.updatedAt}
+        />
         <CmsManagedForm
           formType="footer.content"
           section={section.section}
@@ -60,13 +67,6 @@ export function FooterCmsForm({ section }: FooterCmsFormProps) {
             defaultValue={content.address}
           />
         </CmsManagedForm>
-        <CmsPublishBar
-          id={section.id}
-          section={section.section}
-          cmsKey={section.key}
-          published={section.published}
-          updatedAt={section.updatedAt}
-        />
       </div>
     </section>
   );

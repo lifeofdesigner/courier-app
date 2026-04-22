@@ -11,5 +11,5 @@ export default async function AdminLayout({
 }) {
   await requireAdmin();
 
-  return children;
+  return <div data-admin-route="true">{children}</div>;
 }

@@ -25,7 +25,14 @@ export function SiteIdentityForm({ section }: SiteIdentityFormProps) {
         description="Manage the company name, support channels, logo assets, and site-wide notice in plain fields."
         published={section.published}
       />
-      <div className="mt-6 space-y-5">
+      <div className="mt-8 space-y-8">
+        <CmsPublishBar
+          id={section.id}
+          section={section.section}
+          cmsKey={section.key}
+          published={section.published}
+          updatedAt={section.updatedAt}
+        />
         <CmsManagedForm
           formType="site.identity"
           section={section.section}
@@ -81,13 +88,6 @@ export function SiteIdentityForm({ section }: SiteIdentityFormProps) {
             />
           </div>
         </CmsManagedForm>
-        <CmsPublishBar
-          id={section.id}
-          section={section.section}
-          cmsKey={section.key}
-          published={section.published}
-          updatedAt={section.updatedAt}
-        />
       </div>
     </section>
   );
