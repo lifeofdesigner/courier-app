@@ -1,7 +1,8 @@
 import { TrackingEventForm } from "@/components/admin/tracking-event-form";
+import { TrackingEventEditForm } from "@/components/admin/tracking-event-edit-form";
 import { TrackingStatusBadge } from "@/components/tracking";
 import type { AdminShipmentDetail, AdminTrackingEventRow } from "@/types/admin";
-import { getShipmentStatusMeta } from "@/types/shipment";
+import { getShipmentStatusMeta, type TransportMode } from "@/types/shipment";
 
 export type ShipmentTimelineCardProps = {
   shipment: AdminShipmentDetail;
@@ -22,7 +23,7 @@ function TimelineItem({
   mode,
 }: {
   event: AdminTrackingEventRow;
-  mode: string;
+  mode: TransportMode;
 }) {
   const statusMeta = getShipmentStatusMeta(event.status, { mode });
 
@@ -50,6 +51,7 @@ function TimelineItem({
           {formatDateTime(event.eventTime)}
         </p>
       </div>
+      <TrackingEventEditForm event={event} transportMode={mode} />
     </li>
   );
 }

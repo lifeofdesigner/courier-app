@@ -1,4 +1,4 @@
-import { CalendarDays, MapPin, PackageCheck, Route } from "lucide-react";
+import { CalendarDays, FileText, MapPin, PackageCheck, Route } from "lucide-react";
 import Link from "next/link";
 
 import { TrackingStatusBadge } from "@/components/tracking/tracking-status-badge";
@@ -92,16 +92,25 @@ export function TrackingResultCard({ shipment }: TrackingResultCardProps) {
           is currently marked as {statusMeta.label}.
         </p>
       </div>
-      {shipment.labelUrl ? (
-        <div className="mt-4">
+      <div className="mt-4 flex flex-wrap gap-3">
+        <Link
+          href={`/track/print?tracking=${encodeURIComponent(
+            shipment.trackingNumber,
+          )}`}
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+        >
+          <FileText aria-hidden="true" className="h-4 w-4" />
+          Download / print tracking copy
+        </Link>
+        {shipment.labelUrl ? (
           <Link
             href={shipment.labelUrl}
             className="inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
           >
             Print label
           </Link>
-        </div>
-      ) : null}
+        ) : null}
+      </div>
     </div>
   );
 }

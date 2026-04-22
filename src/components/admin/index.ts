@@ -45,6 +45,7 @@ export * from "./shipment-timeline-card";
 export * from "./shipments-table";
 export * from "./site-identity-form";
 export * from "./tracking-event-form";
+export * from "./tracking-event-edit-form";
 export * from "./tracking-events-table";
 export * from "./user-role-form";
 export * from "./users-table";

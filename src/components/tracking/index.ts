@@ -3,3 +3,4 @@ export * from "./tracking-result-card";
 export * from "./tracking-search-form";
 export * from "./tracking-status-badge";
 export * from "./tracking-timeline";
+export * from "./tracking-print-copy";
