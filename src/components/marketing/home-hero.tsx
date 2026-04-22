@@ -6,7 +6,6 @@ import {
   ArrowRight,
   CheckCircle2,
   MoveRight,
-  PackageCheck,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
@@ -16,7 +15,6 @@ import type {
   CmsImage,
   HeroSectionContent,
   HeroSlideContent,
-  HeroStat,
 } from "@/types/cms";
 
 export type HomeHeroProps = {
@@ -29,7 +27,6 @@ type HeroSlide = {
   description: string;
   image: CmsImage;
   statusLabel: string;
-  metric: HeroStat;
 };
 
 const fallbackImages: CmsImage[] = [
@@ -47,27 +44,12 @@ const fallbackImages: CmsImage[] = [
   },
 ];
 
-function fallbackMetric(index: number): HeroStat {
-  return {
-    label: ["Active lanes", "Tracking updates", "Delivery support"][index] ?? "Courier support",
-    value: ["Air, road, freight", "Live milestones", "Operations team"][index] ?? "Ready",
-    description:
-      [
-        "Mode-aware movement across the routes your shipment needs.",
-        "Visible handoffs from pickup through final delivery.",
-        "Help from people who understand courier exceptions.",
-      ][index] ?? "Shipment support built around clear movement.",
-  };
-}
-
 function resolveHeroSlide({
   content,
-  metric,
   slide,
   index,
 }: {
   content: HeroSectionContent;
-  metric: HeroStat;
   slide: HeroSlideContent;
   index: number;
 }): HeroSlide {
@@ -77,23 +59,16 @@ function resolveHeroSlide({
     description: slide.description || content.description,
     image: slide.image ?? content.image ?? fallbackImages[index % fallbackImages.length],
     statusLabel: slide.statusLabel || content.visual.statusLabel,
-    metric,
   };
 }
 
 function buildSlides(content: HeroSectionContent): HeroSlide[] {
   const primaryImage = content.image ?? fallbackImages[0];
-  const stats = content.stats.length > 0 ? content.stats : [
-    fallbackMetric(0),
-    fallbackMetric(1),
-    fallbackMetric(2),
-  ];
 
   if (content.slides && content.slides.length > 0) {
     return content.slides.map((slide, index) =>
       resolveHeroSlide({
         content,
-        metric: stats[index] ?? fallbackMetric(index),
         slide,
         index,
       }),
@@ -107,7 +82,6 @@ function buildSlides(content: HeroSectionContent): HeroSlide[] {
       description: content.description,
       image: primaryImage,
       statusLabel: content.visual.statusLabel,
-      metric: stats[0] ?? fallbackMetric(0),
     },
     {
       eyebrow: content.visual.eyebrow,
@@ -115,7 +89,6 @@ function buildSlides(content: HeroSectionContent): HeroSlide[] {
       description: `${content.visual.title} is moving on ${content.visual.route}. Follow the same kind of checkpoints your customers expect from a modern courier partner.`,
       image: fallbackImages[1],
       statusLabel: content.visual.statusLabel,
-      metric: stats[1] ?? fallbackMetric(1),
     },
     {
       eyebrow: "Logistics transportation",
@@ -124,7 +97,6 @@ function buildSlides(content: HeroSectionContent): HeroSlide[] {
         "Coordinate courier, cargo, and freight movement with clear service choices, customer-ready tracking, and operations support at every handoff.",
       image: fallbackImages[2],
       statusLabel: "Dispatch ready",
-      metric: stats[2] ?? fallbackMetric(2),
     },
   ];
 }
@@ -298,20 +270,6 @@ export function HomeHero({ content }: HomeHeroProps) {
               ) : null}
             </div>
           ))}
-        </div>
-
-        <div className="pointer-events-none absolute bottom-10 right-5 hidden max-w-xs items-center gap-3 rounded-full bg-white px-6 py-4 text-[#0B1C3A] shadow-2xl shadow-black/20 xl:flex">
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-orange-50 text-[#FF6B2B]">
-            <PackageCheck aria-hidden="true" className="h-5 w-5" />
-          </span>
-          <span>
-            <span className="block text-lg font-black text-[#FF6B2B]">
-              {activeSlide.metric.value}
-            </span>
-            <span className="block text-sm font-bold">
-              {activeSlide.metric.label}
-            </span>
-          </span>
         </div>
       </Container>
     </section>
