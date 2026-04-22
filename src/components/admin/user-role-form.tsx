@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 
 import { updateUserRoleAction } from "@/app/(admin)/admin/users/actions";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AdminActionState, AdminUserRow } from "@/types/admin";
 
@@ -20,6 +21,10 @@ export function UserRoleForm({ user }: UserRoleFormProps) {
     updateUserRoleAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Role updated",
+    errorTitle: "Role update failed",
+  });
   const formRef = usePreservedFormValues(state.values);
 
   return (

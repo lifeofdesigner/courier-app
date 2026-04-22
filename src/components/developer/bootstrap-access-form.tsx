@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 
 import { unlockBootstrapAccessAction } from "@/app/developer/bootstrap-users/actions";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import type { BootstrapAccessActionState } from "@/types/auth";
 
 const initialState: BootstrapAccessActionState = {
@@ -21,6 +22,10 @@ export function BootstrapAccessForm() {
     unlockBootstrapAccessAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Bootstrap unlocked",
+    errorTitle: "Bootstrap access denied",
+  });
 
   return (
     <form

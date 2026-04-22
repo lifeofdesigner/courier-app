@@ -4,6 +4,7 @@ import { AlertTriangle } from "lucide-react";
 
 import { CheckoutButton } from "@/components/booking";
 import { Container } from "@/components/layout";
+import { ToastOnMount } from "@/components/ui/toast-on-mount";
 import { getPaymentSummaryByBookingId } from "@/lib/queries/payments";
 import { createPageMetadata } from "@/lib/seo";
 import {
@@ -52,9 +53,24 @@ export default async function BookingCancelPage({
   const serviceLabel = payment
     ? formatModeAwareServiceType(payment.serviceType, payment.transportMode)
     : null;
+  const isPaid = payment?.paymentStatus === "paid";
+  const toastTitle = isPaid
+    ? "Payment already confirmed"
+    : "Payment not completed";
+  const toastMessage = payment
+    ? isPaid
+      ? `This ${modeMeta?.label.toLowerCase() ?? "shipment"} booking is already paid.`
+      : "Your booking is saved, but payment was not completed."
+    : "No booking reference was provided for this canceled payment.";
+  const toastVariant = isPaid ? "success" : "warning";
 
   return (
     <main>
+      <ToastOnMount
+        title={toastTitle}
+        message={toastMessage}
+        variant={toastVariant}
+      />
       <section className="py-16 lg:py-20">
         <Container>
           <div className="mx-auto max-w-2xl rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">

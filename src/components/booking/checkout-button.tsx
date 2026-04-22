@@ -3,6 +3,7 @@
 import { CreditCard } from "lucide-react";
 import { useState, useTransition } from "react";
 
+import { useToast } from "@/components/ui/toast";
 import type { StripeCheckoutResponse } from "@/types/payment";
 
 export type CheckoutButtonProps = {
@@ -19,6 +20,7 @@ export function CheckoutButton({
   label = "Pay now",
   className = defaultClassName,
 }: CheckoutButtonProps) {
+  const { toast } = useToast();
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
 
@@ -36,13 +38,27 @@ export function CheckoutButton({
         const payload = (await response.json()) as StripeCheckoutResponse;
 
         if (!payload.success || !payload.checkoutUrl) {
-          setMessage(payload.message ?? "Checkout could not be started.");
+          const nextMessage = payload.message ?? "Checkout could not be started.";
+
+          setMessage(nextMessage);
+          toast({
+            title: "Checkout failed",
+            message: nextMessage,
+            variant: "error",
+          });
           return;
         }
 
         window.location.assign(payload.checkoutUrl);
       } catch {
-        setMessage("Checkout could not be started. Please try again.");
+        const nextMessage = "Checkout could not be started. Please try again.";
+
+        setMessage(nextMessage);
+        toast({
+          title: "Checkout failed",
+          message: nextMessage,
+          variant: "error",
+        });
       }
     });
   }

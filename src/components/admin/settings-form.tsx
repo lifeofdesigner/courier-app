@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 
 import { upsertSiteSettingAction } from "@/app/(admin)/admin/settings/actions";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AdminActionState, SiteSettingRow } from "@/types/admin";
 
@@ -27,6 +28,10 @@ export function SettingsForm({ setting, defaultKey = "" }: SettingsFormProps) {
     upsertSiteSettingAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Setting saved",
+    errorTitle: "Setting could not be saved",
+  });
   const formRef = usePreservedFormValues(state.values);
 
   return (

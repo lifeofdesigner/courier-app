@@ -5,6 +5,7 @@ import { useActionState } from "react";
 
 import { adminLoginAction } from "@/app/(auth)/actions";
 import { AuthMessage } from "@/components/auth/auth-message";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AuthActionState } from "@/types/auth";
 
@@ -24,6 +25,10 @@ export function AdminLoginForm() {
     adminLoginAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Admin signed in",
+    errorTitle: "Admin sign in failed",
+  });
   const formRef = usePreservedFormValues(state.values);
 
   return (

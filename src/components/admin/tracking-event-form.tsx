@@ -5,6 +5,7 @@ import { useActionState, useCallback, useMemo, useState } from "react";
 import { updateShipmentStatusAction } from "@/app/(admin)/admin/shipments/actions";
 import { createTrackingEventAction } from "@/app/(admin)/admin/tracking-events/actions";
 import type { PreservedFormValues } from "@/lib/forms/preserve";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type {
   AdminActionState,
@@ -95,6 +96,12 @@ export function TrackingEventForm({
       ? updateShipmentStatusAction
       : createTrackingEventAction;
   const [state, formAction, isPending] = useActionState(action, initialState);
+  useActionToast(state, {
+    successTitle:
+      mode === "shipment-status" ? "Shipment status saved" : "Tracking event saved",
+    errorTitle:
+      mode === "shipment-status" ? "Status update failed" : "Tracking event failed",
+  });
   const restoreControlledValues = useCallback((values: PreservedFormValues) => {
     const nextMode = normalizeTransportMode(values.transportMode);
 

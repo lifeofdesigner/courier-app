@@ -4,6 +4,7 @@ import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
 import { toggleCmsPublishAction } from "@/app/(admin)/admin/cms/actions";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import type { AdminActionState } from "@/types/admin";
 
 export type CmsPublishBarProps = {
@@ -43,6 +44,10 @@ export function CmsPublishBar({
     toggleCmsPublishAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Publish state updated",
+    errorTitle: "Publish state failed",
+  });
 
   useEffect(() => {
     if (state.success) {

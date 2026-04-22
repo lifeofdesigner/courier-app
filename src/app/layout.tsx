@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 
 import { FooterCta, SiteFooter, SiteHeader } from "@/components/layout";
+import { ToastProvider } from "@/components/ui/toast";
 import { company, siteConfig } from "@/constants/site";
 import { getSiteUrl } from "@/lib/env";
 import "./globals.css";
@@ -71,12 +72,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full scroll-smooth">
       <body className="min-h-full bg-background text-text antialiased">
-        <div className="flex min-h-screen flex-col">
-          <SiteHeader />
-          <div className="flex-1">{children}</div>
-          <FooterCta />
-          <SiteFooter />
-        </div>
+        <ToastProvider>
+          <div className="flex min-h-screen flex-col">
+            <SiteHeader />
+            <div className="flex-1">{children}</div>
+            <FooterCta />
+            <SiteFooter />
+          </div>
+        </ToastProvider>
       </body>
     </html>
   );

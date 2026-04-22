@@ -6,6 +6,7 @@ import {
   createAddressAction,
   type DashboardActionState,
 } from "@/app/(customer)/dashboard/profile/actions";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 
 const initialState: DashboardActionState = {
@@ -49,6 +50,10 @@ export function AddressForm() {
     createAddressAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Address saved",
+    errorTitle: "Address could not be saved",
+  });
   const formRef = usePreservedFormValues(state.values);
 
   return (

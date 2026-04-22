@@ -4,6 +4,7 @@ import { useActionState } from "react";
 
 import { createBootstrapUserAction } from "@/app/developer/bootstrap-users/actions";
 import { BootstrapSuccessCard } from "@/components/developer/bootstrap-success-card";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { CreateUserActionState } from "@/types/admin";
 
@@ -62,6 +63,10 @@ export function BootstrapUserForm() {
     createBootstrapUserAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Bootstrap user created",
+    errorTitle: "Bootstrap user failed",
+  });
   const formRef = usePreservedFormValues(state.values);
 
   if (state.success) {

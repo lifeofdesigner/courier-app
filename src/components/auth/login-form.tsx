@@ -5,6 +5,7 @@ import { useActionState } from "react";
 
 import { loginAction } from "@/app/(auth)/actions";
 import { AuthMessage } from "@/components/auth/auth-message";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AuthActionState } from "@/types/auth";
 
@@ -29,6 +30,10 @@ export function LoginForm({ nextPath = "/dashboard", message }: LoginFormProps) 
     loginAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Signed in",
+    errorTitle: "Sign in failed",
+  });
   const formRef = usePreservedFormValues(state.values);
 
   return (

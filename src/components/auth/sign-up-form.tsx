@@ -5,6 +5,7 @@ import { useActionState } from "react";
 
 import { signUpAction } from "@/app/(auth)/actions";
 import { AuthMessage } from "@/components/auth/auth-message";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AuthActionState } from "@/types/auth";
 
@@ -24,6 +25,10 @@ export function SignUpForm() {
     signUpAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Account created",
+    errorTitle: "Sign up failed",
+  });
   const formRef = usePreservedFormValues(state.values);
 
   return (

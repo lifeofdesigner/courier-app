@@ -4,6 +4,7 @@ import { useActionState, useEffect, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
 
 import { saveCmsEditorSectionAction } from "@/app/(admin)/admin/cms/actions";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AdminActionState } from "@/types/admin";
 
@@ -52,6 +53,10 @@ export function CmsManagedForm({
     saveCmsEditorSectionAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "CMS section saved",
+    errorTitle: "CMS section could not be saved",
+  });
   const formRef = usePreservedFormValues(state.values);
 
   useEffect(() => {

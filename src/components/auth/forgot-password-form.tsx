@@ -5,6 +5,7 @@ import { useActionState } from "react";
 
 import { forgotPasswordAction } from "@/app/(auth)/actions";
 import { AuthMessage } from "@/components/auth/auth-message";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AuthActionState } from "@/types/auth";
 
@@ -24,6 +25,10 @@ export function ForgotPasswordForm() {
     forgotPasswordAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Reset email sent",
+    errorTitle: "Reset request failed",
+  });
   const formRef = usePreservedFormValues(state.values);
 
   return (

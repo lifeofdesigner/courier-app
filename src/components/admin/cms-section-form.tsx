@@ -6,6 +6,7 @@ import {
   toggleCmsPublishAction,
   upsertCmsSectionAction,
 } from "@/app/(admin)/admin/cms/actions";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AdminActionState, AdminCmsRow } from "@/types/admin";
 
@@ -45,6 +46,14 @@ export function CmsSectionForm({
     toggleCmsPublishAction,
     initialState,
   );
+  useActionToast(upsertState, {
+    successTitle: "CMS section saved",
+    errorTitle: "CMS section could not be saved",
+  });
+  useActionToast(toggleState, {
+    successTitle: "Publish state updated",
+    errorTitle: "Publish state failed",
+  });
   const formRef = usePreservedFormValues(upsertState.values);
   const payload = row ? JSON.stringify(row.value, null, 2) : "{\n  \n}";
 

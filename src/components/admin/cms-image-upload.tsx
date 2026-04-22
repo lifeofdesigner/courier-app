@@ -3,6 +3,7 @@
 import { useActionState } from "react";
 
 import { uploadCmsAssetAction } from "@/app/(admin)/admin/cms/actions";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import type { AdminActionState } from "@/types/admin";
 
 type CmsUploadState = AdminActionState & {
@@ -23,6 +24,10 @@ export function CmsImageUpload() {
     uploadCmsAssetAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Asset uploaded",
+    errorTitle: "Asset upload failed",
+  });
 
   return (
     <form

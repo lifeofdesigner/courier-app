@@ -10,10 +10,9 @@ import {
 import { QuoteBreakdownCard } from "@/components/quote/quote-breakdown-card";
 import { QuoteResultState } from "@/components/quote/quote-result-state";
 import { QuoteSummaryCard } from "@/components/quote/quote-summary-card";
-import {
-  usePreservedFormValues,
-} from "@/lib/forms/use-preserved-form-values";
 import type { PreservedFormValues } from "@/lib/forms/preserve";
+import { useActionToast } from "@/lib/forms/use-action-toast";
+import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import {
   getDefaultModeAwareServiceType,
   getModeAwareServiceMeta,
@@ -130,6 +129,10 @@ export function QuoteForm({ isConfigured }: QuoteFormProps) {
     calculateQuoteAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Quote calculated",
+    errorTitle: "Quote needs attention",
+  });
   const serviceOptions = useMemo(
     () => getModeAwareServiceOptions(transportMode),
     [transportMode],

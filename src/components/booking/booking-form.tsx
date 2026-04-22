@@ -10,6 +10,7 @@ import {
 import { BookingSuccessCard } from "@/components/booking/booking-success-card";
 import { BookingSummaryCard } from "@/components/booking/booking-summary-card";
 import type { PreservedFormValues } from "@/lib/forms/preserve";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import {
   getDefaultModeAwareServiceType,
@@ -197,6 +198,10 @@ export function BookingForm({
     createBookingAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Booking submitted",
+    errorTitle: "Booking needs attention",
+  });
   const serviceOptions = useMemo(
     () => getModeAwareServiceOptions(transportMode),
     [transportMode],

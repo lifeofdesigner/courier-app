@@ -7,6 +7,7 @@ import { useActionState, useCallback, useMemo, useState } from "react";
 import { createShipmentAction } from "@/app/(admin)/admin/shipments/actions";
 import { CustomerLookupField } from "@/components/admin/customer-lookup-field";
 import type { PreservedFormValues } from "@/lib/forms/preserve";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AdminActionState, CustomerSearchResult } from "@/types/admin";
 import { formatPaymentStatus, paymentStatuses } from "@/types/payment";
@@ -178,6 +179,10 @@ export function CreateShipmentForm() {
     createShipmentAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Shipment created",
+    errorTitle: "Shipment could not be created",
+  });
   const serviceOptions = useMemo(
     () => getModeAwareServiceOptions(transportMode),
     [transportMode],

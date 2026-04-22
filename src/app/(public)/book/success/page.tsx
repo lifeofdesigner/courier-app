@@ -3,6 +3,7 @@ import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 
 import { Container } from "@/components/layout";
+import { ToastOnMount } from "@/components/ui/toast-on-mount";
 import { getPaymentSummaryByCheckoutSessionId } from "@/lib/queries/payments";
 import { createPageMetadata } from "@/lib/seo";
 import {
@@ -52,9 +53,25 @@ export default async function BookingSuccessPage({
   const serviceLabel = payment
     ? formatModeAwareServiceType(payment.serviceType, payment.transportMode)
     : null;
+  const toastTitle = payment
+    ? isPaid
+      ? "Payment confirmed"
+      : "Payment processing"
+    : "Payment lookup needed";
+  const toastMessage = payment
+    ? isPaid
+      ? `Your ${modeMeta?.label.toLowerCase() ?? "shipment"} payment was confirmed.`
+      : "Stripe returned successfully. Final payment confirmation is still being processed."
+    : "No Checkout session was found in the URL.";
+  const toastVariant = payment ? (isPaid ? "success" : "info") : "warning";
 
   return (
     <main>
+      <ToastOnMount
+        title={toastTitle}
+        message={toastMessage}
+        variant={toastVariant}
+      />
       <section className="py-16 lg:py-20">
         <Container>
           <div className="mx-auto max-w-2xl rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">

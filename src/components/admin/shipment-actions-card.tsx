@@ -5,7 +5,9 @@ import { Clipboard, ExternalLink, FileText } from "lucide-react";
 import { useActionState, useCallback, useMemo, useState } from "react";
 
 import { updateShipmentStatusOnlyAction } from "@/app/(admin)/admin/shipments/actions";
+import { useToast } from "@/components/ui/toast";
 import type { PreservedFormValues } from "@/lib/forms/preserve";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AdminActionState, AdminShipmentDetail } from "@/types/admin";
 import {
@@ -42,6 +44,7 @@ const secondaryButtonClassName =
   "inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#2b1d16] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200";
 
 export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
+  const { toast } = useToast();
   const [transportMode, setTransportMode] = useState<TransportMode>(
     shipment.transportMode,
   );
@@ -53,6 +56,10 @@ export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
     updateShipmentStatusOnlyAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Shipment updated",
+    errorTitle: "Shipment update failed",
+  });
   const [copyMessage, setCopyMessage] = useState("");
   const restoreControlledValues = useCallback((values: PreservedFormValues) => {
     if (values.transportMode) {
@@ -91,9 +98,23 @@ export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
     : getShipmentStatusMeta(status, { mode: transportMode });
 
   async function copyTrackingNumber() {
-    await navigator.clipboard.writeText(shipment.trackingNumber);
-    setCopyMessage("Tracking number copied.");
-    window.setTimeout(() => setCopyMessage(""), 2500);
+    try {
+      await navigator.clipboard.writeText(shipment.trackingNumber);
+      setCopyMessage("Tracking number copied.");
+      toast({
+        title: "Copied",
+        message: "Tracking number copied.",
+        variant: "success",
+      });
+      window.setTimeout(() => setCopyMessage(""), 2500);
+    } catch {
+      setCopyMessage("Tracking number could not be copied.");
+      toast({
+        title: "Copy failed",
+        message: "Tracking number could not be copied.",
+        variant: "error",
+      });
+    }
   }
 
   function handleTransportModeChange(nextMode: TransportMode) {

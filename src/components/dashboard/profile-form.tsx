@@ -6,6 +6,7 @@ import {
   updateProfileAction,
   type DashboardActionState,
 } from "@/app/(customer)/dashboard/profile/actions";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { AppUserProfile } from "@/types/auth";
 
@@ -33,6 +34,10 @@ export function ProfileForm({ profile, email }: ProfileFormProps) {
     updateProfileAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "Profile saved",
+    errorTitle: "Profile could not be saved",
+  });
   const formRef = usePreservedFormValues(state.values);
 
   return (

@@ -4,6 +4,7 @@ import { useActionState } from "react";
 
 import { createAdminUserAction } from "@/app/(admin)/admin/users/create/actions";
 import { CreateUserSuccess } from "@/components/admin/create-user-success";
+import { useActionToast } from "@/lib/forms/use-action-toast";
 import { usePreservedFormValues } from "@/lib/forms/use-preserved-form-values";
 import type { CreateUserActionState } from "@/types/admin";
 
@@ -59,6 +60,10 @@ export function CreateUserForm() {
     createAdminUserAction,
     initialState,
   );
+  useActionToast(state, {
+    successTitle: "User created",
+    errorTitle: "User could not be created",
+  });
   const formRef = usePreservedFormValues(state.values);
 
   return (
