@@ -15,6 +15,8 @@ import type {
   FAQPageContent,
   FooterContent,
   HeroSectionContent,
+  HomepageScrollEffect,
+  HomepageTextEffect,
   ServicePreviewSectionContent,
   ServicesPageContent,
   SiteIdentityContent,
@@ -60,6 +62,21 @@ const cmsIconNames = [
   "warehouse",
 ] as const satisfies readonly CmsIconName[];
 
+const homepageScrollEffects = [
+  "none",
+  "fade-up",
+  "slide-left",
+  "slide-right",
+  "zoom-in",
+] as const satisfies readonly HomepageScrollEffect[];
+
+const homepageTextEffects = [
+  "none",
+  "soft-fade",
+  "rise",
+  "focus",
+] as const satisfies readonly HomepageTextEffect[];
+
 function getString(formData: FormData, key: string) {
   const value = formData.get(key);
 
@@ -84,6 +101,28 @@ function getIcon(formData: FormData, key: string, fallback: CmsIconName) {
   return cmsIconNames.includes(value as CmsIconName)
     ? (value as CmsIconName)
     : fallback;
+}
+
+function getHomepageScrollEffect(
+  formData: FormData,
+  key: string,
+): HomepageScrollEffect {
+  const value = getString(formData, key);
+
+  return homepageScrollEffects.includes(value as HomepageScrollEffect)
+    ? (value as HomepageScrollEffect)
+    : "fade-up";
+}
+
+function getHomepageTextEffect(
+  formData: FormData,
+  key: string,
+): HomepageTextEffect {
+  const value = getString(formData, key);
+
+  return homepageTextEffects.includes(value as HomepageTextEffect)
+    ? (value as HomepageTextEffect)
+    : "rise";
 }
 
 function getCount(formData: FormData, key: string) {
@@ -310,6 +349,10 @@ async function buildHomepageHeroPayload(
     description: getString(formData, "hero.description").trim(),
     primaryCta: readLink(formData, "hero.primaryCta"),
     secondaryCta: readLink(formData, "hero.secondaryCta"),
+    motion: {
+      scrollEffect: getHomepageScrollEffect(formData, "hero.motion.scrollEffect"),
+      textEffect: getHomepageTextEffect(formData, "hero.motion.textEffect"),
+    },
     stats: readHeroStats(formData, "hero.stats"),
     visual: {
       eyebrow: getString(formData, "hero.visual.eyebrow").trim(),

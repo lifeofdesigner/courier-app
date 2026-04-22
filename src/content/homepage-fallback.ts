@@ -16,6 +16,10 @@ export const homepageFallbackContent = {
       href: "/book",
       ariaLabel: "Book a courier pickup",
     },
+    motion: {
+      scrollEffect: "fade-up",
+      textEffect: "rise",
+    },
     stats: [
       {
         label: "Pickup windows",

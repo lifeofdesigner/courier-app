@@ -11,6 +11,7 @@ export * from "./faq-list";
 export * from "./home-cta";
 export * from "./home-hero";
 export * from "./legal-content";
+export * from "./motion-section";
 export * from "./seo-json-ld";
 export * from "./service-detail-grid";
 export * from "./service-lane-section";

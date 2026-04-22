@@ -48,6 +48,13 @@ const heroSlideSchema = z.object({
   image: cmsImageSchema.optional(),
 });
 
+const homepageMotionSchema = z.object({
+  scrollEffect: z
+    .enum(["none", "fade-up", "slide-left", "slide-right", "zoom-in"])
+    .default("fade-up"),
+  textEffect: z.enum(["none", "soft-fade", "rise", "focus"]).default("rise"),
+});
+
 const featureHighlightSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
@@ -102,6 +109,7 @@ const homepageSectionSchemas = {
     }),
     image: cmsImageSchema.optional(),
     slides: z.array(heroSlideSchema).min(1).optional(),
+    motion: homepageMotionSchema.optional(),
   }),
   trackingPromo: z.object({
     eyebrow: z.string().min(1),

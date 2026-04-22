@@ -10,7 +10,12 @@ import type {
   AdminCmsEditorSection,
   AdminHomepageCmsSections,
 } from "@/types/admin";
-import type { HeroSectionContent, HeroSlideContent } from "@/types/cms";
+import type {
+  HeroSectionContent,
+  HeroSlideContent,
+  HomepageScrollEffect,
+  HomepageTextEffect,
+} from "@/types/cms";
 import type { ReactNode } from "react";
 
 type SectionCardProps<T> = {
@@ -34,6 +39,27 @@ const iconOptions = [
   { label: "Shield check", value: "shield-check" },
   { label: "Truck", value: "truck" },
   { label: "Warehouse", value: "warehouse" },
+];
+
+const scrollEffectOptions: {
+  label: string;
+  value: HomepageScrollEffect;
+}[] = [
+  { label: "No transition", value: "none" },
+  { label: "Fade up", value: "fade-up" },
+  { label: "Slide from left", value: "slide-left" },
+  { label: "Slide from right", value: "slide-right" },
+  { label: "Zoom in", value: "zoom-in" },
+];
+
+const textEffectOptions: {
+  label: string;
+  value: HomepageTextEffect;
+}[] = [
+  { label: "No text effect", value: "none" },
+  { label: "Soft fade", value: "soft-fade" },
+  { label: "Rise", value: "rise" },
+  { label: "Focus", value: "focus" },
 ];
 
 const fallbackSlideImages = [
@@ -86,6 +112,41 @@ function getHeroSlideDefaults(hero: HeroSectionContent): HeroSlideContent[] {
       image: savedSlide?.image ?? fallbackSlide.image,
     };
   });
+}
+
+function CmsSelectField<T extends string>({
+  label,
+  name,
+  defaultValue,
+  options,
+  helpText,
+}: {
+  label: string;
+  name: string;
+  defaultValue: T;
+  options: { label: string; value: T }[];
+  helpText?: string;
+}) {
+  return (
+    <div className="space-y-2">
+      <label htmlFor={name} className="block text-sm font-semibold text-[#2b1d16]">
+        {label}
+      </label>
+      <select
+        id={name}
+        name={name}
+        defaultValue={defaultValue}
+        className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15"
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>
+            {option.label}
+          </option>
+        ))}
+      </select>
+      {helpText ? <p className="text-xs leading-5 text-slate-500">{helpText}</p> : null}
+    </div>
+  );
 }
 
 function SectionCard<T>({
@@ -188,6 +249,29 @@ export function HomepageCmsForm({ sections }: HomepageCmsFormProps) {
             <CmsLinkField label="Primary button" name="hero.primaryCta" defaultValue={hero.primaryCta} />
             <CmsLinkField label="Secondary button" name="hero.secondaryCta" defaultValue={hero.secondaryCta} />
           </div>
+          <fieldset className="rounded-[24px] border border-slate-200 bg-white p-4">
+            <legend className="px-2 text-sm font-semibold text-[#2b1d16]">
+              Homepage transitions
+            </legend>
+            <p className="mt-2 text-xs leading-5 text-slate-500">
+              Control how homepage sections and headline text reveal as visitors
+              scroll down the public page.
+            </p>
+            <div className="mt-4 grid gap-5 md:grid-cols-2">
+              <CmsSelectField
+                label="Section scroll transition"
+                name="hero.motion.scrollEffect"
+                defaultValue={hero.motion?.scrollEffect ?? "fade-up"}
+                options={scrollEffectOptions}
+              />
+              <CmsSelectField
+                label="Text effect"
+                name="hero.motion.textEffect"
+                defaultValue={hero.motion?.textEffect ?? "rise"}
+                options={textEffectOptions}
+              />
+            </div>
+          </fieldset>
           <CmsImageField
             label="Hero image"
             name="hero.image"

@@ -67,6 +67,24 @@ export interface HeroSlideContent {
   image?: CmsImage;
 }
 
+export type HomepageScrollEffect =
+  | "none"
+  | "fade-up"
+  | "slide-left"
+  | "slide-right"
+  | "zoom-in";
+
+export type HomepageTextEffect =
+  | "none"
+  | "soft-fade"
+  | "rise"
+  | "focus";
+
+export interface HomepageMotionSettings {
+  scrollEffect: HomepageScrollEffect;
+  textEffect: HomepageTextEffect;
+}
+
 export interface HeroSectionContent {
   eyebrow: string;
   title: string;
@@ -77,6 +95,7 @@ export interface HeroSectionContent {
   visual: HeroVisualContent;
   image?: CmsImage;
   slides?: HeroSlideContent[];
+  motion?: HomepageMotionSettings;
 }
 
 export interface TrackingPromoContent {

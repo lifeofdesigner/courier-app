@@ -5,6 +5,7 @@ import {
   FAQPreview,
   HomeCta,
   HomeHero,
+  MotionSection,
   SeoJsonLd,
   ServicePreview,
   SocialProof,
@@ -47,18 +48,38 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function HomePage() {
   const content = await getHomePageContent();
+  const motion = content.hero.motion ?? {
+    scrollEffect: "fade-up" as const,
+    textEffect: "rise" as const,
+  };
 
   return (
     <main>
       <SeoJsonLd data={[getOrganizationJsonLd(), getWebsiteJsonLd()]} />
-      <HomeHero content={content.hero} />
-      <TrackingPromo content={content.trackingPromo} />
-      <ServicePreview content={content.services} />
-      <TrustSection content={content.trust} />
-      <CoverageSection content={content.coverage} />
-      <SocialProof content={content.testimonials} />
-      <FAQPreview content={content.faqPreview} />
-      <HomeCta content={content.cta} />
+      <MotionSection {...motion}>
+        <HomeHero content={content.hero} />
+      </MotionSection>
+      <MotionSection {...motion} delayMs={60}>
+        <TrackingPromo content={content.trackingPromo} />
+      </MotionSection>
+      <MotionSection {...motion} delayMs={90}>
+        <ServicePreview content={content.services} />
+      </MotionSection>
+      <MotionSection {...motion} delayMs={120}>
+        <TrustSection content={content.trust} />
+      </MotionSection>
+      <MotionSection {...motion} delayMs={150}>
+        <CoverageSection content={content.coverage} />
+      </MotionSection>
+      <MotionSection {...motion} delayMs={180}>
+        <SocialProof content={content.testimonials} />
+      </MotionSection>
+      <MotionSection {...motion} delayMs={210}>
+        <FAQPreview content={content.faqPreview} />
+      </MotionSection>
+      <MotionSection {...motion} delayMs={240}>
+        <HomeCta content={content.cta} />
+      </MotionSection>
     </main>
   );
 }

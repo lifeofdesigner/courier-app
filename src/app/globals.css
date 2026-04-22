@@ -110,3 +110,88 @@ summary::-webkit-details-marker {
   color: var(--muted);
   margin-bottom: 0.5rem;
 }
+
+.motion-section {
+  transition:
+    opacity 720ms ease,
+    transform 720ms ease,
+    filter 720ms ease;
+  transition-delay: var(--motion-delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.motion-section[data-motion-ready="true"][data-motion-visible="false"]:not(
+    [data-scroll-effect="none"]
+  ) {
+  opacity: 0;
+}
+
+.motion-section[data-motion-ready="true"][data-motion-visible="false"][data-scroll-effect="fade-up"] {
+  transform: translate3d(0, 34px, 0);
+}
+
+.motion-section[data-motion-ready="true"][data-motion-visible="false"][data-scroll-effect="slide-left"] {
+  transform: translate3d(-42px, 0, 0);
+}
+
+.motion-section[data-motion-ready="true"][data-motion-visible="false"][data-scroll-effect="slide-right"] {
+  transform: translate3d(42px, 0, 0);
+}
+
+.motion-section[data-motion-ready="true"][data-motion-visible="false"][data-scroll-effect="zoom-in"] {
+  transform: scale(0.965);
+}
+
+.motion-section[data-motion-visible="true"] {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+.motion-section[data-motion-ready="true"][data-text-effect]:not(
+    [data-text-effect="none"]
+  )
+  :where(h1, h2, h3, p, blockquote, li, dt, dd) {
+  transition:
+    opacity 680ms ease,
+    transform 680ms ease,
+    filter 680ms ease,
+    letter-spacing 680ms ease;
+  transition-delay: calc(var(--motion-delay, 0ms) + 90ms);
+}
+
+.motion-section[data-motion-ready="true"][data-motion-visible="false"][data-text-effect="soft-fade"]
+  :where(h1, h2, h3, p, blockquote, li, dt, dd) {
+  opacity: 0;
+}
+
+.motion-section[data-motion-ready="true"][data-motion-visible="false"][data-text-effect="rise"]
+  :where(h1, h2, h3, p, blockquote, li, dt, dd) {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+}
+
+.motion-section[data-motion-ready="true"][data-motion-visible="false"][data-text-effect="focus"]
+  :where(h1, h2, h3, p, blockquote, li, dt, dd) {
+  opacity: 0;
+  filter: blur(5px);
+  letter-spacing: 0.03em;
+  transform: translate3d(0, 10px, 0);
+}
+
+.motion-section[data-motion-visible="true"]
+  :where(h1, h2, h3, p, blockquote, li, dt, dd) {
+  opacity: 1;
+  transform: none;
+  filter: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .motion-section,
+  .motion-section :where(h1, h2, h3, p, blockquote, li, dt, dd) {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
