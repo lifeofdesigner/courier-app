@@ -15,11 +15,11 @@ export function CmsSectionHeader({
     <div className="flex items-start justify-between gap-4 border-b border-slate-200 pb-4">
       <div>
         {eyebrow ? (
-          <p className="text-xs font-bold uppercase tracking-wide text-[#FF6B2B]">
+          <p className="text-xs font-bold uppercase tracking-wide text-[#b0825f]">
             {eyebrow}
           </p>
         ) : null}
-        <h2 className="mt-1 text-xl font-bold tracking-tight text-[#0B1C3A]">
+        <h2 className="mt-1 text-xl font-bold tracking-tight text-[#2b1d16]">
           {title}
         </h2>
         {description ? (

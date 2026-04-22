@@ -13,7 +13,7 @@ export type TrackingEventsTableProps = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15";
 
 function formatDateTime(value: string) {
   return new Intl.DateTimeFormat("en", {
@@ -83,7 +83,7 @@ export function TrackingEventsTable({ events }: TrackingEventsTableProps) {
                   <td className="px-4 py-4 text-sm text-slate-700">
                     <Link
                       href={`/admin/shipments/${event.orderId}`}
-                      className="font-semibold text-[#0B1C3A] transition hover:text-[#FF6B2B]"
+                      className="font-semibold text-[#2b1d16] transition hover:text-[#b0825f]"
                     >
                       {event.trackingNumber ?? event.orderId}
                     </Link>
@@ -103,7 +103,7 @@ export function TrackingEventsTable({ events }: TrackingEventsTableProps) {
                     {getTransportModeMeta(event.transportMode).label}
                   </td>
                   <td className="px-4 py-4 text-sm text-slate-700">
-                    <p className="font-semibold text-[#0B1C3A]">
+                    <p className="font-semibold text-[#2b1d16]">
                       {event.label}
                     </p>
                     {event.description ? (

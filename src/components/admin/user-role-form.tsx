@@ -27,7 +27,7 @@ export function UserRoleForm({ user }: UserRoleFormProps) {
         <select
           name="role"
           defaultValue={user.role}
-          className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15"
+          className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15"
         >
           <option value="customer">Customer</option>
           <option value="admin">Admin</option>
@@ -35,7 +35,7 @@ export function UserRoleForm({ user }: UserRoleFormProps) {
         <button
           type="submit"
           disabled={isPending}
-          className="inline-flex h-10 items-center justify-center rounded-xl bg-[#FF6B2B] px-3 text-xs font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+          className="inline-flex h-10 items-center justify-center rounded-xl bg-[#b0825f] px-3 text-xs font-semibold text-white transition hover:bg-[#9a704f] focus:outline-none focus:ring-4 focus:ring-[#b0825f]/20"
         >
           {isPending ? "Saving" : "Update"}
         </button>

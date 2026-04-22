@@ -18,7 +18,7 @@ function DetailRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-center justify-between gap-4 border-b border-slate-100 py-3 last:border-b-0">
       <p className="text-sm font-semibold text-slate-500">{label}</p>
-      <p className="max-w-[12rem] truncate text-right text-sm font-semibold text-[#0B1C3A]">
+      <p className="max-w-[12rem] truncate text-right text-sm font-semibold text-[#2b1d16]">
         {value}
       </p>
     </div>
@@ -30,7 +30,7 @@ export function ShipmentPaymentCard({ shipment }: ShipmentPaymentCardProps) {
     <section className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-[#0B1C3A]">
+          <h2 className="text-xl font-bold tracking-tight text-[#2b1d16]">
             Booking / payment
           </h2>
           <p className="mt-1 text-sm text-slate-500">
@@ -76,7 +76,7 @@ export function ShipmentPaymentCard({ shipment }: ShipmentPaymentCardProps) {
           {shipment.labelUrl ? (
             <Link
               href={shipment.labelUrl}
-              className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+              className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#b0825f] px-5 text-sm font-semibold text-white transition hover:bg-[#9a704f] focus:outline-none focus:ring-4 focus:ring-[#b0825f]/20"
             >
               Print label
             </Link>

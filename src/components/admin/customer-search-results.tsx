@@ -60,7 +60,7 @@ export function CustomerSearchResults({
           className="flex w-full items-start justify-between gap-4 px-4 py-4 text-left transition hover:bg-slate-50"
         >
           <span>
-            <span className="block text-sm font-semibold text-[#0B1C3A]">
+            <span className="block text-sm font-semibold text-[#2b1d16]">
               {customerDisplayName(customer)}
             </span>
             <span className="mt-1 block text-sm leading-6 text-slate-500">

@@ -16,7 +16,7 @@ export function ContactCmsForm({ section }: ContactCmsFormProps) {
   return (
     <section
       id="contact-info"
-      className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8"
+      className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8"
     >
       <CmsSectionHeader
         eyebrow="Contact Info"

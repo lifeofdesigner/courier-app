@@ -12,10 +12,10 @@ const initialState: CreateUserActionState = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15";
 
 const selectClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15";
 
 function FieldError({ errors }: { errors?: string[] }) {
   return errors?.[0] ? (
@@ -38,7 +38,7 @@ function TextInput({
 }) {
   return (
     <div className="space-y-2">
-      <label htmlFor={name} className="block text-sm font-semibold text-[#0B1C3A]">
+      <label htmlFor={name} className="block text-sm font-semibold text-[#2b1d16]">
         {label}
       </label>
       <input
@@ -60,7 +60,7 @@ export function CreateUserForm() {
   );
 
   return (
-    <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
+    <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
       {state.success ? <CreateUserSuccess state={state} /> : null}
 
       {state.message && !state.success ? (
@@ -93,7 +93,7 @@ export function CreateUserForm() {
           <div className="space-y-2">
             <label
               htmlFor="role"
-              className="block text-sm font-semibold text-[#0B1C3A]"
+              className="block text-sm font-semibold text-[#2b1d16]"
             >
               Role
             </label>
@@ -128,7 +128,7 @@ export function CreateUserForm() {
           <button
             type="submit"
             disabled={isPending}
-            className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#b0825f] px-5 text-sm font-semibold text-white transition hover:bg-[#9a704f] focus:outline-none focus:ring-4 focus:ring-[#b0825f]/20 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isPending ? "Creating..." : "Create user"}
           </button>

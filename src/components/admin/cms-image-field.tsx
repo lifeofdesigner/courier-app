@@ -49,7 +49,7 @@ export function CmsImageField({
           <div>
             <label
               htmlFor={`${name}.file`}
-              className="block text-sm font-semibold text-[#0B1C3A]"
+              className="block text-sm font-semibold text-[#2b1d16]"
             >
               {label}
             </label>
@@ -68,7 +68,7 @@ export function CmsImageField({
             name={`${name}.file`}
             type="file"
             accept={accept}
-            className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition file:mr-4 file:rounded-xl file:border-0 file:bg-slate-100 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-[#0B1C3A] focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15"
+            className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition file:mr-4 file:rounded-xl file:border-0 file:bg-slate-100 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-[#2b1d16] focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15"
             onChange={(event) => {
               const file = event.target.files?.[0];
 
@@ -84,7 +84,7 @@ export function CmsImageField({
           <div className="space-y-2">
             <label
               htmlFor={`${name}.alt`}
-              className="block text-sm font-semibold text-[#0B1C3A]"
+              className="block text-sm font-semibold text-[#2b1d16]"
             >
               Image description
             </label>
@@ -92,13 +92,13 @@ export function CmsImageField({
               id={`${name}.alt`}
               name={`${name}.alt`}
               defaultValue={defaultImage?.alt ?? ""}
-              className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15"
+              className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15"
             />
           </div>
           {allowRemove ? (
             <button
               type="button"
-              className="inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
+              className="inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#2b1d16] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
               onClick={() => {
                 setPreviewUrl("");
                 setAssetUrl("");

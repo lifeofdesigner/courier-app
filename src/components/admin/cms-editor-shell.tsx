@@ -7,7 +7,7 @@ import { saveCmsEditorSectionAction } from "@/app/(admin)/admin/cms/actions";
 import type { AdminActionState } from "@/types/admin";
 
 export type CmsEditorShellProps = {
-  sidebar: ReactNode;
+  sidebar?: ReactNode;
   children: ReactNode;
 };
 
@@ -26,6 +26,10 @@ const initialState: AdminActionState = {
 };
 
 export function CmsEditorShell({ sidebar, children }: CmsEditorShellProps) {
+  if (!sidebar) {
+    return <div className="min-w-0 space-y-8">{children}</div>;
+  }
+
   return (
     <div className="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
       {sidebar}
@@ -79,7 +83,7 @@ export function CmsManagedForm({
           <button
             type="submit"
             disabled={isPending}
-            className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20 disabled:cursor-not-allowed disabled:opacity-70"
+            className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#b0825f] px-5 text-sm font-semibold text-white transition hover:bg-[#9a704f] focus:outline-none focus:ring-4 focus:ring-[#b0825f]/20 disabled:cursor-not-allowed disabled:opacity-70"
           >
             {isPending ? "Saving..." : "Save Changes"}
           </button>

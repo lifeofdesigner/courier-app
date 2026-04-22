@@ -25,15 +25,15 @@ export function CmsSidebar({ items, activeId }: CmsSidebarProps) {
               <li key={item.href}>
                 <a
                   href={item.href}
-                  className={`block rounded-2xl px-3 py-3 transition focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/15 ${
+                  className={`block rounded-2xl px-3 py-3 transition focus:outline-none focus:ring-4 focus:ring-[#b0825f]/15 ${
                     isActive
-                      ? "bg-[#0B1C3A] text-white"
+                      ? "bg-[#2b1d16] text-white"
                       : "hover:bg-slate-50"
                   }`}
                 >
                   <span
                     className={`block text-sm font-semibold ${
-                      isActive ? "text-white" : "text-[#0B1C3A]"
+                      isActive ? "text-white" : "text-[#2b1d16]"
                     }`}
                   >
                     {item.label}

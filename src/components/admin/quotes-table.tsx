@@ -10,7 +10,7 @@ export type QuotesTableProps = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15";
 
 function formatMoney(value: number, currency: string) {
   return new Intl.NumberFormat("en", {
@@ -84,7 +84,7 @@ export function QuotesTable({ quotes }: QuotesTableProps) {
               {filteredQuotes.map((quote) => (
                 <tr key={quote.id}>
                   <td className="px-4 py-4 text-sm text-slate-700">
-                    <p className="font-semibold text-[#0B1C3A]">
+                    <p className="font-semibold text-[#2b1d16]">
                       {quote.fullName ?? "Guest quote"}
                     </p>
                     <p className="mt-1 text-xs text-slate-500">
@@ -98,7 +98,7 @@ export function QuotesTable({ quotes }: QuotesTableProps) {
                   <td className="px-4 py-4 text-sm text-slate-700">
                     {quote.serviceType}
                   </td>
-                  <td className="px-4 py-4 text-sm font-semibold text-[#0B1C3A]">
+                  <td className="px-4 py-4 text-sm font-semibold text-[#2b1d16]">
                     {formatMoney(quote.total, quote.currency)}
                   </td>
                   <td className="px-4 py-4 text-sm text-slate-700">

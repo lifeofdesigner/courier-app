@@ -49,10 +49,10 @@ export function ShipmentOverviewCard({ shipment }: ShipmentOverviewCardProps) {
       `Customer ${shipment.customer.id?.slice(0, 8)}`;
 
   return (
-    <section className="rounded-[24px] border border-[#0B1C3A]/10 bg-[#0B1C3A] p-6 text-white shadow-sm">
+    <section className="rounded-[24px] border border-[#2b1d16]/10 bg-[#2b1d16] p-6 text-white shadow-sm">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
         <div>
-          <p className="text-sm font-bold uppercase tracking-wide text-[#FFB18B]">
+          <p className="text-sm font-bold uppercase tracking-wide text-[#dcc1aa]">
             Shipment overview
           </p>
           <h2 className="mt-2 text-3xl font-bold tracking-tight">

@@ -25,7 +25,7 @@ export function FaqCmsForm({ section }: FaqCmsFormProps) {
   return (
     <section
       id="faq"
-      className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8"
+      className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8"
     >
       <CmsSectionHeader
         eyebrow="FAQ"

@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 
 import {
   AboutCmsForm,
-  AdminShell,
+  AdminPageHeader,
+  AdminSectionCard,
   CmsEditorShell,
   CmsPreviewCard,
-  CmsSidebar,
   ContactCmsForm,
   FaqCmsForm,
   FooterCmsForm,
@@ -14,68 +14,22 @@ import {
   ServicesPageCmsForm,
   SiteIdentityForm,
 } from "@/components/admin";
-import { requireAdmin } from "@/lib/auth/require-admin";
 import { getAdminCmsEditorData } from "@/lib/queries/admin-cms";
 
 export const metadata: Metadata = {
   title: "CMS",
 };
 
-const cmsNavigation = [
-  {
-    id: "overview",
-    label: "Overview",
-    href: "/admin/cms?section=overview",
-    description: "Publishing status and section summary",
-  },
-  {
-    id: "site-identity",
-    label: "Site Identity",
-    href: "/admin/cms?section=site-identity",
-    description: "Logo, contact basics, hours",
-  },
-  {
-    id: "homepage",
-    label: "Homepage",
-    href: "/admin/cms?section=homepage",
-    description: "Hero, services, trust, CTA",
-  },
-  {
-    id: "services-page",
-    label: "Services Page",
-    href: "/admin/cms?section=services-page",
-    description: "Services, workflow, SEO",
-  },
-  {
-    id: "about-page",
-    label: "About Page",
-    href: "/admin/cms?section=about-page",
-    description: "Story, values, CTA",
-  },
-  {
-    id: "contact-info",
-    label: "Contact Info",
-    href: "/admin/cms?section=contact-info",
-    description: "Email, phone, address",
-  },
-  {
-    id: "faq",
-    label: "FAQ",
-    href: "/admin/cms?section=faq",
-    description: "Questions and answers",
-  },
-  {
-    id: "footer",
-    label: "Footer",
-    href: "/admin/cms?section=footer",
-    description: "Footer notice and support",
-  },
-  {
-    id: "seo",
-    label: "SEO",
-    href: "/admin/cms?section=seo",
-    description: "Homepage metadata",
-  },
+const cmsSectionIds = [
+  "overview",
+  "site-identity",
+  "homepage",
+  "services-page",
+  "about-page",
+  "contact-info",
+  "faq",
+  "footer",
+  "seo",
 ];
 
 type CMSPageProps = {
@@ -87,15 +41,10 @@ type CMSPageProps = {
 export default async function CMSPage({ searchParams }: CMSPageProps) {
   const params = await searchParams;
   const requestedSection = params?.section ?? "overview";
-  const activeSection = cmsNavigation.some(
-    (item) => item.id === requestedSection,
-  )
+  const activeSection = cmsSectionIds.includes(requestedSection)
     ? requestedSection
     : "overview";
-  const [admin, cmsData] = await Promise.all([
-    requireAdmin(),
-    getAdminCmsEditorData(),
-  ]);
+  const cmsData = await getAdminCmsEditorData();
 
   const activeEditor = (() => {
     if (activeSection === "site-identity") {
@@ -131,19 +80,12 @@ export default async function CMSPage({ searchParams }: CMSPageProps) {
     }
 
     return (
-      <section className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
-        <div>
-          <p className="text-xs font-bold uppercase tracking-wide text-[#FF6B2B]">
-            Publishing overview
-          </p>
-          <h2 className="mt-1 text-xl font-bold tracking-tight text-[#0B1C3A]">
-            CMS sections
-          </h2>
-          <p className="mt-2 max-w-3xl text-sm leading-7 text-slate-600">
-            Pick a section from the left to edit a focused set of fields.
-          </p>
-        </div>
-        <div className="mt-6 grid gap-5 xl:grid-cols-2">
+      <AdminSectionCard
+        title="CMS sections"
+        eyebrow="Publishing overview"
+        description="Pick a section from the left navigation to edit a focused set of fields."
+      >
+        <div className="grid gap-5 xl:grid-cols-2">
           <CmsPreviewCard
             title="Site Identity"
             description="Brand assets, support details, and company address."
@@ -159,34 +101,36 @@ export default async function CMSPage({ searchParams }: CMSPageProps) {
             updatedAt={cmsData.homepage.hero.updatedAt}
           />
           <CmsPreviewCard
-            title="Services Page"
+            title="Services"
             description="Services page copy, cards, workflow, highlights, and metadata."
             published={cmsData.servicesPage.published}
             updatedAt={cmsData.servicesPage.updatedAt}
           />
           <CmsPreviewCard
-            title="About Page"
+            title="About"
             description="About page story, values, reasons, CTA, and metadata."
             published={cmsData.aboutPage.published}
             updatedAt={cmsData.aboutPage.updatedAt}
           />
         </div>
-      </section>
+      </AdminSectionCard>
     );
   })();
 
   return (
-    <AdminShell
-      profile={admin.profile}
-      title="Content Management"
-      description="Edit public site content with friendly fields, inline image uploads, and explicit draft or published controls."
-      maxWidthClassName="max-w-[1680px]"
-    >
-      <CmsEditorShell
-        sidebar={<CmsSidebar items={cmsNavigation} activeId={activeSection} />}
-      >
-        {activeEditor}
-      </CmsEditorShell>
-    </AdminShell>
+    <>
+      <AdminPageHeader
+        breadcrumbs={[
+          { label: "Admin", href: "/admin" },
+          { label: "CMS" },
+        ]}
+        title="Content Management"
+        description="Edit public site content with friendly fields, inline image uploads, and explicit draft or published controls."
+        status={{ label: "Draft and publish", tone: "accent" }}
+        primaryAction={{ label: "Preview Site", href: "/" }}
+      />
+
+      <CmsEditorShell>{activeEditor}</CmsEditorShell>
+    </>
   );
 }

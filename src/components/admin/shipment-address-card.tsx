@@ -28,12 +28,12 @@ export function ShipmentAddressCard({
 }: ShipmentAddressCardProps) {
   return (
     <section className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-bold tracking-tight text-[#0B1C3A]">
+      <h2 className="text-xl font-bold tracking-tight text-[#2b1d16]">
         {title}
       </h2>
       <div className="mt-5 space-y-4 text-sm text-slate-700">
         <div>
-          <p className="font-semibold text-[#0B1C3A]">
+          <p className="font-semibold text-[#2b1d16]">
             {personName ?? address?.contactName ?? "Not set"}
           </p>
           {address?.companyName ? (

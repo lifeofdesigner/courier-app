@@ -671,6 +671,35 @@ CMS usability improvements:
 - Admin routes suppress the public header, footer CTA, and footer so the CMS
   feels like a back-office interface rather than a public page.
 
+## Admin Enterprise Shell Patch
+
+The admin area now renders through a centralized enterprise-style operations
+shell. `src/app/(admin)/admin/layout.tsx` owns the protected admin shell,
+top module navigation, adaptive left sub-navigation, and neutral admin-only
+background so pages feel like one cohesive back-office product.
+
+Top admin modules:
+
+- Dashboard
+- Shipments
+- Customers
+- Quotes
+- Bookings
+- CMS
+- Analytics
+- Settings
+
+The left navigation adapts by active module. Shipments includes All Shipments,
+Create Shipment, and Tracking Events. CMS includes Overview, Site Identity,
+Homepage, Services, About, Contact, FAQ, Footer, and SEO. Settings includes
+General, Site Settings, Integrations, and System Status.
+
+Reusable admin display primitives now cover page headers, KPI/stat cards,
+section cards, tab bars, and status pills. Dashboard, shipment, booking, quote,
+customer, CMS, analytics, and settings pages use the shared header and card
+hierarchy while preserving existing Supabase queries, Server Actions, routes,
+and data models.
+
 ## Routes
 
 Public:

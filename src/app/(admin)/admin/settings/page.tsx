@@ -1,7 +1,13 @@
 import type { Metadata } from "next";
+import { CheckCircle2, Settings, SlidersHorizontal, TriangleAlert } from "lucide-react";
 
-import { AdminSectionCard, AdminShell, SettingsForm } from "@/components/admin";
-import { requireAdmin } from "@/lib/auth/require-admin";
+import {
+  AdminPageHeader,
+  AdminSectionCard,
+  AdminStatCard,
+  AdminStatusPill,
+  SettingsForm,
+} from "@/components/admin";
 import { getLaunchEnvStatus } from "@/lib/env";
 import { getAdminSiteSettings } from "@/lib/queries/admin-settings";
 
@@ -17,42 +23,73 @@ const requiredSettingKeys = [
 ];
 
 export default async function AdminSettingsPage() {
-  const [admin, settings] = await Promise.all([
-    requireAdmin(),
-    getAdminSiteSettings(),
-  ]);
+  const settings = await getAdminSiteSettings();
   const envStatus = getLaunchEnvStatus();
+  const configuredEnv = envStatus.filter((item) => item.configured).length;
+  const missingEnv = envStatus.length - configuredEnv;
 
   return (
-    <AdminShell
-      profile={admin.profile}
-      title="Site settings"
-      description="Maintain JSON-backed settings for operational contact details and site-level content."
-    >
+    <>
+      <AdminPageHeader
+        breadcrumbs={[
+          { label: "Admin", href: "/admin" },
+          { label: "Settings" },
+        ]}
+        title="Settings"
+        description="Maintain JSON-backed settings for operational contact details, public site content, and launch configuration."
+        status={{ label: "System controls", tone: "accent" }}
+      />
+
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+        <AdminStatCard
+          title="Editable settings"
+          value={requiredSettingKeys.length}
+          helperText="JSON-backed configuration records."
+          icon={<Settings aria-hidden="true" className="h-5 w-5" />}
+        />
+        <AdminStatCard
+          title="Configured env"
+          value={configuredEnv}
+          helperText="Launch environment checks passing."
+          tone="success"
+          icon={<CheckCircle2 aria-hidden="true" className="h-5 w-5" />}
+        />
+        <AdminStatCard
+          title="Missing env"
+          value={missingEnv}
+          helperText="Values still needed for launch readiness."
+          tone={missingEnv > 0 ? "warning" : "success"}
+          icon={<TriangleAlert aria-hidden="true" className="h-5 w-5" />}
+        />
+        <AdminStatCard
+          title="Integrations"
+          value={envStatus.length}
+          helperText="Payment, email, and URL readiness items."
+          tone="info"
+          icon={<SlidersHorizontal aria-hidden="true" className="h-5 w-5" />}
+        />
+      </div>
+
       <AdminSectionCard
+        id="site-settings"
         title="Editable settings"
-        description="Use valid JSON values. These records are admin-only and designed for future public integration."
+        description="Use valid JSON values. These records are admin-only and designed for public integration."
       >
         <div className="grid gap-5">
           {requiredSettingKeys.map((key) => {
             const setting = settings.find((item) => item.key === key);
 
-            return (
-              <SettingsForm
-                key={key}
-                setting={setting}
-                defaultKey={key}
-              />
-            );
+            return <SettingsForm key={key} setting={setting} defaultKey={key} />;
           })}
         </div>
       </AdminSectionCard>
 
       <AdminSectionCard
-        title="Launch environment"
+        id="integrations"
+        title="Integrations"
         description="Non-secret readiness check for payment, email, and production URL configuration."
       >
-        <div className="grid gap-3 md:grid-cols-2">
+        <div id="system-status" className="grid gap-3 md:grid-cols-2">
           {envStatus.map((item) => (
             <div
               key={item.key}
@@ -60,18 +97,13 @@ export default async function AdminSettingsPage() {
             >
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="font-semibold text-[#0B1C3A]">{item.label}</p>
+                  <p className="font-semibold text-[#2b1d16]">{item.label}</p>
                   <p className="mt-1 text-xs text-slate-500">{item.key}</p>
                 </div>
-                <span
-                  className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
-                    item.configured
-                      ? "bg-emerald-50 text-emerald-700"
-                      : "bg-amber-50 text-amber-700"
-                  }`}
-                >
-                  {item.configured ? "Set" : "Missing"}
-                </span>
+                <AdminStatusPill
+                  label={item.configured ? "Set" : "Missing"}
+                  tone={item.configured ? "success" : "warning"}
+                />
               </div>
               <p className="mt-3 text-sm capitalize text-slate-600">
                 Required for {item.requiredFor}
@@ -80,6 +112,6 @@ export default async function AdminSettingsPage() {
           ))}
         </div>
       </AdminSectionCard>
-    </AdminShell>
+    </>
   );
 }

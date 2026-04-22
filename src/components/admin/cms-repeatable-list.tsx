@@ -59,7 +59,7 @@ export function CmsRepeatableList({
 
   return (
     <fieldset className="rounded-[24px] border border-slate-200 bg-white p-4">
-      <legend className="px-2 text-sm font-semibold text-[#0B1C3A]">
+      <legend className="px-2 text-sm font-semibold text-[#2b1d16]">
         {label}
       </legend>
       {helpText ? <p className="mt-2 text-xs leading-5 text-slate-500">{helpText}</p> : null}
@@ -71,7 +71,7 @@ export function CmsRepeatableList({
             className="rounded-[20px] border border-slate-200 bg-slate-50/70 p-4"
           >
             <div className="mb-4 flex items-center justify-between gap-3">
-              <p className="text-sm font-bold text-[#0B1C3A]">Item {index + 1}</p>
+              <p className="text-sm font-bold text-[#2b1d16]">Item {index + 1}</p>
               <button
                 type="button"
                 className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-50"
@@ -96,7 +96,7 @@ export function CmsRepeatableList({
                     <div key={field.name} className="space-y-2 md:col-span-2">
                       <label
                         htmlFor={fieldName}
-                        className="block text-sm font-semibold text-[#0B1C3A]"
+                        className="block text-sm font-semibold text-[#2b1d16]"
                       >
                         {field.label}
                       </label>
@@ -105,7 +105,7 @@ export function CmsRepeatableList({
                         name={fieldName}
                         value={String(fieldValue)}
                         placeholder={field.placeholder}
-                        className="min-h-28 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15"
+                        className="min-h-28 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15"
                         onChange={(event) => {
                           const nextValue = event.target.value;
 
@@ -133,7 +133,7 @@ export function CmsRepeatableList({
                     <div key={field.name} className="space-y-2">
                       <label
                         htmlFor={fieldName}
-                        className="block text-sm font-semibold text-[#0B1C3A]"
+                        className="block text-sm font-semibold text-[#2b1d16]"
                       >
                         {field.label}
                       </label>
@@ -141,7 +141,7 @@ export function CmsRepeatableList({
                         id={fieldName}
                         name={fieldName}
                         value={String(fieldValue)}
-                        className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15"
+                        className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15"
                         onChange={(event) => {
                           const nextValue = event.target.value;
 
@@ -174,14 +174,14 @@ export function CmsRepeatableList({
                   return (
                     <label
                       key={field.name}
-                      className="flex h-12 items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-[#0B1C3A]"
+                      className="flex h-12 items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 text-sm font-semibold text-[#2b1d16]"
                     >
                       <input
                         name={fieldName}
                         type="checkbox"
                         value="true"
                         checked={Boolean(row.values[field.name])}
-                        className="h-4 w-4 rounded border-slate-300 text-[#FF6B2B] focus:ring-[#FF6B2B]"
+                        className="h-4 w-4 rounded border-slate-300 text-[#b0825f] focus:ring-[#b0825f]"
                         onChange={(event) => {
                           const nextValue = event.target.checked;
 
@@ -209,7 +209,7 @@ export function CmsRepeatableList({
                   <div key={field.name} className="space-y-2">
                     <label
                       htmlFor={fieldName}
-                      className="block text-sm font-semibold text-[#0B1C3A]"
+                      className="block text-sm font-semibold text-[#2b1d16]"
                     >
                       {field.label}
                     </label>
@@ -218,7 +218,7 @@ export function CmsRepeatableList({
                       name={fieldName}
                       value={String(fieldValue)}
                       placeholder={field.placeholder}
-                      className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15"
+                      className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15"
                       onChange={(event) => {
                         const nextValue = event.target.value;
 
@@ -246,7 +246,7 @@ export function CmsRepeatableList({
       </div>
       <button
         type="button"
-        className="mt-4 inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
+        className="mt-4 inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#2b1d16] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
         onClick={() => {
           setRows((currentRows) => [
             ...currentRows,

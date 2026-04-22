@@ -27,7 +27,7 @@ export function AboutCmsForm({ section }: AboutCmsFormProps) {
   return (
     <section
       id="about-page"
-      className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8"
+      className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8"
     >
       <CmsSectionHeader
         eyebrow="About Page"

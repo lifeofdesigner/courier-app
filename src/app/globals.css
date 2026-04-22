@@ -28,6 +28,14 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+body:has([data-admin-route="true"]) {
+  background: #f6f7f9;
+}
+
+body:has([data-admin-route="true"]) > div {
+  background: #f6f7f9;
+}
+
 body:has([data-admin-route="true"]) > div > header,
 body:has([data-admin-route="true"]) > div > section,
 body:has([data-admin-route="true"]) > div > footer {

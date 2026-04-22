@@ -34,10 +34,10 @@ const initialState: AdminActionState = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15";
 
 const textareaClassName =
-  "min-h-28 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "min-h-28 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15";
 
 function FieldError({ errors }: { errors?: string[] }) {
   return errors?.[0] ? (
@@ -99,7 +99,7 @@ export function TrackingEventForm({
       className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm"
     >
       <div>
-        <h2 className="text-xl font-bold tracking-tight text-[#0B1C3A]">
+        <h2 className="text-xl font-bold tracking-tight text-[#2b1d16]">
           {title}
         </h2>
         <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600">
@@ -123,14 +123,14 @@ export function TrackingEventForm({
         <div className="space-y-2">
           <label
             htmlFor={`${mode}-orderId`}
-            className="block text-sm font-semibold text-[#0B1C3A]"
+            className="block text-sm font-semibold text-[#2b1d16]"
           >
             Shipment / order
           </label>
           {shipment ? (
             <>
               <input type="hidden" name="orderId" value={shipment.id} />
-              <div className="flex h-12 items-center rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-[#0B1C3A]">
+              <div className="flex h-12 items-center rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-[#2b1d16]">
                 {shipment.trackingNumber}
               </div>
             </>
@@ -172,7 +172,7 @@ export function TrackingEventForm({
         <div className="space-y-2">
           <label
             htmlFor={`${mode}-transportMode`}
-            className="block text-sm font-semibold text-[#0B1C3A]"
+            className="block text-sm font-semibold text-[#2b1d16]"
           >
             Transport mode
           </label>
@@ -183,7 +183,7 @@ export function TrackingEventForm({
                 name="transportMode"
                 value={selectedShipment.transportMode}
               />
-              <div className="flex h-12 items-center rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-[#0B1C3A]">
+              <div className="flex h-12 items-center rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-[#2b1d16]">
                 {
                   transportModeDefinitions.find(
                     (item) => item.code === selectedShipment.transportMode,
@@ -220,7 +220,7 @@ export function TrackingEventForm({
         <div className="space-y-2">
           <label
             htmlFor={`${mode}-status`}
-            className="block text-sm font-semibold text-[#0B1C3A]"
+            className="block text-sm font-semibold text-[#2b1d16]"
           >
             Resulting shipment status
           </label>
@@ -247,7 +247,7 @@ export function TrackingEventForm({
         <div className="space-y-2">
           <label
             htmlFor={`${mode}-label`}
-            className="block text-sm font-semibold text-[#0B1C3A]"
+            className="block text-sm font-semibold text-[#2b1d16]"
           >
             Event label
           </label>
@@ -262,7 +262,7 @@ export function TrackingEventForm({
         <div className="space-y-2">
           <label
             htmlFor={`${mode}-eventTime`}
-            className="block text-sm font-semibold text-[#0B1C3A]"
+            className="block text-sm font-semibold text-[#2b1d16]"
           >
             Event time
           </label>
@@ -278,7 +278,7 @@ export function TrackingEventForm({
         <div className="space-y-2 md:col-span-2">
           <label
             htmlFor={`${mode}-locationName`}
-            className="block text-sm font-semibold text-[#0B1C3A]"
+            className="block text-sm font-semibold text-[#2b1d16]"
           >
             Location
           </label>
@@ -292,7 +292,7 @@ export function TrackingEventForm({
         <div className="space-y-2 md:col-span-2">
           <label
             htmlFor={`${mode}-description`}
-            className="block text-sm font-semibold text-[#0B1C3A]"
+            className="block text-sm font-semibold text-[#2b1d16]"
           >
             Description
           </label>
@@ -308,7 +308,7 @@ export function TrackingEventForm({
       <button
         type="submit"
         disabled={isPending}
-        className="mt-6 inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20 disabled:cursor-not-allowed disabled:opacity-60"
+        className="mt-6 inline-flex h-11 items-center justify-center rounded-2xl bg-[#b0825f] px-5 text-sm font-semibold text-white transition hover:bg-[#9a704f] focus:outline-none focus:ring-4 focus:ring-[#b0825f]/20 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isPending ? "Saving..." : "Save tracking update"}
       </button>

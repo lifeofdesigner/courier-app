@@ -51,7 +51,7 @@ function SectionCard<T>({
     >
       <summary className="flex cursor-pointer items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <span>
-          <span className="block text-lg font-bold tracking-tight text-[#0B1C3A]">
+          <span className="block text-lg font-bold tracking-tight text-[#2b1d16]">
             {title}
           </span>
           <span className="mt-2 block max-w-3xl text-sm leading-6 text-slate-600">
@@ -106,7 +106,7 @@ export function HomepageCmsForm({ sections }: HomepageCmsFormProps) {
   return (
     <section
       id="homepage"
-      className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8"
+      className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8"
     >
       <CmsSectionHeader
         eyebrow="Homepage"

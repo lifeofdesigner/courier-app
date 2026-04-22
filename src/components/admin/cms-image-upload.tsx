@@ -16,7 +16,7 @@ const initialState: CmsUploadState = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15";
 
 export function CmsImageUpload() {
   const [state, formAction, isPending] = useActionState(
@@ -27,9 +27,9 @@ export function CmsImageUpload() {
   return (
     <form
       action={formAction}
-      className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"
+      className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm"
     >
-      <h2 className="text-xl font-bold tracking-tight text-[#0B1C3A]">
+      <h2 className="text-xl font-bold tracking-tight text-[#2b1d16]">
         Upload CMS asset
       </h2>
       <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
@@ -40,7 +40,7 @@ export function CmsImageUpload() {
         <div className="space-y-2">
           <label
             htmlFor="folder"
-            className="block text-sm font-semibold text-[#0B1C3A]"
+            className="block text-sm font-semibold text-[#2b1d16]"
           >
             Folder
           </label>
@@ -54,7 +54,7 @@ export function CmsImageUpload() {
         <div className="space-y-2">
           <label
             htmlFor="file"
-            className="block text-sm font-semibold text-[#0B1C3A]"
+            className="block text-sm font-semibold text-[#2b1d16]"
           >
             Image file
           </label>
@@ -63,14 +63,14 @@ export function CmsImageUpload() {
             name="file"
             type="file"
             accept="image/*"
-            className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition file:mr-4 file:rounded-xl file:border-0 file:bg-slate-100 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-[#0B1C3A] focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15"
+            className="h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition file:mr-4 file:rounded-xl file:border-0 file:bg-slate-100 file:px-3 file:py-1 file:text-xs file:font-semibold file:text-[#2b1d16] focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15"
           />
         </div>
       </div>
       <button
         type="submit"
         disabled={isPending}
-        className="mt-6 inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+        className="mt-6 inline-flex h-11 items-center justify-center rounded-2xl bg-[#b0825f] px-5 text-sm font-semibold text-white transition hover:bg-[#9a704f] focus:outline-none focus:ring-4 focus:ring-[#b0825f]/20"
       >
         {isPending ? "Uploading..." : "Upload asset"}
       </button>

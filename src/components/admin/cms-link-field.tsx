@@ -16,7 +16,7 @@ export function CmsLinkField({
 }: CmsLinkFieldProps) {
   return (
     <fieldset className="rounded-[24px] border border-slate-200 bg-white p-4">
-      <legend className="px-2 text-sm font-semibold text-[#0B1C3A]">
+      <legend className="px-2 text-sm font-semibold text-[#2b1d16]">
         {label}
       </legend>
       <div className="mt-3 grid gap-4 md:grid-cols-2">

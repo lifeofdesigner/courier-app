@@ -29,7 +29,7 @@ export function ServicesPageCmsForm({ section }: ServicesPageCmsFormProps) {
   return (
     <section
       id="services-page"
-      className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8"
+      className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8"
     >
       <CmsSectionHeader
         eyebrow="Services Page"

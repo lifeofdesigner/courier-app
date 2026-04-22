@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
-import { AdminShell, ShipmentDetailShell } from "@/components/admin";
-import { requireAdmin } from "@/lib/auth/require-admin";
+import { AdminPageHeader, ShipmentDetailShell } from "@/components/admin";
 import { getAdminShipmentDetail } from "@/lib/queries/admin";
 
 export const metadata: Metadata = {
@@ -19,23 +18,31 @@ export default async function ShipmentDetailPage({
   params,
 }: ShipmentDetailPageProps) {
   const { id } = await params;
-  const [admin, shipment] = await Promise.all([
-    requireAdmin(),
-    getAdminShipmentDetail(id),
-  ]);
+  const shipment = await getAdminShipmentDetail(id);
 
   if (!shipment) {
     notFound();
   }
 
   return (
-    <AdminShell
-      profile={admin.profile}
-      title={`Shipment ${shipment.trackingNumber}`}
-      description="Inspect linked customer ownership, sender, recipient, addresses, payment, package details, label readiness, and the full customer-visible tracking timeline."
-      primaryAction={{ label: "All shipments", href: "/admin/shipments" }}
-    >
+    <>
+      <AdminPageHeader
+        breadcrumbs={[
+          { label: "Admin", href: "/admin" },
+          { label: "Shipments", href: "/admin/shipments" },
+          { label: shipment.trackingNumber },
+        ]}
+        title={`Shipment ${shipment.trackingNumber}`}
+        description="Inspect linked customer ownership, sender, recipient, addresses, payment, package details, label readiness, and the full customer-visible tracking timeline."
+        status={{ label: "Shipment record", tone: "info" }}
+        primaryAction={{
+          label: "Public Tracking",
+          href: `/track?tracking=${shipment.trackingNumber}`,
+        }}
+        secondaryAction={{ label: "All Shipments", href: "/admin/shipments" }}
+      />
+
       <ShipmentDetailShell shipment={shipment} />
-    </AdminShell>
+    </>
   );
 }

@@ -120,19 +120,135 @@ export const customerNavigation: NavItem[] = [
   { label: "Profile & Address Book", href: "/dashboard/profile" },
 ];
 
-export const adminNavigation: NavItem[] = [
-  { label: "Overview", href: "/admin" },
-  { label: "Shipments", href: "/admin/shipments" },
-  { label: "Create Shipment", href: "/admin/shipments/create" },
-  { label: "Tracking Events", href: "/admin/tracking-events" },
-  { label: "Quotes", href: "/admin/quotes" },
-  { label: "Bookings", href: "/admin/bookings" },
-  { label: "Users", href: "/admin/users" },
-  { label: "Create User", href: "/admin/users/create" },
-  { label: "CMS", href: "/admin/cms" },
-  { label: "Analytics", href: "/admin/analytics" },
-  { label: "Settings", href: "/admin/settings" },
-];
+export type AdminModuleKey =
+  | "dashboard"
+  | "shipments"
+  | "customers"
+  | "quotes"
+  | "bookings"
+  | "cms"
+  | "analytics"
+  | "settings";
+
+export type AdminTopNavigationItem = NavItem & {
+  module: AdminModuleKey;
+  matchHrefs?: readonly string[];
+};
+
+export type AdminSubNavigationItem = NavItem & {
+  description?: string;
+};
+
+export const adminTopNavigation = [
+  { label: "Dashboard", href: "/admin", module: "dashboard" },
+  {
+    label: "Shipments",
+    href: "/admin/shipments",
+    module: "shipments",
+    matchHrefs: ["/admin/shipments", "/admin/tracking-events"],
+  },
+  {
+    label: "Customers",
+    href: "/admin/users",
+    module: "customers",
+    matchHrefs: ["/admin/users"],
+  },
+  { label: "Quotes", href: "/admin/quotes", module: "quotes" },
+  { label: "Bookings", href: "/admin/bookings", module: "bookings" },
+  { label: "CMS", href: "/admin/cms", module: "cms" },
+  { label: "Analytics", href: "/admin/analytics", module: "analytics" },
+  { label: "Settings", href: "/admin/settings", module: "settings" },
+] as const satisfies readonly AdminTopNavigationItem[];
+
+export const adminModuleDetails = {
+  dashboard: {
+    label: "Dashboard",
+    description: "Executive scan of operational activity and admin actions.",
+  },
+  shipments: {
+    label: "Shipments",
+    description: "Shipment queues, manual creation, and tracking events.",
+  },
+  customers: {
+    label: "Customers",
+    description: "Customer profiles, staff access, and role management.",
+  },
+  quotes: {
+    label: "Quotes",
+    description: "Quote demand, customer intent, and follow-up visibility.",
+  },
+  bookings: {
+    label: "Bookings",
+    description: "Pickup requests, payment states, and label readiness.",
+  },
+  cms: {
+    label: "CMS",
+    description: "Public site content, publishing state, and SEO fields.",
+  },
+  analytics: {
+    label: "Analytics",
+    description: "Operational counts from shipment, booking, quote, and user data.",
+  },
+  settings: {
+    label: "Settings",
+    description: "Site settings, integrations, and launch readiness.",
+  },
+} as const satisfies Record<
+  AdminModuleKey,
+  { label: string; description: string }
+>;
+
+export const adminSubNavigation = {
+  dashboard: [
+    { label: "Overview", href: "/admin" },
+    { label: "Quick Actions", href: "/admin#quick-actions" },
+    { label: "Recent Activity", href: "/admin#recent-activity" },
+  ],
+  shipments: [
+    { label: "All Shipments", href: "/admin/shipments" },
+    { label: "Create Shipment", href: "/admin/shipments/create" },
+    { label: "Tracking Events", href: "/admin/tracking-events" },
+  ],
+  customers: [
+    { label: "All Customers", href: "/admin/users" },
+    { label: "Create User", href: "/admin/users/create" },
+    { label: "Role Management", href: "/admin/users#roles" },
+  ],
+  quotes: [
+    { label: "All Quotes", href: "/admin/quotes" },
+    { label: "Quote Pipeline", href: "/admin/quotes#quote-pipeline" },
+  ],
+  bookings: [
+    { label: "All Bookings", href: "/admin/bookings" },
+    { label: "Payment Review", href: "/admin/bookings#payment-review" },
+  ],
+  cms: [
+    { label: "Overview", href: "/admin/cms?section=overview" },
+    { label: "Site Identity", href: "/admin/cms?section=site-identity" },
+    { label: "Homepage", href: "/admin/cms?section=homepage" },
+    { label: "Services", href: "/admin/cms?section=services-page" },
+    { label: "About", href: "/admin/cms?section=about-page" },
+    { label: "Contact", href: "/admin/cms?section=contact-info" },
+    { label: "FAQ", href: "/admin/cms?section=faq" },
+    { label: "Footer", href: "/admin/cms?section=footer" },
+    { label: "SEO", href: "/admin/cms?section=seo" },
+  ],
+  analytics: [
+    { label: "Overview", href: "/admin/analytics" },
+    { label: "Shipment Mix", href: "/admin/analytics#shipment-mix" },
+    { label: "Booking Mix", href: "/admin/analytics#booking-mix" },
+  ],
+  settings: [
+    { label: "General", href: "/admin/settings" },
+    { label: "Site Settings", href: "/admin/settings#site-settings" },
+    { label: "Integrations", href: "/admin/settings#integrations" },
+    { label: "System Status", href: "/admin/settings#system-status" },
+  ],
+} as const satisfies Record<AdminModuleKey, readonly AdminSubNavigationItem[]>;
+
+export const adminNavigation: NavItem[] = adminTopNavigation.map(
+  ({ label, href }) => ({ label, href }),
+);
 
 export const footerNavigation: FooterColumn[] = [
   {

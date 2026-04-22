@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 
 import {
-  AdminShell,
+  AdminPageHeader,
+  AdminSectionCard,
   TrackingEventForm,
   TrackingEventsTable,
 } from "@/components/admin";
-import { requireAdmin } from "@/lib/auth/require-admin";
 import { getAdminShipments, getAdminTrackingEvents } from "@/lib/queries/admin";
 
 export const metadata: Metadata = {
@@ -13,25 +13,38 @@ export const metadata: Metadata = {
 };
 
 export default async function ManageTrackingEventsPage() {
-  const [admin, shipments, events] = await Promise.all([
-    requireAdmin(),
+  const [shipments, events] = await Promise.all([
     getAdminShipments(100),
     getAdminTrackingEvents(100),
   ]);
 
   return (
-    <AdminShell
-      profile={admin.profile}
-      title="Tracking events"
-      description="Review manual tracking history across shipments. Shipment detail pages are the primary workflow for adding new events."
-    >
+    <>
+      <AdminPageHeader
+        breadcrumbs={[
+          { label: "Admin", href: "/admin" },
+          { label: "Shipments", href: "/admin/shipments" },
+          { label: "Tracking Events" },
+        ]}
+        title="Tracking Events"
+        description="Review manual tracking history across shipments and add operational milestones when needed."
+        status={{ label: "Timeline control", tone: "info" }}
+        secondaryAction={{ label: "All Shipments", href: "/admin/shipments" }}
+      />
+
       <TrackingEventForm
         mode="tracking-event"
         shipments={shipments}
         title="Add tracking event"
         description="Create a manual event and sync the selected shipment to the same status."
       />
-      <TrackingEventsTable events={events} />
-    </AdminShell>
+
+      <AdminSectionCard
+        title="Event history"
+        description="Latest tracking milestones published by operations."
+      >
+        <TrackingEventsTable events={events} />
+      </AdminSectionCard>
+    </>
   );
 }

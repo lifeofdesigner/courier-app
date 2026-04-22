@@ -28,13 +28,13 @@ const initialState: AdminActionState = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15";
 
 const primaryButtonClassName =
-  "inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex h-11 items-center justify-center rounded-2xl bg-[#b0825f] px-5 text-sm font-semibold text-white transition hover:bg-[#9a704f] focus:outline-none focus:ring-4 focus:ring-[#b0825f]/20 disabled:cursor-not-allowed disabled:opacity-60";
 
 const secondaryButtonClassName =
-  "inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200";
+  "inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#2b1d16] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200";
 
 export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
   const [transportMode, setTransportMode] = useState<TransportMode>(
@@ -85,7 +85,7 @@ export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
 
   return (
     <section className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-bold tracking-tight text-[#0B1C3A]">
+      <h2 className="text-xl font-bold tracking-tight text-[#2b1d16]">
         Operational actions
       </h2>
 
@@ -105,7 +105,7 @@ export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
         <input type="hidden" name="orderId" value={shipment.id} />
         <label
           htmlFor="transportMode"
-          className="block text-sm font-semibold text-[#0B1C3A]"
+          className="block text-sm font-semibold text-[#2b1d16]"
         >
           Transport mode
         </label>
@@ -126,7 +126,7 @@ export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
         </select>
         <label
           htmlFor="serviceType"
-          className="block text-sm font-semibold text-[#0B1C3A]"
+          className="block text-sm font-semibold text-[#2b1d16]"
         >
           Service type
         </label>
@@ -155,7 +155,7 @@ export function ShipmentActionsCard({ shipment }: ShipmentActionsCardProps) {
         </p>
         <label
           htmlFor="status"
-          className="block text-sm font-semibold text-[#0B1C3A]"
+          className="block text-sm font-semibold text-[#2b1d16]"
         >
           Update shipment status
         </label>

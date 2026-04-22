@@ -24,10 +24,10 @@ export type ShipmentsTableProps = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15";
 
 const actionClassName =
-  "inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50";
+  "inline-flex h-9 items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-[#2b1d16] transition hover:border-slate-300 hover:bg-slate-50";
 
 const paymentBadgeClasses: Record<PaymentStatus, string> = {
   paid: "bg-emerald-50 text-emerald-700",
@@ -168,7 +168,7 @@ export function ShipmentsTable({ shipments }: ShipmentsTableProps) {
                     <td className="px-4 py-4 text-sm text-slate-700">
                       <Link
                         href={`/admin/shipments/${shipment.id}`}
-                        className="font-semibold text-[#0B1C3A] transition hover:text-[#FF6B2B]"
+                        className="font-semibold text-[#2b1d16] transition hover:text-[#b0825f]"
                       >
                         {shipment.trackingNumber}
                       </Link>
@@ -179,7 +179,7 @@ export function ShipmentsTable({ shipments }: ShipmentsTableProps) {
                       ) : null}
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">
-                      <p className="font-semibold text-[#0B1C3A]">
+                      <p className="font-semibold text-[#2b1d16]">
                         {shipment.customerLabel}
                       </p>
                       {shipment.customerIsUnassigned ? (
@@ -223,7 +223,7 @@ export function ShipmentsTable({ shipments }: ShipmentsTableProps) {
                       {shipment.destinationCity}, {shipment.destinationCountry}
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">
-                      <p className="font-semibold text-[#0B1C3A]">
+                      <p className="font-semibold text-[#2b1d16]">
                         {formatModeAwareServiceType(
                           shipment.serviceType,
                           shipment.transportMode,

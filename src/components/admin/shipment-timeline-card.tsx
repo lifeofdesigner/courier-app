@@ -28,11 +28,11 @@ function TimelineItem({
 
   return (
     <li className="relative pb-6 pl-7 last:pb-0">
-      <span className="absolute left-0 top-1.5 h-3 w-3 rounded-full bg-[#FF6B2B]" />
+      <span className="absolute left-0 top-1.5 h-3 w-3 rounded-full bg-[#b0825f]" />
       <div className="flex flex-col gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
           <div className="flex flex-wrap items-center gap-2">
-            <p className="font-semibold text-[#0B1C3A]">{statusMeta.label}</p>
+            <p className="font-semibold text-[#2b1d16]">{statusMeta.label}</p>
             <TrackingStatusBadge status={event.status} mode={mode} />
           </div>
           {event.description ? (
@@ -58,7 +58,7 @@ export function ShipmentTimelineCard({ shipment }: ShipmentTimelineCardProps) {
   return (
     <section className="space-y-6">
       <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="text-xl font-bold tracking-tight text-[#0B1C3A]">
+        <h2 className="text-xl font-bold tracking-tight text-[#2b1d16]">
           Tracking timeline
         </h2>
         {shipment.trackingEvents.length > 0 ? (

@@ -12,10 +12,10 @@ export type CustomerLookupFieldProps = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#b0825f] focus:ring-4 focus:ring-[#b0825f]/15";
 
 const secondaryButtonClassName =
-  "inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200";
+  "inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#2b1d16] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200";
 
 function customerDisplayName(customer: CustomerSearchResult) {
   return customer.fullName ?? customer.email ?? `Customer ${customer.id.slice(0, 8)}`;
@@ -108,7 +108,7 @@ export function CustomerLookupField({
       <div className="space-y-2">
         <label
           htmlFor="customerLookup"
-          className="block text-sm font-semibold text-[#0B1C3A]"
+          className="block text-sm font-semibold text-[#2b1d16]"
         >
           Search existing customer
         </label>
