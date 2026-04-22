@@ -1,6 +1,8 @@
 import type { ServiceType } from "@/types/quote";
 import type { PaymentStatus } from "@/types/payment";
 
+export type BookingStatus = "requested" | "confirmed" | "completed" | "cancelled";
+
 export interface AddressInput {
   contactName: string;
   companyName?: string;

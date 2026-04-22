@@ -104,6 +104,7 @@ export const customerNavigation: NavItem[] = [
 export const adminNavigation: NavItem[] = [
   { label: "Overview", href: "/admin" },
   { label: "Shipments", href: "/admin/shipments" },
+  { label: "Create Shipment", href: "/admin/shipments/create" },
   { label: "Tracking Events", href: "/admin/tracking-events" },
   { label: "Quotes", href: "/admin/quotes" },
   { label: "Bookings", href: "/admin/bookings" },

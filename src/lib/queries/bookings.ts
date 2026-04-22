@@ -103,7 +103,7 @@ function mapBooking(row: BookingRow): BookingRecord {
   };
 }
 
-async function calculateBookingAmountDue(input: BookingFormInput) {
+export async function calculateBookingAmountDue(input: BookingFormInput) {
   const pricingRules = await getPricingRules({
     serviceType: input.serviceType,
   });

@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import Link from "next/link";
 
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import type { AdminTrackingEventRow } from "@/types/admin";
@@ -31,6 +32,7 @@ export function TrackingEventsTable({ events }: TrackingEventsTableProps) {
     return events.filter((event) =>
       [
         event.orderId,
+        event.trackingNumber ?? "",
         event.status,
         event.label,
         event.description ?? "",
@@ -64,7 +66,7 @@ export function TrackingEventsTable({ events }: TrackingEventsTableProps) {
           <table className="w-full min-w-[860px]">
             <thead className="bg-slate-50 text-left text-xs font-semibold uppercase tracking-[0.12em] text-slate-500">
               <tr>
-                <th className="px-4 py-4">Order</th>
+                <th className="px-4 py-4">Shipment</th>
                 <th className="px-4 py-4">Status</th>
                 <th className="px-4 py-4">Label</th>
                 <th className="px-4 py-4">Location</th>
@@ -75,7 +77,17 @@ export function TrackingEventsTable({ events }: TrackingEventsTableProps) {
               {filteredEvents.map((event) => (
                 <tr key={event.id}>
                   <td className="px-4 py-4 text-sm text-slate-700">
-                    {event.orderId}
+                    <Link
+                      href={`/admin/shipments/${event.orderId}`}
+                      className="font-semibold text-[#0B1C3A] transition hover:text-[#FF6B2B]"
+                    >
+                      {event.trackingNumber ?? event.orderId}
+                    </Link>
+                    {event.trackingNumber ? (
+                      <p className="mt-1 max-w-40 truncate text-xs text-slate-500">
+                        {event.orderId}
+                      </p>
+                    ) : null}
                   </td>
                   <td className="px-4 py-4 text-sm text-slate-700">
                     <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize text-slate-700">

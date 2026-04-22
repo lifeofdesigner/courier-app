@@ -4,10 +4,16 @@ import { useActionState } from "react";
 
 import { updateShipmentStatusAction } from "@/app/(admin)/admin/shipments/actions";
 import { createTrackingEventAction } from "@/app/(admin)/admin/tracking-events/actions";
-import type { AdminActionState, AdminShipmentRow } from "@/types/admin";
+import type {
+  AdminActionState,
+  AdminShipmentDetail,
+  AdminShipmentRow,
+} from "@/types/admin";
+import { formatShipmentStatus, shipmentStatuses } from "@/types/shipment";
 
 export type TrackingEventFormProps = {
   shipments?: AdminShipmentRow[];
+  shipment?: Pick<AdminShipmentDetail, "id" | "trackingNumber" | "status">;
   mode: "shipment-status" | "tracking-event";
   title: string;
   description: string;
@@ -24,25 +30,19 @@ const inputClassName =
 const textareaClassName =
   "min-h-28 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
 
-const statuses = [
-  "label_created",
-  "picked_up",
-  "in_transit",
-  "arrived_at_hub",
-  "customs_clearance",
-  "out_for_delivery",
-  "delivered",
-  "exception",
-];
-
 function FieldError({ errors }: { errors?: string[] }) {
   return errors?.[0] ? (
     <p className="text-sm text-rose-600">{errors[0]}</p>
   ) : null;
 }
 
+function defaultEventTime() {
+  return new Date().toISOString().slice(0, 16);
+}
+
 export function TrackingEventForm({
   shipments = [],
+  shipment,
   mode,
   title,
   description,
@@ -55,14 +55,15 @@ export function TrackingEventForm({
 
   return (
     <form
+      id="tracking-event"
       action={formAction}
-      className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8"
+      className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm"
     >
       <div>
         <h2 className="text-xl font-bold tracking-tight text-[#0B1C3A]">
           {title}
         </h2>
-        <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
+        <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600">
           {description}
         </p>
       </div>
@@ -87,7 +88,14 @@ export function TrackingEventForm({
           >
             Shipment / order
           </label>
-          {shipments.length > 0 ? (
+          {shipment ? (
+            <>
+              <input type="hidden" name="orderId" value={shipment.id} />
+              <div className="flex h-12 items-center rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-[#0B1C3A]">
+                {shipment.trackingNumber}
+              </div>
+            </>
+          ) : shipments.length > 0 ? (
             <select
               id={`${mode}-orderId`}
               name="orderId"
@@ -97,9 +105,9 @@ export function TrackingEventForm({
               <option value="" disabled>
                 Select a shipment
               </option>
-              {shipments.map((shipment) => (
-                <option key={shipment.id} value={shipment.id}>
-                  {shipment.trackingNumber} - {shipment.status}
+              {shipments.map((row) => (
+                <option key={row.id} value={row.id}>
+                  {row.trackingNumber} - {formatShipmentStatus(row.status)}
                 </option>
               ))}
             </select>
@@ -118,17 +126,17 @@ export function TrackingEventForm({
             htmlFor={`${mode}-status`}
             className="block text-sm font-semibold text-[#0B1C3A]"
           >
-            Status
+            Resulting shipment status
           </label>
           <select
             id={`${mode}-status`}
             name="status"
             className={inputClassName}
-            defaultValue="in_transit"
+            defaultValue={shipment?.status ?? "in_transit"}
           >
-            {statuses.map((status) => (
+            {shipmentStatuses.map((status) => (
               <option key={status} value={status}>
-                {status.replaceAll("_", " ")}
+                {formatShipmentStatus(status)}
               </option>
             ))}
           </select>
@@ -161,6 +169,7 @@ export function TrackingEventForm({
             name="eventTime"
             type="datetime-local"
             className={inputClassName}
+            defaultValue={defaultEventTime()}
           />
           <FieldError errors={state.fieldErrors?.eventTime} />
         </div>
@@ -175,7 +184,7 @@ export function TrackingEventForm({
             id={`${mode}-locationName`}
             name="locationName"
             className={inputClassName}
-            placeholder="Dublin operations hub"
+            placeholder="Operations hub"
           />
         </div>
         <div className="space-y-2 md:col-span-2">
@@ -197,7 +206,7 @@ export function TrackingEventForm({
       <button
         type="submit"
         disabled={isPending}
-        className="mt-6 inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+        className="mt-6 inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isPending ? "Saving..." : "Save tracking update"}
       </button>

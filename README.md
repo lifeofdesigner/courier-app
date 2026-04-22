@@ -520,6 +520,27 @@ for the existing homepage model. Published site identity, contact, and footer
 records sync back into `site_settings` so current public contact/header/footer
 readers continue to work.
 
+## Admin Shipment Workspace Patch
+
+The `/admin/shipments` area is now an operations workspace for courier staff.
+Orders remain the shipment source of truth, with linked `bookings`,
+`addresses`, `tracking_events`, and payment fields used for the full admin view.
+
+Admin shipment routes:
+
+- `/admin/shipments` lists shipments with sender, recipient, route, service,
+  shipment status, payment status, label state, and operational actions.
+- `/admin/shipments/create` lets admins manually create unassigned or
+  customer-linked shipments. Tracking numbers are generated automatically.
+- `/admin/shipments/[id]` is the main shipment management page with overview,
+  contacts, pickup and delivery addresses, package details, booking/payment
+  summary, status updates, label/public tracking actions, and timeline event
+  creation.
+
+The migration `supabase/migrations/006_admin_shipment_workspace.sql` adds the
+narrow RLS correction needed for admins to insert linked booking records during
+manual shipment creation, plus operational indexes for shipment queues.
+
 ## Routes
 
 Public:
@@ -558,6 +579,8 @@ Admin:
 
 - `/admin`
 - `/admin/shipments`
+- `/admin/shipments/create`
+- `/admin/shipments/[id]`
 - `/admin/tracking-events`
 - `/admin/quotes`
 - `/admin/bookings`

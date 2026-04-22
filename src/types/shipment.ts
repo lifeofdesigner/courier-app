@@ -8,6 +8,39 @@ export type ShipmentStatus =
   | "delivered"
   | "exception";
 
+export const shipmentStatuses = [
+  "label_created",
+  "picked_up",
+  "in_transit",
+  "arrived_at_hub",
+  "customs_clearance",
+  "out_for_delivery",
+  "delivered",
+  "exception",
+] as const satisfies readonly ShipmentStatus[];
+
+export const activeShipmentStatuses: ShipmentStatus[] = [
+  "label_created",
+  "picked_up",
+  "in_transit",
+  "arrived_at_hub",
+  "customs_clearance",
+  "out_for_delivery",
+];
+
+export function normalizeShipmentStatus(status: string): ShipmentStatus {
+  return shipmentStatuses.includes(status as ShipmentStatus)
+    ? (status as ShipmentStatus)
+    : "exception";
+}
+
+export function formatShipmentStatus(status: string) {
+  return status
+    .split("_")
+    .map((word) => word[0].toUpperCase() + word.slice(1))
+    .join(" ");
+}
+
 export interface TrackingEventItem {
   id: string;
   orderId: string;
@@ -31,8 +64,10 @@ export interface ShipmentRecord {
   destinationCountry: string;
   destinationCity: string;
   recipientName: string;
+  recipientPhone: string | null;
   senderName: string | null;
   weightKg: number;
+  declaredValue: number;
   currency: string;
   status: ShipmentStatus;
   labelUrl: string | null;

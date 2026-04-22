@@ -2,20 +2,9 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type {
   PublicTrackingResult,
   ShipmentRecord,
-  ShipmentStatus,
   TrackingEventItem,
 } from "@/types/shipment";
-
-const shipmentStatuses: ShipmentStatus[] = [
-  "label_created",
-  "picked_up",
-  "in_transit",
-  "arrived_at_hub",
-  "customs_clearance",
-  "out_for_delivery",
-  "delivered",
-  "exception",
-];
+import { normalizeShipmentStatus } from "@/types/shipment";
 
 type OrderRow = {
   id: string;
@@ -29,8 +18,10 @@ type OrderRow = {
   destination_country: string;
   destination_city: string;
   recipient_name: string;
+  recipient_phone: string | null;
   sender_name: string | null;
   weight_kg: number | string;
+  declared_value: number | string;
   currency: string;
   status: string;
   label_url: string | null;
@@ -51,12 +42,6 @@ type TrackingEventRow = {
   created_at: string;
 };
 
-function normalizeStatus(status: string): ShipmentStatus {
-  return shipmentStatuses.includes(status as ShipmentStatus)
-    ? (status as ShipmentStatus)
-    : "exception";
-}
-
 function mapShipment(row: OrderRow): ShipmentRecord {
   return {
     id: row.id,
@@ -70,10 +55,12 @@ function mapShipment(row: OrderRow): ShipmentRecord {
     destinationCountry: row.destination_country,
     destinationCity: row.destination_city,
     recipientName: row.recipient_name,
+    recipientPhone: row.recipient_phone,
     senderName: row.sender_name,
     weightKg: Number(row.weight_kg),
+    declaredValue: Number(row.declared_value),
     currency: row.currency,
-    status: normalizeStatus(row.status),
+    status: normalizeShipmentStatus(row.status),
     labelUrl: row.label_url,
     labelGeneratedAt: row.label_generated_at,
     estimatedDeliveryDate: row.estimated_delivery_date,
@@ -86,7 +73,7 @@ function mapTrackingEvent(row: TrackingEventRow): TrackingEventItem {
   return {
     id: row.id,
     orderId: row.order_id,
-    status: normalizeStatus(row.status),
+    status: normalizeShipmentStatus(row.status),
     label: row.label,
     description: row.description,
     locationName: row.location_name,
@@ -133,8 +120,10 @@ export async function getPublicTrackingResult(
       destination_country,
       destination_city,
       recipient_name,
+      recipient_phone,
       sender_name,
       weight_kg,
+      declared_value,
       currency,
       status,
       label_url,

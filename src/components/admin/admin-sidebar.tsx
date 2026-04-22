@@ -8,6 +8,7 @@ import {
   CalendarCheck,
   FileText,
   LayoutDashboard,
+  PackagePlus,
   PackageSearch,
   Settings,
   ShieldCheck,
@@ -20,6 +21,7 @@ import { adminNavigation } from "@/constants/site";
 const iconMap = {
   "/admin": LayoutDashboard,
   "/admin/shipments": PackageSearch,
+  "/admin/shipments/create": PackagePlus,
   "/admin/tracking-events": ShieldCheck,
   "/admin/quotes": FileText,
   "/admin/bookings": CalendarCheck,
@@ -37,6 +39,13 @@ function isActivePath(pathname: string, href: string) {
 
   if (href === "/admin/users") {
     return pathname === href;
+  }
+
+  if (href === "/admin/shipments") {
+    return (
+      pathname === href ||
+      (pathname.startsWith(`${href}/`) && pathname !== "/admin/shipments/create")
+    );
   }
 
   return pathname === href || pathname.startsWith(`${href}/`);

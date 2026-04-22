@@ -1,4 +1,5 @@
 import type { ShipmentStatus } from "@/types/shipment";
+import { formatShipmentStatus } from "@/types/shipment";
 
 export type TrackingStatusBadgeProps = {
   status: ShipmentStatus;
@@ -15,19 +16,12 @@ const statusClasses = {
   picked_up: "bg-orange-100 text-orange-700",
 } satisfies Record<ShipmentStatus, string>;
 
-function formatStatus(status: ShipmentStatus) {
-  return status
-    .split("_")
-    .map((word) => word[0].toUpperCase() + word.slice(1))
-    .join(" ");
-}
-
 export function TrackingStatusBadge({ status }: TrackingStatusBadgeProps) {
   return (
     <span
       className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${statusClasses[status]}`}
     >
-      {formatStatus(status)}
+      {formatShipmentStatus(status)}
     </span>
   );
 }

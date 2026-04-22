@@ -1,4 +1,5 @@
 import type { PaymentStatus } from "@/types/payment";
+import type { ShipmentStatus } from "@/types/shipment";
 import type {
   AboutPageContent,
   ContactInfoContent,
@@ -21,6 +22,9 @@ export interface AdminActionState {
   success: boolean;
   message: string;
   fieldErrors?: Record<string, string[]>;
+  createdShipmentId?: string;
+  createdTrackingNumber?: string;
+  createdBookingId?: string;
 }
 
 export interface CreateUserActionState {
@@ -45,14 +49,28 @@ export interface AdminShipmentRow {
   id: string;
   bookingId: string | null;
   trackingNumber: string;
+  referenceCode: string | null;
+  customerLabel: string;
+  customerEmail: string | null;
+  customerUserId: string | null;
+  senderName: string | null;
+  senderEmail: string | null;
+  recipientName: string;
+  recipientEmail: string | null;
   serviceType: string;
-  status: string;
+  packageType: string | null;
+  status: ShipmentStatus;
+  paymentStatus: PaymentStatus;
   originCity: string;
   originCountry: string;
   destinationCity: string;
   destinationCountry: string;
+  weightKg: number;
+  declaredValue: number;
+  currency: string;
   estimatedDeliveryDate: string | null;
   labelUrl: string | null;
+  labelGeneratedAt: string | null;
   createdAt: string;
   userId: string | null;
 }
@@ -60,12 +78,93 @@ export interface AdminShipmentRow {
 export interface AdminTrackingEventRow {
   id: string;
   orderId: string;
-  status: string;
+  trackingNumber: string | null;
+  status: ShipmentStatus;
   label: string;
   description: string | null;
   locationName: string | null;
   eventTime: string;
   createdAt: string;
+}
+
+export interface AdminShipmentAddressBlock {
+  id: string | null;
+  contactName: string | null;
+  companyName: string | null;
+  phone: string | null;
+  email: string | null;
+  line1: string | null;
+  line2: string | null;
+  city: string;
+  stateRegion: string | null;
+  postalCode: string | null;
+  country: string;
+}
+
+export interface AdminShipmentPaymentSummary {
+  bookingId: string | null;
+  paymentStatus: PaymentStatus;
+  amountDue: number;
+  amountPaid: number;
+  currency: string;
+  paymentProvider: string | null;
+  stripeCheckoutSessionId: string | null;
+  stripePaymentIntentId: string | null;
+}
+
+export interface AdminShipmentBookingSummary {
+  id: string;
+  status: string;
+  pickupDate: string;
+  pickupWindow: string | null;
+  specialInstructions: string | null;
+  senderEmail: string;
+  senderPhone: string | null;
+  recipientEmail: string | null;
+  recipientPhone: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminShipmentCustomerSummary {
+  id: string;
+  fullName: string | null;
+  phone: string | null;
+}
+
+export interface AdminShipmentDetail {
+  id: string;
+  bookingId: string | null;
+  trackingNumber: string;
+  referenceCode: string | null;
+  serviceType: string;
+  packageType: string | null;
+  status: ShipmentStatus;
+  paymentStatus: PaymentStatus;
+  originCity: string;
+  originCountry: string;
+  destinationCity: string;
+  destinationCountry: string;
+  senderName: string | null;
+  senderEmail: string | null;
+  senderPhone: string | null;
+  recipientName: string;
+  recipientEmail: string | null;
+  recipientPhone: string | null;
+  weightKg: number;
+  declaredValue: number;
+  currency: string;
+  labelUrl: string | null;
+  labelGeneratedAt: string | null;
+  estimatedDeliveryDate: string | null;
+  createdAt: string;
+  updatedAt: string;
+  customer: AdminShipmentCustomerSummary | null;
+  booking: AdminShipmentBookingSummary | null;
+  payment: AdminShipmentPaymentSummary;
+  pickupAddress: AdminShipmentAddressBlock | null;
+  deliveryAddress: AdminShipmentAddressBlock | null;
+  trackingEvents: AdminTrackingEventRow[];
 }
 
 export interface AdminQuoteRow {

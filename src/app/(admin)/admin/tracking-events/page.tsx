@@ -23,7 +23,7 @@ export default async function ManageTrackingEventsPage() {
     <AdminShell
       profile={admin.profile}
       title="Tracking events"
-      description="Add shipment milestones and review the operational tracking history customers see on public tracking pages."
+      description="Review manual tracking history across shipments. Shipment detail pages are the primary workflow for adding new events."
     >
       <TrackingEventForm
         mode="tracking-event"

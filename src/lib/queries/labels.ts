@@ -1,4 +1,5 @@
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/server";
+import { company } from "@/constants/site";
 import type { PaymentStatus } from "@/types/payment";
 
 export type ShippingLabelData = {
@@ -181,7 +182,7 @@ export async function getShippingLabelData(
   const typedOrder = order as OrderRow;
 
   return {
-    companyName: "Atlas Courier",
+    companyName: company.name,
     bookingId: typedBooking.id,
     orderId: typedOrder.id,
     trackingNumber: typedOrder.tracking_number,

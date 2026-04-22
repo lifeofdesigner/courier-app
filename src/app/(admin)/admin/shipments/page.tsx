@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { AdminShell, ShipmentsTable, TrackingEventForm } from "@/components/admin";
+import { AdminShell, ShipmentsTable } from "@/components/admin";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { getAdminShipments } from "@/lib/queries/admin";
 
@@ -11,22 +11,19 @@ export const metadata: Metadata = {
 export default async function ManageShipmentsPage() {
   const [admin, shipments] = await Promise.all([
     requireAdmin(),
-    getAdminShipments(100),
+    getAdminShipments(250),
   ]);
 
   return (
     <AdminShell
       profile={admin.profile}
-      title="Manage shipments"
-      description="Review shipment records, label links, filter operational queues, and create tracking events while updating shipment status."
+      title="Shipment operations"
+      description="Search, filter, inspect, and manage courier shipments from one operational queue."
+      primaryAction={{ label: "Create shipment", href: "/admin/shipments/create" }}
     >
-      <TrackingEventForm
-        mode="shipment-status"
-        shipments={shipments}
-        title="Update shipment status"
-        description="Changing status here also creates a customer-facing tracking event for the selected shipment."
-      />
-      <ShipmentsTable shipments={shipments} />
+      <div className="space-y-6">
+        <ShipmentsTable shipments={shipments} />
+      </div>
     </AdminShell>
   );
 }

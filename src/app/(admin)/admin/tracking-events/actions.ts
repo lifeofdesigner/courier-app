@@ -6,10 +6,11 @@ import { z } from "zod";
 import { assertAdminAction } from "@/lib/auth/assert-admin-action";
 import { sendStatusEmail } from "@/lib/email/send-status-email";
 import type { AdminActionState } from "@/types/admin";
+import { shipmentStatuses } from "@/types/shipment";
 
 const trackingEventSchema = z.object({
   orderId: z.string().trim().min(1, "Select a shipment."),
-  status: z.string().trim().min(1, "Select a status."),
+  status: z.enum(shipmentStatuses),
   label: z.string().trim().min(1, "Enter an event label."),
   description: z.string().trim().optional(),
   locationName: z.string().trim().optional(),
@@ -84,15 +85,17 @@ export async function createTrackingEventAction(
       throw new Error("Tracking event could not be created.");
     }
 
-    const { error: orderError } = await supabase
+    const { data: order, error: orderError } = await supabase
       .from("orders")
       .update({
         status: parsed.data.status,
         updated_at: new Date().toISOString(),
       })
-      .eq("id", parsed.data.orderId);
+      .eq("id", parsed.data.orderId)
+      .select("id, tracking_number")
+      .single();
 
-    if (orderError) {
+    if (orderError || !order) {
       throw new Error("Tracking event saved, but shipment status sync failed.");
     }
 
@@ -105,8 +108,12 @@ export async function createTrackingEventAction(
 
     revalidatePath("/admin");
     revalidatePath("/admin/shipments");
+    revalidatePath(`/admin/shipments/${parsed.data.orderId}`);
     revalidatePath("/admin/tracking-events");
     revalidatePath("/track");
+    revalidatePath(
+      `/track?tracking=${(order as { tracking_number: string }).tracking_number}`,
+    );
 
     return {
       success: true,
