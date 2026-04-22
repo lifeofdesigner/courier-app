@@ -1,6 +1,7 @@
 import { TrackingStatusBadge } from "@/components/tracking";
 import type { AdminShipmentDetail } from "@/types/admin";
 import { formatPaymentStatus } from "@/types/payment";
+import { getShipmentStatusMeta } from "@/types/shipment";
 
 export type ShipmentOverviewCardProps = {
   shipment: AdminShipmentDetail;
@@ -33,6 +34,7 @@ function DetailItem({ label, value }: { label: string; value: string }) {
 
 export function ShipmentOverviewCard({ shipment }: ShipmentOverviewCardProps) {
   const labelStatus = shipment.labelUrl ? "Ready to print" : "Pending";
+  const statusMeta = getShipmentStatusMeta(shipment.status);
   const customer = shipment.customer
     ? shipment.customer.fullName ?? shipment.customer.id
     : "Unassigned";
@@ -61,12 +63,16 @@ export function ShipmentOverviewCard({ shipment }: ShipmentOverviewCardProps) {
         </div>
       </div>
 
-      <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="mt-6 grid gap-5 sm:grid-cols-2 xl:grid-cols-5">
         <DetailItem label="Service" value={shipment.serviceType} />
+        <DetailItem label="Current milestone" value={statusMeta.label} />
         <DetailItem label="Label" value={labelStatus} />
         <DetailItem label="Created" value={formatDate(shipment.createdAt)} />
         <DetailItem label="Customer" value={customer} />
       </div>
+      <p className="mt-5 max-w-3xl text-sm leading-7 text-white/70">
+        {statusMeta.description}
+      </p>
     </section>
   );
 }

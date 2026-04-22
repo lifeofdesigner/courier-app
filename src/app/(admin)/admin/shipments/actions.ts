@@ -10,7 +10,7 @@ import { findCustomerUserIdByEmail } from "@/lib/queries/admin";
 import type { AdminActionState } from "@/types/admin";
 import { paymentStatuses } from "@/types/payment";
 import {
-  formatShipmentStatus,
+  getShipmentStatusMeta,
   shipmentStatuses,
   type ShipmentStatus,
 } from "@/types/shipment";
@@ -394,13 +394,13 @@ export async function createShipmentAction(
         .eq("id", bookingId);
     }
 
+    const initialStatusMeta = getShipmentStatusMeta(parsed.data.shipmentStatus);
+
     await supabase.from("tracking_events").insert({
       order_id: orderId,
       status: parsed.data.shipmentStatus,
-      label: "Shipment created",
-      description: `Admin created shipment with ${formatShipmentStatus(
-        parsed.data.shipmentStatus,
-      )} status.`,
+      label: initialStatusMeta.label,
+      description: initialStatusMeta.description,
       location_name: "Atlas Courier operations",
       event_time: now,
     });
@@ -459,11 +459,11 @@ export async function updateShipmentStatusAction(
     const eventTime = parsed.data.eventTime
       ? new Date(parsed.data.eventTime).toISOString()
       : new Date().toISOString();
-    const statusLabel = formatShipmentStatus(parsed.data.status);
-    const label = optionalValue(parsed.data.label) ?? `Status updated to ${statusLabel}`;
+    const statusMeta = getShipmentStatusMeta(parsed.data.status);
+    const label = optionalValue(parsed.data.label) ?? statusMeta.label;
     const description =
       optionalValue(parsed.data.description) ??
-      `Shipment status changed to ${statusLabel}.`;
+      statusMeta.description;
 
     const { data: order, error: orderError } = await supabase
       .from("orders")
@@ -524,13 +524,13 @@ export async function updateShipmentStatusOnlyAction(
   formData: FormData,
 ): Promise<AdminActionState> {
   const status = getString(formData, "status") as ShipmentStatus;
-  const statusLabel = formatShipmentStatus(status);
+  const statusMeta = getShipmentStatusMeta(status);
   const nextFormData = new FormData();
 
   nextFormData.set("orderId", getString(formData, "orderId"));
   nextFormData.set("status", status);
-  nextFormData.set("label", `Status updated to ${statusLabel}`);
-  nextFormData.set("description", `Shipment status changed to ${statusLabel}.`);
+  nextFormData.set("label", statusMeta.label);
+  nextFormData.set("description", statusMeta.description);
   nextFormData.set("locationName", "Atlas Courier operations");
 
   return updateShipmentStatusAction(previousState, nextFormData);

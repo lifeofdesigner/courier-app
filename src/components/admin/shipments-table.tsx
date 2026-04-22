@@ -14,7 +14,6 @@ import {
 import {
   formatShipmentStatus,
   shipmentStatuses,
-  type ShipmentStatus,
 } from "@/types/shipment";
 import type { AdminShipmentRow } from "@/types/admin";
 
@@ -215,9 +214,7 @@ export function ShipmentsTable({ shipments }: ShipmentsTableProps) {
                       </p>
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">
-                      <TrackingStatusBadge
-                        status={shipment.status as ShipmentStatus}
-                      />
+                      <TrackingStatusBadge status={shipment.status} />
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">
                       <span

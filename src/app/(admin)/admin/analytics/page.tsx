@@ -4,12 +4,19 @@ import { BarChart3, CalendarDays, PackageSearch, UsersRound } from "lucide-react
 import { AdminSectionCard, AdminShell, AdminStatCard } from "@/components/admin";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { getAdminAnalyticsData } from "@/lib/queries/admin-analytics";
+import { getShipmentStatusMeta } from "@/types/shipment";
 
 export const metadata: Metadata = {
   title: "Admin Analytics",
 };
 
-function CountList({ counts }: { counts: Record<string, number> }) {
+function CountList({
+  counts,
+  formatLabel = (label) => label.replaceAll("_", " "),
+}: {
+  counts: Record<string, number>;
+  formatLabel?: (label: string) => string;
+}) {
   const entries = Object.entries(counts).sort((a, b) => b[1] - a[1]);
 
   if (entries.length === 0) {
@@ -24,7 +31,7 @@ function CountList({ counts }: { counts: Record<string, number> }) {
           className="flex items-center justify-between rounded-2xl bg-slate-50 px-4 py-3 text-sm"
         >
           <span className="font-semibold capitalize text-[#0B1C3A]">
-            {label.replaceAll("_", " ")}
+            {formatLabel(label)}
           </span>
           <span className="font-bold text-[#FF6B2B]">{count}</span>
         </div>
@@ -69,7 +76,10 @@ export default async function AdminAnalyticsPage() {
             aria-hidden="true"
             className="mb-4 h-5 w-5 text-[#FF6B2B]"
           />
-          <CountList counts={analytics.shipmentsByStatus} />
+          <CountList
+            counts={analytics.shipmentsByStatus}
+            formatLabel={(label) => getShipmentStatusMeta(label).label}
+          />
         </AdminSectionCard>
         <AdminSectionCard
           title="Quotes by service"

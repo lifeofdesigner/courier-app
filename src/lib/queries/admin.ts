@@ -12,9 +12,7 @@ import type {
   AdminTrackingEventRow,
   AdminUserRow,
 } from "@/types/admin";
-import {
-  normalizePaymentStatus,
-} from "@/types/payment";
+import { normalizePaymentStatus } from "@/types/payment";
 import {
   activeShipmentStatuses,
   normalizeShipmentStatus,
@@ -203,7 +201,9 @@ function mapTrackingEvent(
     id: row.id,
     orderId: row.order_id,
     trackingNumber,
-    status: normalizeShipmentStatus(row.status),
+    status: normalizeShipmentStatus(row.status, {
+      arrivedAtHubAs: "received_at_origin_facility",
+    }),
     label: row.label,
     description: row.description,
     locationName: row.location_name,

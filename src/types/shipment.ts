@@ -1,45 +1,20 @@
-export type ShipmentStatus =
-  | "label_created"
-  | "picked_up"
-  | "in_transit"
-  | "arrived_at_hub"
-  | "customs_clearance"
-  | "out_for_delivery"
-  | "delivered"
-  | "exception";
+import type { ShipmentStatus } from "@/lib/shipping/statuses";
 
-export const shipmentStatuses = [
-  "label_created",
-  "picked_up",
-  "in_transit",
-  "arrived_at_hub",
-  "customs_clearance",
-  "out_for_delivery",
-  "delivered",
-  "exception",
-] as const satisfies readonly ShipmentStatus[];
-
-export const activeShipmentStatuses: ShipmentStatus[] = [
-  "label_created",
-  "picked_up",
-  "in_transit",
-  "arrived_at_hub",
-  "customs_clearance",
-  "out_for_delivery",
-];
-
-export function normalizeShipmentStatus(status: string): ShipmentStatus {
-  return shipmentStatuses.includes(status as ShipmentStatus)
-    ? (status as ShipmentStatus)
-    : "exception";
-}
-
-export function formatShipmentStatus(status: string) {
-  return status
-    .split("_")
-    .map((word) => word[0].toUpperCase() + word.slice(1))
-    .join(" ");
-}
+export type {
+  LegacyShipmentStatus,
+  ShipmentStatus,
+  ShipmentStatusInput,
+  ShipmentStatusMeta,
+} from "@/lib/shipping/statuses";
+export {
+  activeShipmentStatuses,
+  formatShipmentStatus,
+  getShipmentStatusMeta,
+  legacyShipmentStatusMap,
+  normalizeShipmentStatus,
+  shipmentStatusDefinitions,
+  shipmentStatuses,
+} from "@/lib/shipping/statuses";
 
 export interface TrackingEventItem {
   id: string;

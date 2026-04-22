@@ -1,4 +1,5 @@
 import { company } from "@/constants/site";
+import { getShipmentStatusMeta } from "@/types/shipment";
 
 export type TrackingStatusEmailProps = {
   trackingNumber: string;
@@ -17,13 +18,15 @@ export function TrackingStatusEmail({
   description,
   trackingUrl,
 }: TrackingStatusEmailProps) {
+  const statusMeta = getShipmentStatusMeta(status);
+
   return (
     <div style={{ fontFamily: "Arial, sans-serif", color: "#0F172A" }}>
       <h1 style={{ color: "#0B1C3A" }}>Shipment status updated</h1>
       <p>Hello,</p>
       <p>
         The shipment for {recipientName} is now marked as{" "}
-        <strong>{status.replaceAll("_", " ")}</strong>.
+        <strong>{statusMeta.label}</strong>.
       </p>
       <p>
         <strong>{label}</strong>

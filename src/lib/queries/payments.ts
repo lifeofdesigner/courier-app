@@ -500,7 +500,7 @@ export async function createOrderAfterSuccessfulPaymentIfMissing({
       weight_kg: Number(booking.weight_kg),
       declared_value: Number(booking.declared_value),
       currency: booking.currency,
-      status: "label_created",
+      status: "shipment_created",
       label_url: labelUrl,
       label_generated_at: labelGeneratedAt,
       created_at: labelGeneratedAt,
@@ -548,10 +548,10 @@ export async function createOrderAfterSuccessfulPaymentIfMissing({
       .eq("id", bookingId),
     supabase.from("tracking_events").insert({
       order_id: (order as OrderRow).id,
-      status: "label_created",
-      label: "Shipping label created",
+      status: "shipment_created",
+      label: "Shipment Created",
       description:
-        "Payment was confirmed and the shipment label is ready to print.",
+        "Payment was confirmed and the shipment is ready for courier handling.",
       location_name: "Atlas Courier operations",
       event_time: labelGeneratedAt,
     }),

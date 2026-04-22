@@ -355,7 +355,7 @@ export function CreateShipmentForm() {
             id="shipmentStatus"
             name="shipmentStatus"
             className={inputClassName}
-            defaultValue="label_created"
+            defaultValue="shipment_created"
           >
             {shipmentStatuses.map((status) => (
               <option key={status} value={status}>

@@ -73,7 +73,9 @@ function mapTrackingEvent(row: TrackingEventRow): TrackingEventItem {
   return {
     id: row.id,
     orderId: row.order_id,
-    status: normalizeShipmentStatus(row.status),
+    status: normalizeShipmentStatus(row.status, {
+      arrivedAtHubAs: "received_at_origin_facility",
+    }),
     label: row.label,
     description: row.description,
     locationName: row.location_name,

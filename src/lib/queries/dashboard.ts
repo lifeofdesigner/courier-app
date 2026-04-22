@@ -10,7 +10,10 @@ import type {
   ShipmentTableItem,
 } from "@/types/dashboard";
 import type { PaymentStatus } from "@/types/payment";
-import type { ShipmentStatus } from "@/types/shipment";
+import {
+  activeShipmentStatuses,
+  normalizeShipmentStatus,
+} from "@/types/shipment";
 
 type ProfileRow = {
   id: string;
@@ -61,32 +64,6 @@ type BookingRow = {
   pickup_date: string;
   created_at: string;
 };
-
-const activeShipmentStatuses = [
-  "label_created",
-  "picked_up",
-  "arrived_at_hub",
-  "in_transit",
-  "customs_clearance",
-  "out_for_delivery",
-];
-
-const shipmentStatuses: ShipmentStatus[] = [
-  "label_created",
-  "picked_up",
-  "in_transit",
-  "arrived_at_hub",
-  "customs_clearance",
-  "out_for_delivery",
-  "delivered",
-  "exception",
-];
-
-function normalizeShipmentStatus(status: string): ShipmentStatus {
-  return shipmentStatuses.includes(status as ShipmentStatus)
-    ? (status as ShipmentStatus)
-    : "exception";
-}
 
 function normalizePaymentStatus(status: string): PaymentStatus {
   const statuses: PaymentStatus[] = [

@@ -1,5 +1,6 @@
 import { assertAdminAction } from "@/lib/auth/assert-admin-action";
 import type { AdminAnalyticsData } from "@/types/admin";
+import { normalizeShipmentStatus } from "@/types/shipment";
 
 function countByKey(rows: { [key: string]: unknown }[], key: string) {
   return rows.reduce<Record<string, number>>((counts, row) => {
@@ -15,6 +16,15 @@ function isAfter(dateValue: string, daysAgo: number) {
   const threshold = Date.now() - daysAgo * 24 * 60 * 60 * 1000;
 
   return createdAt >= threshold;
+}
+
+function countShipmentsByStatus(rows: { status: string }[]) {
+  return rows.reduce<Record<string, number>>((counts, row) => {
+    const status = normalizeShipmentStatus(row.status);
+    counts[status] = (counts[status] ?? 0) + 1;
+
+    return counts;
+  }, {});
 }
 
 export async function getAdminAnalyticsData(): Promise<AdminAnalyticsData> {
@@ -34,9 +44,8 @@ export async function getAdminAnalyticsData(): Promise<AdminAnalyticsData> {
   const users = (usersResult.data ?? []) as { id: string; created_at: string }[];
 
   return {
-    shipmentsByStatus: countByKey(
+    shipmentsByStatus: countShipmentsByStatus(
       (shipmentsResult.data ?? []) as { status: string }[],
-      "status",
     ),
     quotesByServiceType: countByKey(
       (quotesResult.data ?? []) as { service_type: string }[],

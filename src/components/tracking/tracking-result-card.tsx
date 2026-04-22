@@ -2,7 +2,7 @@ import { CalendarDays, MapPin, PackageCheck, Route } from "lucide-react";
 import Link from "next/link";
 
 import { TrackingStatusBadge } from "@/components/tracking/tracking-status-badge";
-import type { ShipmentRecord } from "@/types/shipment";
+import { getShipmentStatusMeta, type ShipmentRecord } from "@/types/shipment";
 
 export type TrackingResultCardProps = {
   shipment: ShipmentRecord;
@@ -21,6 +21,8 @@ function formatDate(value: string | null) {
 }
 
 export function TrackingResultCard({ shipment }: TrackingResultCardProps) {
+  const statusMeta = getShipmentStatusMeta(shipment.status);
+
   return (
     <div className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
       <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
@@ -72,7 +74,7 @@ export function TrackingResultCard({ shipment }: TrackingResultCardProps) {
         <MapPin aria-hidden="true" className="mt-1 h-5 w-5 text-[#FF6B2B]" />
         <p className="text-sm leading-7 text-slate-600">
           Delivery for <span className="font-semibold text-[#0B1C3A]">{shipment.recipientName}</span>{" "}
-          is currently marked as {shipment.status.replaceAll("_", " ")}.
+          is currently marked as {statusMeta.label}.
         </p>
       </div>
       {shipment.labelUrl ? (

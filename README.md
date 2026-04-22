@@ -541,6 +541,38 @@ The migration `supabase/migrations/006_admin_shipment_workspace.sql` adds the
 narrow RLS correction needed for admins to insert linked booking records during
 manual shipment creation, plus operational indexes for shipment queues.
 
+## Shipping Status Terminology Patch
+
+Shipment status display is centralized in `src/lib/shipping/statuses.ts`.
+Admin, customer dashboard, public tracking, tracking emails, and analytics now
+render courier terminology instead of raw stored codes.
+
+Canonical shipment statuses:
+
+- `shipment_created` - Shipment Created
+- `pickup_scheduled` - Pickup Scheduled
+- `collected` - Collected by Courier
+- `received_at_origin_facility` - Received at Origin Facility
+- `departed_origin_facility` - Departed Origin Facility
+- `in_transit` - In Transit
+- `arrived_at_destination_facility` - Arrived at Destination Facility
+- `customs_clearance_in_progress` - Customs Clearance in Progress
+- `customs_cleared` - Customs Cleared
+- `out_for_delivery` - Out for Delivery
+- `delivered` - Delivered
+- `delivery_attempted` - Delivery Attempted
+- `exception` - Shipment Exception
+- `on_hold` - On Hold
+- `returned_to_sender` - Returned to Sender
+- `cancelled` - Cancelled
+
+Legacy status rows remain supported at the display layer:
+
+- `label_created` renders as `shipment_created`
+- `picked_up` renders as `collected`
+- `arrived_at_hub` renders as a facility milestone based on context
+- `customs_clearance` renders as `customs_clearance_in_progress`
+
 ## Routes
 
 Public:

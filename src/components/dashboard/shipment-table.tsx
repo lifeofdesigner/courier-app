@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 import { DashboardEmptyState } from "@/components/dashboard/dashboard-empty-state";
 import { TrackingStatusBadge } from "@/components/tracking";
 import type { ShipmentTableItem } from "@/types/dashboard";
+import { shipmentStatusDefinitions } from "@/types/shipment";
 
 export type ShipmentTableProps = {
   shipments: ShipmentTableItem[];
@@ -75,14 +76,11 @@ export function ShipmentTable({ shipments }: ShipmentTableProps) {
           className={inputClassName}
         >
           <option value="all">All statuses</option>
-          <option value="label_created">Label created</option>
-          <option value="picked_up">Picked up</option>
-          <option value="in_transit">In transit</option>
-          <option value="arrived_at_hub">Arrived at hub</option>
-          <option value="customs_clearance">Customs clearance</option>
-          <option value="out_for_delivery">Out for delivery</option>
-          <option value="delivered">Delivered</option>
-          <option value="exception">Exception</option>
+          {shipmentStatusDefinitions.map((option) => (
+            <option key={option.code} value={option.code}>
+              {option.label}
+            </option>
+          ))}
         </select>
       </div>
 

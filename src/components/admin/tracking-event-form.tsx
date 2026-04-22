@@ -153,7 +153,7 @@ export function TrackingEventForm({
             id={`${mode}-label`}
             name="label"
             className={inputClassName}
-            placeholder="Package scanned at hub"
+            placeholder="Received at Origin Facility"
           />
           <FieldError errors={state.fieldErrors?.label} />
         </div>

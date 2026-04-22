@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import { AdminEmptyState } from "@/components/admin/admin-empty-state";
 import type { AdminTrackingEventRow } from "@/types/admin";
+import { TrackingStatusBadge } from "@/components/tracking";
 
 export type TrackingEventsTableProps = {
   events: AdminTrackingEventRow[];
@@ -90,9 +91,7 @@ export function TrackingEventsTable({ events }: TrackingEventsTableProps) {
                     ) : null}
                   </td>
                   <td className="px-4 py-4 text-sm text-slate-700">
-                    <span className="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold capitalize text-slate-700">
-                      {event.status.replaceAll("_", " ")}
-                    </span>
+                    <TrackingStatusBadge status={event.status} />
                   </td>
                   <td className="px-4 py-4 text-sm text-slate-700">
                     <p className="font-semibold text-[#0B1C3A]">
