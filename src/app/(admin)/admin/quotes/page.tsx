@@ -21,10 +21,47 @@ function formatMoney(value: number, currency = "USD") {
   }).format(value);
 }
 
+function csvCell(value: string | number | null) {
+  const text = String(value ?? "");
+
+  return `"${text.replaceAll('"', '""')}"`;
+}
+
+function createQuotesExportHref(quotes: Awaited<ReturnType<typeof getAdminQuotes>>) {
+  const rows = [
+    [
+      "Customer",
+      "Email or User ID",
+      "Origin",
+      "Destination",
+      "Service",
+      "Total",
+      "Currency",
+      "Status",
+      "Created",
+    ],
+    ...quotes.map((quote) => [
+      quote.fullName ?? "Guest quote",
+      quote.email ?? quote.userId ?? "",
+      `${quote.originCity}, ${quote.originCountry}`,
+      `${quote.destinationCity}, ${quote.destinationCountry}`,
+      quote.serviceType,
+      quote.total,
+      quote.currency,
+      quote.status,
+      quote.createdAt,
+    ]),
+  ];
+  const csv = rows.map((row) => row.map(csvCell).join(",")).join("\n");
+
+  return `data:text/csv;charset=utf-8,${encodeURIComponent(csv)}`;
+}
+
 export default async function ManageQuotesPage() {
   const quotes = await getAdminQuotes(100);
   const customerQuotes = quotes.filter((quote) => quote.userId).length;
   const serviceCount = new Set(quotes.map((quote) => quote.serviceType)).size;
+  const quotesExportHref = createQuotesExportHref(quotes);
   const highestQuote =
     quotes.length > 0
       ? quotes.reduce((highest, quote) =>
@@ -42,6 +79,11 @@ export default async function ManageQuotesPage() {
         title="Quote Review"
         description="Review recent customer quote calculations for service demand, follow-up, and booking support."
         status={{ label: "Read only", tone: "neutral" }}
+        primaryAction={{
+          label: "Export Quotes",
+          href: quotesExportHref,
+          download: "atlas-quotes-export.csv",
+        }}
       />
 
       <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">

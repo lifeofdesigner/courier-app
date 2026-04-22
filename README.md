@@ -700,6 +700,10 @@ customer, CMS, analytics, and settings pages use the shared header and card
 hierarchy while preserving existing Supabase queries, Server Actions, routes,
 and data models.
 
+The topbar is intentionally admin-only and does not include public marketing
+CTAs. Quote review includes a header-level CSV export action generated from the
+already loaded admin quote data.
+
 ## Routes
 
 Public:

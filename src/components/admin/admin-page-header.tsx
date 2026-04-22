@@ -10,6 +10,7 @@ export type AdminPageBreadcrumb = {
 export type AdminPageAction = {
   label: string;
   href: string;
+  download?: string;
 };
 
 export type AdminPageHeaderProps = {
@@ -32,6 +33,27 @@ export function AdminPageHeader({
   primaryAction,
   secondaryAction,
 }: AdminPageHeaderProps) {
+  function renderAction(action: AdminPageAction, variant: "primary" | "secondary") {
+    const className =
+      variant === "primary"
+        ? "inline-flex h-11 items-center justify-center rounded-2xl bg-[#b0825f] px-5 text-sm font-semibold text-white transition hover:opacity-95 focus:outline-none focus:ring-4 focus:ring-[#b0825f]/20"
+        : "inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#2b1d16] transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200";
+
+    if (action.download) {
+      return (
+        <a href={action.href} download={action.download} className={className}>
+          {action.label}
+        </a>
+      );
+    }
+
+    return (
+      <Link href={action.href} className={className}>
+        {action.label}
+      </Link>
+    );
+  }
+
   return (
     <header className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
       {breadcrumbs?.length ? (
@@ -77,22 +99,8 @@ export function AdminPageHeader({
 
         {primaryAction || secondaryAction ? (
           <div className="flex flex-wrap gap-3">
-            {secondaryAction ? (
-              <Link
-                href={secondaryAction.href}
-                className="inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#2b1d16] transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
-              >
-                {secondaryAction.label}
-              </Link>
-            ) : null}
-            {primaryAction ? (
-              <Link
-                href={primaryAction.href}
-                className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#b0825f] px-5 text-sm font-semibold text-white transition hover:opacity-95 focus:outline-none focus:ring-4 focus:ring-[#b0825f]/20"
-              >
-                {primaryAction.label}
-              </Link>
-            ) : null}
+            {secondaryAction ? renderAction(secondaryAction, "secondary") : null}
+            {primaryAction ? renderAction(primaryAction, "primary") : null}
           </div>
         ) : null}
       </div>

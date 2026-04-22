@@ -86,9 +86,11 @@ export function AdminSidebar() {
   const items = adminSubNavigation[activeModule];
 
   return (
-    <aside className="w-full shrink-0 rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm lg:w-[250px]">
+    <aside className="w-[250px] shrink-0 rounded-[24px] border border-slate-200 bg-white p-4 shadow-sm max-lg:w-full lg:sticky lg:top-[88px] lg:self-start">
       <div className="px-2">
-        <p className="text-xs font-bold uppercase text-[#b0825f]">Module</p>
+        <p className="text-xs font-bold uppercase text-[#b0825f]">
+          Active module
+        </p>
         <h2 className="mt-2 text-lg font-bold text-[#2b1d16]">
           {details.label}
         </h2>
