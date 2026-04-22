@@ -15,13 +15,13 @@ import { getPublicPageSettings } from "@/lib/queries/public-pages";
 import type { CurrentAuthState } from "@/lib/queries/auth";
 
 const secondaryActionButtonClasses =
-  "inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200";
+  "inline-flex h-11 items-center justify-center whitespace-nowrap rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200";
 
 const navyAccountButtonClasses =
-  "inline-flex h-11 items-center justify-center rounded-2xl bg-[#0B1C3A] px-5 text-sm font-semibold text-white transition hover:bg-[#08142c] focus:outline-none focus:ring-4 focus:ring-[#0B1C3A]/20";
+  "inline-flex h-11 items-center justify-center whitespace-nowrap rounded-2xl bg-[#0B1C3A] px-5 text-sm font-semibold text-white transition hover:bg-[#08142c] focus:outline-none focus:ring-4 focus:ring-[#0B1C3A]/20";
 
 const primaryOrangeButtonClasses =
-  "inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20";
+  "inline-flex h-11 items-center justify-center whitespace-nowrap rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20";
 
 function getHeaderAccountAction({ user, profileRole }: CurrentAuthState) {
   if (!user) {
@@ -65,19 +65,22 @@ export async function SiteHeader() {
       </div>
 
       <Container>
-        <div className="relative flex h-20 items-center justify-between gap-6">
+        <div className="relative flex h-20 items-center justify-between gap-5">
           <Logo
             siteName={settings.siteIdentity.siteName}
             logo={settings.siteIdentity.logo}
           />
 
-          <nav aria-label="Primary navigation" className="hidden lg:block">
-            <ul className="flex items-center gap-1.5">
+          <nav
+            aria-label="Primary navigation"
+            className="hidden min-w-0 flex-1 justify-center xl:flex"
+          >
+            <ul className="flex min-w-0 items-center justify-center gap-1">
               {publicNavigation.map((item) => (
                 <li key={item.href}>
                   <NavLink
                     href={item.href}
-                    className="rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-100 hover:text-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+                    className="whitespace-nowrap rounded-xl px-3 py-2 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-100 hover:text-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
                     activeClassName="bg-primary/10 text-navy ring-1 ring-inset ring-primary/20"
                   >
                     {item.label}
@@ -87,7 +90,7 @@ export async function SiteHeader() {
             </ul>
           </nav>
 
-          <div className="hidden items-center gap-2 lg:flex">
+          <div className="hidden shrink-0 items-center gap-2 xl:flex">
             <NavLink
               href={primaryCtas.track.href}
               className={secondaryActionButtonClasses}

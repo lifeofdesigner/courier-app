@@ -72,6 +72,8 @@ function readImage(value: unknown): CmsImage | null {
   }
 
   const src = readString(value.src, "");
+  const width = Number(value.width);
+  const height = Number(value.height);
 
   if (!src) {
     return null;
@@ -80,6 +82,8 @@ function readImage(value: unknown): CmsImage | null {
   return {
     src,
     alt: readString(value.alt, "Site image"),
+    ...(Number.isFinite(width) && width > 0 ? { width } : {}),
+    ...(Number.isFinite(height) && height > 0 ? { height } : {}),
   };
 }
 

@@ -433,12 +433,28 @@ function buildSiteIdentityFallback(settings: SettingRow[]): SiteIdentityContent 
       ? {
           src: readString(siteIdentity.logo.src, ""),
           alt: readString(siteIdentity.logo.alt, `${company.name} logo`),
+          ...(Number.isFinite(Number(siteIdentity.logo.width)) &&
+          Number(siteIdentity.logo.width) > 0
+            ? { width: Number(siteIdentity.logo.width) }
+            : {}),
+          ...(Number.isFinite(Number(siteIdentity.logo.height)) &&
+          Number(siteIdentity.logo.height) > 0
+            ? { height: Number(siteIdentity.logo.height) }
+            : {}),
         }
       : undefined,
     favicon: isRecord(siteIdentity.favicon)
       ? {
           src: readString(siteIdentity.favicon.src, ""),
           alt: readString(siteIdentity.favicon.alt, `${company.name} favicon`),
+          ...(Number.isFinite(Number(siteIdentity.favicon.width)) &&
+          Number(siteIdentity.favicon.width) > 0
+            ? { width: Number(siteIdentity.favicon.width) }
+            : {}),
+          ...(Number.isFinite(Number(siteIdentity.favicon.height)) &&
+          Number(siteIdentity.favicon.height) > 0
+            ? { height: Number(siteIdentity.favicon.height) }
+            : {}),
         }
       : undefined,
     supportEmail: readString(companyContact.email, company.email),

@@ -22,6 +22,7 @@ export async function SiteFooter() {
           <div className="max-w-sm">
             <Logo
               variant="inverse"
+              context="footer"
               siteName={settings.siteIdentity.siteName}
               logo={settings.siteIdentity.logo}
             />

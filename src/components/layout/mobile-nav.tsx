@@ -49,7 +49,7 @@ export function MobileNav({ accountAction }: MobileNavProps) {
   }, []);
 
   return (
-    <div className="relative lg:hidden">
+    <div className="relative xl:hidden">
       <button
         type="button"
         aria-controls={menuId}
