@@ -1,5 +1,6 @@
 "use server";
 
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -11,6 +12,7 @@ import {
   getAdminCustomerById,
   searchAdminCustomers,
 } from "@/lib/queries/customers";
+import { createSupabaseServiceRoleClient } from "@/lib/supabase/service-role";
 import type {
   AdminActionState,
   CustomerSearchActionState,
@@ -18,7 +20,6 @@ import type {
 import { paymentStatuses } from "@/types/payment";
 import {
   getModeAwareServiceMeta,
-  getPricingServiceTypeForModeAwareService,
   getShipmentStatusMeta,
   isModeAwareServiceTypeForMode,
   modeAwareServiceTypes,
@@ -196,9 +197,7 @@ function estimatedDeliveryDate(
   return date.toISOString().slice(0, 10);
 }
 
-async function generateUniqueTrackingNumber(
-  supabase: Awaited<ReturnType<typeof assertAdminAction>>["supabase"],
-) {
+async function generateUniqueTrackingNumber(supabase: SupabaseClient) {
   for (let attempt = 0; attempt < 5; attempt += 1) {
     const trackingNumber = generateTrackingNumber();
     const { data } = await supabase
@@ -222,7 +221,7 @@ async function insertAddress({
   addressType,
   address,
 }: {
-  supabase: Awaited<ReturnType<typeof assertAdminAction>>["supabase"];
+  supabase: SupabaseClient;
   userId: string | null;
   label: "Pickup" | "Delivery";
   addressType: "pickup" | "delivery";
@@ -249,10 +248,19 @@ async function insertAddress({
     .single();
 
   if (error || !data) {
+    console.error(`${label} address could not be saved.`, error);
     throw new Error(`${label} address could not be saved.`);
   }
 
   return (data as { id: string }).id;
+}
+
+function getAdminMutationClient(fallbackClient: SupabaseClient) {
+  try {
+    return createSupabaseServiceRoleClient();
+  } catch {
+    return fallbackClient;
+  }
 }
 
 export async function searchShipmentCustomersAction(
@@ -352,7 +360,7 @@ export async function createShipmentAction(
   }
 
   try {
-    const { supabase } = adminContext;
+    const supabase = getAdminMutationClient(adminContext.supabase);
     const customerEmail = optionalValue(parsed.data.customerEmail);
     const selectedCustomerId = optionalValue(parsed.data.selectedCustomerId);
     const selectedCustomer = selectedCustomerId
@@ -379,19 +387,16 @@ export async function createShipmentAction(
           fallbackCustomer?.id ??
           null;
     const now = new Date().toISOString();
-    const pricingServiceType = getPricingServiceTypeForModeAwareService(
-      parsed.data.serviceType,
-      parsed.data.transportMode,
-    );
     const amountDue = await calculateBookingAmountDue({
       quoteId: null,
+      transportMode: parsed.data.transportMode,
       senderName: parsed.data.senderName,
       senderEmail: parsed.data.senderEmail,
       senderPhone: parsed.data.senderPhone,
       recipientName: parsed.data.recipientName,
       recipientEmail: parsed.data.recipientEmail,
       recipientPhone: parsed.data.recipientPhone,
-      serviceType: pricingServiceType,
+      serviceType: parsed.data.serviceType,
       packageType: parsed.data.packageType,
       weightKg: parsed.data.weightKg,
       declaredValue: parsed.data.declaredValue,
