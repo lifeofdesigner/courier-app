@@ -32,7 +32,7 @@ export default async function ShipmentDetailPage({
     <AdminShell
       profile={admin.profile}
       title={`Shipment ${shipment.trackingNumber}`}
-      description="Inspect sender, recipient, addresses, payment, package details, label readiness, and the full customer-visible tracking timeline."
+      description="Inspect linked customer ownership, sender, recipient, addresses, payment, package details, label readiness, and the full customer-visible tracking timeline."
       primaryAction={{ label: "All shipments", href: "/admin/shipments" }}
     >
       <ShipmentDetailShell shipment={shipment} />

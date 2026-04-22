@@ -126,6 +126,7 @@ type AddressRow = {
 type UserRow = {
   id: string;
   full_name: string | null;
+  email: string | null;
   phone: string | null;
   role: "customer" | "admin";
   created_at: string;
@@ -187,6 +188,10 @@ function customerLabel({
     return user.full_name;
   }
 
+  if (user?.email) {
+    return user.email;
+  }
+
   if (booking?.sender_email) {
     return booking.sender_email;
   }
@@ -242,8 +247,10 @@ function mapShipment({
     trackingNumber: shipment.tracking_number,
     referenceCode: shipment.reference_code,
     customerLabel: customerLabel({ shipment, booking, user }),
-    customerEmail: booking?.sender_email ?? null,
+    customerEmail: user?.email ?? booking?.sender_email ?? null,
+    customerPhone: user?.phone ?? booking?.sender_phone ?? null,
     customerUserId: shipment.user_id,
+    customerIsUnassigned: !shipment.user_id,
     senderName: booking?.sender_name ?? shipment.sender_name,
     senderEmail: booking?.sender_email ?? null,
     recipientName: booking?.recipient_name ?? shipment.recipient_name,
@@ -401,7 +408,47 @@ async function getUsersByIds(ids: string[]) {
     .select("id, full_name, phone, role, created_at, updated_at")
     .in("id", uniqueIds);
 
-  return byId((data ?? []) as UserRow[]);
+  const emailsByUserId = await getAuthEmailsByUserId(uniqueIds);
+  const rows = ((data ?? []) as Omit<UserRow, "email">[]).map((row) => ({
+    ...row,
+    email: emailsByUserId.get(row.id) ?? null,
+  }));
+
+  return byId(rows);
+}
+
+async function getAuthEmailsByUserId(userIds: string[]) {
+  const emailsByUserId = new Map<string, string | null>();
+  const uniqueIds = [...new Set(userIds)].filter(Boolean);
+
+  if (uniqueIds.length === 0) {
+    return emailsByUserId;
+  }
+
+  try {
+    const serviceRole = createSupabaseServiceRoleClient();
+    const authUsers = await Promise.all(
+      uniqueIds.map(async (id) => {
+        const { data, error } = await serviceRole.auth.admin.getUserById(id);
+
+        if (error || !data.user) {
+          return null;
+        }
+
+        return data.user;
+      }),
+    );
+
+    for (const user of authUsers) {
+      if (user) {
+        emailsByUserId.set(user.id, user.email ?? null);
+      }
+    }
+  } catch {
+    return emailsByUserId;
+  }
+
+  return emailsByUserId;
 }
 
 export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
@@ -630,9 +677,17 @@ export async function getAdminShipmentDetail(
       ? {
           id: user.id,
           fullName: user.full_name,
+          email: user.email,
           phone: user.phone,
+          isUnassigned: false,
         }
-      : null,
+      : {
+          id: null,
+          fullName: null,
+          email: null,
+          phone: null,
+          isUnassigned: true,
+        },
     booking: booking
       ? {
           id: booking.id,

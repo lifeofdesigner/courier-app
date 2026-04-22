@@ -22,6 +22,8 @@ export * from "./contact-cms-form";
 export * from "./create-user-form";
 export * from "./create-user-success";
 export * from "./create-shipment-form";
+export * from "./customer-lookup-field";
+export * from "./customer-search-results";
 export * from "./faq-cms-form";
 export * from "./footer-cms-form";
 export * from "./homepage-cms-form";

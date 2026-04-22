@@ -6,8 +6,15 @@ import { z } from "zod";
 import { assertAdminAction } from "@/lib/auth/assert-admin-action";
 import { sendStatusEmail } from "@/lib/email/send-status-email";
 import { calculateBookingAmountDue } from "@/lib/queries/bookings";
-import { findCustomerUserIdByEmail } from "@/lib/queries/admin";
-import type { AdminActionState } from "@/types/admin";
+import {
+  findAdminCustomerByEmail,
+  getAdminCustomerById,
+  searchAdminCustomers,
+} from "@/lib/queries/customers";
+import type {
+  AdminActionState,
+  CustomerSearchActionState,
+} from "@/types/admin";
 import { paymentStatuses } from "@/types/payment";
 import {
   getModeAwareServiceMeta,
@@ -44,6 +51,16 @@ const addressSchema = z.object({
 const createShipmentSchema = z
   .object({
     customerEmail: optionalEmailSchema,
+    selectedCustomerId: z
+      .string()
+      .trim()
+      .optional()
+      .refine(
+        (value) => !value || z.string().uuid().safeParse(value).success,
+        {
+          message: "Select a valid customer or continue without linking.",
+        },
+      ),
     unassignedCustomer: z.boolean(),
     senderName: z.string().trim().min(1, "Enter the sender name."),
     senderEmail: z.string().trim().email("Enter a valid sender email."),
@@ -238,6 +255,42 @@ async function insertAddress({
   return (data as { id: string }).id;
 }
 
+export async function searchShipmentCustomersAction(
+  query: string,
+): Promise<CustomerSearchActionState> {
+  const normalizedQuery = query.trim();
+
+  if (normalizedQuery.length < 2) {
+    return {
+      success: true,
+      message: "Type at least 2 characters to search customers.",
+      results: [],
+    };
+  }
+
+  try {
+    const results = await searchAdminCustomers(normalizedQuery, 10);
+
+    return {
+      success: true,
+      message:
+        results.length > 0
+          ? "Customers found."
+          : "No matching customers found.",
+      results,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message:
+        error instanceof Error
+          ? error.message
+          : "Customer search is unavailable.",
+      results: [],
+    };
+  }
+}
+
 function revalidateShipmentWorkspace(orderId?: string, trackingNumber?: string) {
   revalidatePath("/admin");
   revalidatePath("/admin/shipments");
@@ -271,6 +324,7 @@ export async function createShipmentAction(
 
   const parsed = createShipmentSchema.safeParse({
     customerEmail: getString(formData, "customerEmail"),
+    selectedCustomerId: getString(formData, "selectedCustomerId"),
     unassignedCustomer: getBoolean(formData, "unassignedCustomer"),
     senderName: getString(formData, "senderName"),
     senderEmail: getString(formData, "senderEmail"),
@@ -300,10 +354,30 @@ export async function createShipmentAction(
   try {
     const { supabase } = adminContext;
     const customerEmail = optionalValue(parsed.data.customerEmail);
+    const selectedCustomerId = optionalValue(parsed.data.selectedCustomerId);
+    const selectedCustomer = selectedCustomerId
+      ? await getAdminCustomerById(selectedCustomerId)
+      : null;
+
+    if (selectedCustomerId && !selectedCustomer) {
+      return {
+        success: false,
+        message: "Selected customer could not be found.",
+        fieldErrors: {
+          selectedCustomerId: ["Select a valid customer or clear selection."],
+        },
+      };
+    }
+
+    const fallbackCustomer = !selectedCustomer && customerEmail
+      ? await findAdminCustomerByEmail(customerEmail)
+      : null;
     const userId =
-      parsed.data.unassignedCustomer || !customerEmail
+      parsed.data.unassignedCustomer
         ? null
-        : await findCustomerUserIdByEmail(customerEmail);
+        : selectedCustomer?.id ??
+          fallbackCustomer?.id ??
+          null;
     const now = new Date().toISOString();
     const pricingServiceType = getPricingServiceTypeForModeAwareService(
       parsed.data.serviceType,

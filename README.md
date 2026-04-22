@@ -635,6 +635,25 @@ The migration `supabase/migrations/008_mode_aware_service_types.sql` keeps
 Express/Economy rows while documenting the new service codes and adding small
 transport-mode/service indexes for admin shipment operations.
 
+## Admin Customer Lookup Patch
+
+Admin shipment creation includes a server-side customer lookup workflow. Admins
+can search existing customer profiles by full name, phone, or safely available
+auth email, select a result, and link the generated booking and order to that
+customer user id.
+
+Linked customer behavior:
+
+- Selected customers are written to `bookings.user_id` and `orders.user_id`.
+- Sender name, email, and phone are autofilled from the selected customer when
+  available, but staff can still edit those fields before creating the shipment.
+- If no customer is selected, the shipment remains a supported unassigned/manual
+  shipment.
+- Admin shipment tables and detail pages show linked customer name, email, and
+  phone where available, with clean unassigned states for manual shipments.
+
+This patch ends with lint, production build, commit, and push to GitHub.
+
 ## Routes
 
 Public:

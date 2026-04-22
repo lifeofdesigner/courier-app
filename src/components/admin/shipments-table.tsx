@@ -67,6 +67,7 @@ export function ShipmentsTable({ shipments }: ShipmentsTableProps) {
         shipment.referenceCode ?? "",
         shipment.customerLabel,
         shipment.customerEmail ?? "",
+        shipment.customerPhone ?? "",
         shipment.senderName ?? "",
         shipment.senderEmail ?? "",
         shipment.recipientName,
@@ -181,14 +182,22 @@ export function ShipmentsTable({ shipments }: ShipmentsTableProps) {
                       <p className="font-semibold text-[#0B1C3A]">
                         {shipment.customerLabel}
                       </p>
-                      {shipment.customerUserId ? (
-                        <p className="mt-1 max-w-40 truncate text-xs text-slate-500">
-                          {shipment.customerUserId}
+                      {shipment.customerIsUnassigned ? (
+                        <p className="mt-1 text-xs text-slate-500">
+                          Unassigned manual shipment
                         </p>
                       ) : (
-                        <p className="mt-1 text-xs text-slate-500">
-                          No linked customer
-                        </p>
+                        <div className="mt-1 space-y-0.5 text-xs text-slate-500">
+                          {shipment.customerEmail ? (
+                            <p className="max-w-44 truncate">
+                              {shipment.customerEmail}
+                            </p>
+                          ) : null}
+                          {shipment.customerPhone ? (
+                            <p>{shipment.customerPhone}</p>
+                          ) : null}
+                          <p>Linked customer</p>
+                        </div>
                       )}
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">

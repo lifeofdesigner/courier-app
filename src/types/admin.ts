@@ -31,6 +31,27 @@ export interface AdminActionState {
   createdBookingId?: string;
 }
 
+export interface CustomerSearchResult {
+  id: string;
+  fullName: string | null;
+  email: string | null;
+  phone: string | null;
+  role: "customer" | "admin";
+}
+
+export interface CustomerSearchActionState {
+  success: boolean;
+  message: string;
+  results: CustomerSearchResult[];
+}
+
+export interface CreateShipmentCustomerFormState {
+  selectedCustomerId: string;
+  selectedCustomerLabel: string;
+  selectedCustomerEmail: string;
+  selectedCustomerPhone: string;
+}
+
 export interface CreateUserActionState {
   success: boolean;
   message: string;
@@ -56,7 +77,9 @@ export interface AdminShipmentRow {
   referenceCode: string | null;
   customerLabel: string;
   customerEmail: string | null;
+  customerPhone: string | null;
   customerUserId: string | null;
+  customerIsUnassigned: boolean;
   senderName: string | null;
   senderEmail: string | null;
   recipientName: string;
@@ -133,9 +156,11 @@ export interface AdminShipmentBookingSummary {
 }
 
 export interface AdminShipmentCustomerSummary {
-  id: string;
+  id: string | null;
   fullName: string | null;
+  email: string | null;
   phone: string | null;
+  isUnassigned: boolean;
 }
 
 export interface AdminShipmentDetail {
@@ -166,7 +191,7 @@ export interface AdminShipmentDetail {
   estimatedDeliveryDate: string | null;
   createdAt: string;
   updatedAt: string;
-  customer: AdminShipmentCustomerSummary | null;
+  customer: AdminShipmentCustomerSummary;
   booking: AdminShipmentBookingSummary | null;
   payment: AdminShipmentPaymentSummary;
   pickupAddress: AdminShipmentAddressBlock | null;

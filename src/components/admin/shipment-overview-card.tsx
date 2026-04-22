@@ -42,9 +42,11 @@ export function ShipmentOverviewCard({ shipment }: ShipmentOverviewCardProps) {
     mode: shipment.transportMode,
   });
   const transportMode = getTransportModeMeta(shipment.transportMode);
-  const customer = shipment.customer
-    ? shipment.customer.fullName ?? shipment.customer.id
-    : "Unassigned";
+  const customer = shipment.customer.isUnassigned
+    ? "Unassigned"
+    : shipment.customer.fullName ??
+      shipment.customer.email ??
+      `Customer ${shipment.customer.id?.slice(0, 8)}`;
 
   return (
     <section className="rounded-[24px] border border-[#0B1C3A]/10 bg-[#0B1C3A] p-6 text-white shadow-sm">
@@ -90,6 +92,29 @@ export function ShipmentOverviewCard({ shipment }: ShipmentOverviewCardProps) {
       <p className="mt-5 max-w-3xl text-sm leading-7 text-white/70">
         {statusMeta.description}
       </p>
+      <div className="mt-5 rounded-2xl bg-white/10 p-4 ring-1 ring-white/15">
+        <p className="text-xs font-bold uppercase tracking-[0.14em] text-white/55">
+          Linked customer
+        </p>
+        {shipment.customer.isUnassigned ? (
+          <p className="mt-2 text-sm font-semibold text-white">
+            This shipment is unassigned.
+          </p>
+        ) : (
+          <div className="mt-2 grid gap-2 text-sm text-white sm:grid-cols-2 lg:grid-cols-4">
+            <p className="font-semibold">{customer}</p>
+            <p className="text-white/75">
+              {shipment.customer.email ?? "No email on profile"}
+            </p>
+            <p className="text-white/75">
+              {shipment.customer.phone ?? "No phone on profile"}
+            </p>
+            <p className="text-white/55">
+              ID {shipment.customer.id?.slice(0, 8)}
+            </p>
+          </div>
+        )}
+      </div>
     </section>
   );
 }

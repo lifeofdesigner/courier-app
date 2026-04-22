@@ -18,7 +18,7 @@ export default async function ManageShipmentsPage() {
     <AdminShell
       profile={admin.profile}
       title="Shipment operations"
-      description="Search, filter, inspect, and manage courier shipments from one operational queue."
+      description="Search, filter, inspect, and manage courier shipments with linked customer ownership from one operational queue."
       primaryAction={{ label: "Create shipment", href: "/admin/shipments/create" }}
     >
       <div className="space-y-6">

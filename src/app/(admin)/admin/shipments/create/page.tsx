@@ -14,7 +14,7 @@ export default async function CreateShipmentPage() {
     <AdminShell
       profile={admin.profile}
       title="Create shipment"
-      description="Manually create a shipment, generate a tracking number, link booking records, and start the tracking timeline."
+      description="Search and link an existing customer, or create an unassigned manual shipment with mode-aware service and tracking options."
       primaryAction={{ label: "All shipments", href: "/admin/shipments" }}
     >
       <CreateShipmentForm />

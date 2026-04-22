@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { ChangeEventHandler, ReactNode } from "react";
 import { useActionState, useMemo, useState } from "react";
 
 import { createShipmentAction } from "@/app/(admin)/admin/shipments/actions";
-import type { AdminActionState } from "@/types/admin";
+import { CustomerLookupField } from "@/components/admin/customer-lookup-field";
+import type { AdminActionState, CustomerSearchResult } from "@/types/admin";
 import { formatPaymentStatus, paymentStatuses } from "@/types/payment";
 import {
   getDefaultModeAwareServiceType,
@@ -48,6 +49,8 @@ function TextInput({
   type = "text",
   placeholder,
   defaultValue,
+  value,
+  onChange,
   errors,
 }: {
   label: string;
@@ -55,8 +58,13 @@ function TextInput({
   type?: string;
   placeholder?: string;
   defaultValue?: string | number;
+  value?: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
   errors?: string[];
 }) {
+  const valueProps =
+    value === undefined ? { defaultValue } : { value, onChange };
+
   return (
     <div className="space-y-2">
       <label htmlFor={name} className="block text-sm font-semibold text-[#0B1C3A]">
@@ -67,9 +75,9 @@ function TextInput({
         name={name}
         type={type}
         placeholder={placeholder}
-        defaultValue={defaultValue}
         step={type === "number" ? "0.01" : undefined}
         className={inputClassName}
+        {...valueProps}
       />
       <FieldError errors={errors} />
     </div>
@@ -158,6 +166,9 @@ export function CreateShipmentForm() {
   );
   const [shipmentStatus, setShipmentStatus] =
     useState<ShipmentStatus>("shipment_created");
+  const [senderName, setSenderName] = useState("");
+  const [senderEmail, setSenderEmail] = useState("");
+  const [senderPhone, setSenderPhone] = useState("");
   const [state, formAction, isPending] = useActionState(
     createShipmentAction,
     initialState,
@@ -189,6 +200,16 @@ export function CreateShipmentForm() {
     )) {
       setShipmentStatus("shipment_created");
     }
+  }
+
+  function handleCustomerChange(customer: CustomerSearchResult | null) {
+    if (!customer) {
+      return;
+    }
+
+    setSenderName(customer.fullName ?? "");
+    setSenderEmail(customer.email ?? "");
+    setSenderPhone(customer.phone ?? "");
   }
 
   return (
@@ -223,52 +244,16 @@ export function CreateShipmentForm() {
         </div>
       ) : null}
 
-      <FormSection title="Customer assignment">
-        <TextInput
-          label="Customer email"
-          name="customerEmail"
-          type="email"
-          placeholder="customer@example.com"
-          errors={state.fieldErrors?.customerEmail}
-        />
-        <label className="flex min-h-12 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 text-sm font-semibold text-[#0B1C3A]">
-          <input
-            type="checkbox"
-            name="unassignedCustomer"
-            className="h-4 w-4 rounded border-slate-300 text-[#FF6B2B] focus:ring-[#FF6B2B]"
+      <FormSection title="Customer">
+        <div className="md:col-span-2">
+          <CustomerLookupField
+            onCustomerChange={handleCustomerChange}
+            fieldError={state.fieldErrors?.selectedCustomerId}
           />
-          Create as unassigned shipment
-        </label>
+        </div>
       </FormSection>
 
-      <FormSection title="Sender and recipient">
-        <TextInput
-          label="Sender name"
-          name="senderName"
-          errors={state.fieldErrors?.senderName}
-        />
-        <TextInput
-          label="Sender email"
-          name="senderEmail"
-          type="email"
-          errors={state.fieldErrors?.senderEmail}
-        />
-        <TextInput label="Sender phone" name="senderPhone" />
-        <TextInput
-          label="Recipient name"
-          name="recipientName"
-          errors={state.fieldErrors?.recipientName}
-        />
-        <TextInput
-          label="Recipient email"
-          name="recipientEmail"
-          type="email"
-          errors={state.fieldErrors?.recipientEmail}
-        />
-        <TextInput label="Recipient phone" name="recipientPhone" />
-      </FormSection>
-
-      <FormSection title="Service and package">
+      <FormSection title="Shipment details">
         <div className="space-y-2">
           <label
             htmlFor="transportMode"
@@ -323,6 +308,100 @@ export function CreateShipmentForm() {
           </p>
           <FieldError errors={state.fieldErrors?.serviceType} />
         </div>
+        <div className="space-y-2">
+          <label
+            htmlFor="shipmentStatus"
+            className="block text-sm font-semibold text-[#0B1C3A]"
+          >
+            Shipment status
+          </label>
+          <select
+            id="shipmentStatus"
+            name="shipmentStatus"
+            className={inputClassName}
+            value={shipmentStatus}
+            onChange={(event) =>
+              setShipmentStatus(event.target.value as ShipmentStatus)
+            }
+          >
+            {statusOptions.map((status) => (
+              <option key={status.code} value={status.code}>
+                {status.label}
+              </option>
+            ))}
+          </select>
+          <p className="text-xs leading-5 text-slate-500">
+            {statusMeta?.description ??
+              "Choose the initial operational milestone for this shipment."}
+          </p>
+        </div>
+        <div className="space-y-2">
+          <label
+            htmlFor="paymentStatus"
+            className="block text-sm font-semibold text-[#0B1C3A]"
+          >
+            Payment status
+          </label>
+          <select
+            id="paymentStatus"
+            name="paymentStatus"
+            className={inputClassName}
+            defaultValue="unpaid"
+          >
+            {paymentStatuses.map((status) => (
+              <option key={status} value={status}>
+                {formatPaymentStatus(status)}
+              </option>
+            ))}
+          </select>
+        </div>
+      </FormSection>
+
+      <FormSection title="Sender and recipient">
+        <TextInput
+          label="Sender name"
+          name="senderName"
+          value={senderName}
+          onChange={(event) => setSenderName(event.target.value)}
+          errors={state.fieldErrors?.senderName}
+        />
+        <TextInput
+          label="Sender email"
+          name="senderEmail"
+          type="email"
+          value={senderEmail}
+          onChange={(event) => setSenderEmail(event.target.value)}
+          errors={state.fieldErrors?.senderEmail}
+        />
+        <TextInput
+          label="Sender phone"
+          name="senderPhone"
+          value={senderPhone}
+          onChange={(event) => setSenderPhone(event.target.value)}
+        />
+        <TextInput
+          label="Recipient name"
+          name="recipientName"
+          errors={state.fieldErrors?.recipientName}
+        />
+        <TextInput
+          label="Recipient email"
+          name="recipientEmail"
+          type="email"
+          errors={state.fieldErrors?.recipientEmail}
+        />
+        <TextInput label="Recipient phone" name="recipientPhone" />
+      </FormSection>
+
+      <FormSection title="Pickup address">
+        <AddressFields prefix="pickup" errors={state.fieldErrors} />
+      </FormSection>
+
+      <FormSection title="Delivery address">
+        <AddressFields prefix="delivery" errors={state.fieldErrors} />
+      </FormSection>
+
+      <FormSection title="Package and schedule">
         <TextInput
           label="Package type"
           name="packageType"
@@ -404,64 +483,6 @@ export function CreateShipmentForm() {
             className={textareaClassName}
             placeholder="Access notes, handoff requirements, or handling instructions"
           />
-        </div>
-      </FormSection>
-
-      <FormSection title="Pickup address">
-        <AddressFields prefix="pickup" errors={state.fieldErrors} />
-      </FormSection>
-
-      <FormSection title="Delivery address">
-        <AddressFields prefix="delivery" errors={state.fieldErrors} />
-      </FormSection>
-
-      <FormSection title="Operational state">
-        <div className="space-y-2">
-          <label
-            htmlFor="paymentStatus"
-            className="block text-sm font-semibold text-[#0B1C3A]"
-          >
-            Payment status
-          </label>
-          <select
-            id="paymentStatus"
-            name="paymentStatus"
-            className={inputClassName}
-            defaultValue="unpaid"
-          >
-            {paymentStatuses.map((status) => (
-              <option key={status} value={status}>
-                {formatPaymentStatus(status)}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="space-y-2">
-          <label
-            htmlFor="shipmentStatus"
-            className="block text-sm font-semibold text-[#0B1C3A]"
-          >
-            Shipment status
-          </label>
-          <select
-            id="shipmentStatus"
-            name="shipmentStatus"
-            className={inputClassName}
-            value={shipmentStatus}
-            onChange={(event) =>
-              setShipmentStatus(event.target.value as ShipmentStatus)
-            }
-          >
-            {statusOptions.map((status) => (
-              <option key={status.code} value={status.code}>
-                {status.label}
-              </option>
-            ))}
-          </select>
-          <p className="text-xs leading-5 text-slate-500">
-            {statusMeta?.description ??
-              "Choose the initial operational milestone for this shipment."}
-          </p>
         </div>
       </FormSection>
 
