@@ -1,6 +1,6 @@
 import type { FooterColumn, NavItem } from "@/types/ui";
 
-export const DEFAULT_SITE_URL = "https://www.atlascourier.com";
+export const DEFAULT_SITE_URL = "https://www.example-logistics.com";
 
 export const brandColors = {
   primary: "#FF6B2B",
@@ -12,13 +12,13 @@ export const brandColors = {
 } as const;
 
 export const company = {
-  name: "Atlas Courier",
-  legalName: "Atlas Courier Logistics",
-  tagline: "Reliable courier services for business-critical deliveries.",
+  name: "Your Logistics Company",
+  legalName: "Your Logistics Company LLC",
+  tagline: "Courier, cargo, and freight support for business-critical shipments.",
   phone: "+1 (800) 555-0188",
   phoneHref: "tel:+18005550188",
-  email: "support@atlascourier.com",
-  emailHref: "mailto:support@atlascourier.com",
+  email: "support@example-logistics.com",
+  emailHref: "mailto:support@example-logistics.com",
   address: "1200 Commerce Way, Newark, NJ 07102",
   addressLines: ["1200 Commerce Way", "Newark, NJ 07102", "United States"],
   hours: "Monday-Friday, 8:00 AM-7:00 PM",
@@ -38,13 +38,13 @@ export const siteConfig = {
   defaultOgImagePath: "/opengraph-image",
   twitterImagePath: "/twitter-image",
   locale: "en_US",
-  twitterHandle: "@atlascourier",
+  twitterHandle: "@examplelogistics",
 } as const;
 
 export const socialLinks = {
-  linkedin: "https://www.linkedin.com/company/atlas-courier",
-  x: "https://x.com/atlascourier",
-  facebook: "https://www.facebook.com/atlascourier",
+  linkedin: "https://www.linkedin.com/company/example-logistics",
+  x: "https://x.com/examplelogistics",
+  facebook: "https://www.facebook.com/examplelogistics",
 } as const;
 
 export const blogCategoryLabels = {
@@ -191,7 +191,7 @@ export const adminModuleDetails = {
   },
   settings: {
     label: "Settings",
-    description: "Site settings, integrations, and launch readiness.",
+    description: "Business details, website links, and launch readiness.",
   },
 } as const satisfies Record<
   AdminModuleKey,
@@ -239,10 +239,9 @@ export const adminSubNavigation = {
     { label: "Booking Mix", href: "/admin/analytics#booking-mix" },
   ],
   settings: [
-    { label: "General", href: "/admin/settings" },
-    { label: "Site Settings", href: "/admin/settings#site-settings" },
-    { label: "Integrations", href: "/admin/settings#integrations" },
-    { label: "System Status", href: "/admin/settings#system-status" },
+    { label: "Overview", href: "/admin/settings" },
+    { label: "Business Details", href: "/admin/settings#site-settings" },
+    { label: "Launch Readiness", href: "/admin/settings#integrations" },
   ],
 } as const satisfies Record<AdminModuleKey, readonly AdminSubNavigationItem[]>;
 

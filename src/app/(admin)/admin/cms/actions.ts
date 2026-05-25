@@ -16,6 +16,7 @@ import type {
   FooterContent,
   HeroSectionContent,
   HomepageEnhancementsContent,
+  HomepageHeroTextSize,
   HomepageModeCode,
   HomepageScrollEffect,
   HomepageTextEffect,
@@ -30,12 +31,6 @@ type CmsUploadState = AdminActionState & {
 };
 
 type AdminContext = Awaited<ReturnType<typeof assertAdminAction>>;
-
-const cmsSectionSchema = z.object({
-  section: z.string().trim().min(1, "Enter a section."),
-  key: z.string().trim().min(1, "Enter a key."),
-  payload: z.string().trim().min(2, "Enter a JSON payload."),
-});
 
 const toggleSchema = z.object({
   id: z.string().trim().optional(),
@@ -81,6 +76,12 @@ const homepageTextEffects = [
   "rise",
   "focus",
 ] as const satisfies readonly HomepageTextEffect[];
+
+const homepageHeroTextSizes = [
+  "small",
+  "medium",
+  "large",
+] as const satisfies readonly HomepageHeroTextSize[];
 
 function getString(formData: FormData, key: string) {
   const value = formData.get(key);
@@ -142,6 +143,17 @@ function getHomepageTextEffect(
     : "rise";
 }
 
+function getHomepageHeroTextSize(
+  formData: FormData,
+  key: string,
+): HomepageHeroTextSize {
+  const value = getString(formData, key);
+
+  return homepageHeroTextSizes.includes(value as HomepageHeroTextSize)
+    ? (value as HomepageHeroTextSize)
+    : "medium";
+}
+
 function getCount(formData: FormData, key: string) {
   const value = Number.parseInt(getString(formData, `${key}.__count`), 10);
 
@@ -160,20 +172,6 @@ function splitKeywords(value: string) {
     .split(",")
     .map((keyword) => keyword.trim())
     .filter(Boolean);
-}
-
-function parseJsonPayload(payload: string) {
-  try {
-    return {
-      data: JSON.parse(payload) as unknown,
-      error: null,
-    };
-  } catch {
-    return {
-      data: null,
-      error: "Enter valid JSON.",
-    };
-  }
 }
 
 async function readCmsImage({
@@ -518,6 +516,20 @@ async function buildHomepageHeroPayload(
     motion: {
       scrollEffect: getHomepageScrollEffect(formData, "hero.motion.scrollEffect"),
       textEffect: getHomepageTextEffect(formData, "hero.motion.textEffect"),
+    },
+    typography: {
+      eyebrowSize: getHomepageHeroTextSize(
+        formData,
+        "hero.typography.eyebrowSize",
+      ),
+      titleSize: getHomepageHeroTextSize(
+        formData,
+        "hero.typography.titleSize",
+      ),
+      descriptionSize: getHomepageHeroTextSize(
+        formData,
+        "hero.typography.descriptionSize",
+      ),
     },
     stats: readHeroStats(formData, "hero.stats"),
     visual: {
@@ -1063,75 +1075,6 @@ export async function saveCmsEditorSectionAction(
     return {
       success: true,
       message: "Changes saved and published.",
-    };
-  } catch (error) {
-    return {
-      success: false,
-      message:
-        error instanceof Error ? error.message : "CMS section could not be saved.",
-      values: formDataToValues(formData),
-    };
-  }
-}
-
-export async function upsertCmsSectionAction(
-  _previousState: AdminActionState,
-  formData: FormData,
-): Promise<AdminActionState> {
-  let adminContext: AdminContext;
-
-  try {
-    adminContext = await assertAdminAction();
-  } catch (error) {
-    return {
-      success: false,
-      message:
-        error instanceof Error ? error.message : "Admin access is required.",
-      values: formDataToValues(formData),
-    };
-  }
-
-  const parsed = cmsSectionSchema.safeParse({
-    section: getString(formData, "section"),
-    key: getString(formData, "key"),
-    payload: getString(formData, "payload"),
-  });
-
-  if (!parsed.success) {
-    return {
-      success: false,
-      message: "Please review the highlighted fields.",
-      fieldErrors: parsed.error.flatten().fieldErrors,
-      values: formDataToValues(formData),
-    };
-  }
-
-  const payload = parseJsonPayload(parsed.data.payload);
-
-  if (payload.error) {
-    return {
-      success: false,
-      message: payload.error,
-      fieldErrors: {
-        payload: [payload.error],
-      },
-      values: formDataToValues(formData),
-    };
-  }
-
-  try {
-    await upsertCmsValue({
-      context: adminContext,
-      section: parsed.data.section,
-      key: parsed.data.key,
-      value: payload.data,
-    });
-
-    revalidateCmsPaths();
-
-    return {
-      success: true,
-      message: "CMS section saved and published.",
     };
   } catch (error) {
     return {

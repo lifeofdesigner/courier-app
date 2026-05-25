@@ -59,7 +59,7 @@ export async function generateMetadata({
   if (!post) {
     return createPageMetadata({
       title: "Article Not Found",
-      description: "This Atlas Courier article could not be found.",
+      description: "This logistics article could not be found.",
       path: `/blog/${slug}`,
       noIndex: true,
     });

@@ -87,6 +87,14 @@ export interface HomepageMotionSettings {
   textEffect: HomepageTextEffect;
 }
 
+export type HomepageHeroTextSize = "small" | "medium" | "large";
+
+export interface HomepageHeroTypographySettings {
+  eyebrowSize: HomepageHeroTextSize;
+  titleSize: HomepageHeroTextSize;
+  descriptionSize: HomepageHeroTextSize;
+}
+
 export interface HeroSectionContent {
   eyebrow: string;
   title: string;
@@ -98,6 +106,7 @@ export interface HeroSectionContent {
   image?: CmsImage;
   slides?: HeroSlideContent[];
   motion?: HomepageMotionSettings;
+  typography?: HomepageHeroTypographySettings;
 }
 
 export interface TrackingPromoContent {

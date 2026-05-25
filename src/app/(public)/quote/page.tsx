@@ -9,7 +9,7 @@ import { normalizeTransportMode } from "@/types/shipment";
 export const metadata: Metadata = createPageMetadata({
   title: "Get a Mode-Aware Courier Quote",
   description:
-    "Estimate an Atlas Courier air, road, or freight shipment with mode-aware service types, route details, cargo details, and declared value before booking.",
+    "Estimate an air, road, or freight shipment with service type, route details, cargo information, and declared value before booking.",
   path: "/quote",
   keywords: [
     "courier quote",
@@ -46,8 +46,8 @@ export default async function GetQuotePage({ searchParams }: GetQuotePageProps) 
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600">
               Choose a transport mode, pick a matching service type, and
-              calculate a quote using active pricing rules, zone detection, and
-              fuel surcharge logic.
+              prepare a quote with the route, cargo details, declared value,
+              and delivery timing customers need before booking.
             </p>
           </div>
           <div className="mt-10">

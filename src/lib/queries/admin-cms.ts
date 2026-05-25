@@ -55,7 +55,7 @@ const servicesPageFallback: ServicesPageContent = {
     eyebrow: "Services",
     title: "Courier services built around clear delivery expectations.",
     description:
-      "Atlas Courier supports urgent local delivery, planned economy movement, recurring business pickups, and international shipment conversations with practical operations detail at every handoff.",
+      "The logistics team supports urgent local delivery, planned economy movement, recurring business pickups, and international shipment conversations with practical operations detail at every handoff.",
     primaryCta: {
       label: "Get a Quote",
       href: "/quote",
@@ -169,7 +169,7 @@ const servicesPageFallback: ServicesPageContent = {
   seo: {
     title: "Courier Services",
     description:
-      "Explore same-day courier, economy delivery, business shipping, tracking, proof of delivery, and customs-aware courier support from Atlas Courier.",
+      "Explore same-day courier, economy delivery, business shipping, tracking, proof of delivery, and customs-aware courier support from the logistics team.",
     keywords: [
       "courier services",
       "same-day courier",
@@ -186,13 +186,13 @@ const aboutPageFallback: AboutPageContent = {
     eyebrow: "About",
     title: "A courier company built for calm, accountable delivery.",
     description:
-      "Atlas Courier combines customer-friendly booking tools with the operations detail courier teams need to keep pickups, transfers, and delivery confirmations moving cleanly.",
+      "The logistics team combines customer-friendly booking tools with the operations detail courier teams need to keep pickups, transfers, and delivery confirmations moving cleanly.",
   },
   story: {
     eyebrow: "Company story",
     title: "Reliability starts with the handoff.",
     paragraphs: [
-      "Atlas Courier is built for customers who need delivery to feel organized, not uncertain. Our public tools focus on the practical work of courier operations: clear pickup details, understandable tracking milestones, and support conversations that start with the shipment context already in view.",
+      "The logistics team is built for customers who need delivery to feel organized, not uncertain. Our public tools focus on the practical work of courier operations: clear pickup details, understandable tracking milestones, and support conversations that start with the shipment context already in view.",
       "The company serves households, growing teams, and operations-led businesses that depend on reliable handoffs. Whether the shipment is an urgent contract, a replacement part, a customer order, or a recurring branch transfer, the goal is the same: keep the movement clear from request to proof of delivery.",
       "This website gives customers a production-ready place to quote, book, track, and understand the service before deeper payment, email, and mapping integrations are added in future phases.",
     ],
@@ -215,7 +215,7 @@ const aboutPageFallback: AboutPageContent = {
     title:
       "The operating model is simple: clear details, careful movement, visible progress.",
     description:
-      "Customers choose Atlas Courier because the service experience is practical. It asks for the right information, sets clear expectations, and keeps delivery status visible.",
+      "Customers choose the logistics team because the service experience is practical. It asks for the right information, sets clear expectations, and keeps delivery status visible.",
     items: [
       {
         title: "Operational clarity",
@@ -253,11 +253,11 @@ const aboutPageFallback: AboutPageContent = {
     eyebrow: "Why customers choose us",
     title: "Courier support that respects the shipment and the schedule.",
     description:
-      "A good delivery partner reduces uncertainty. Atlas Courier keeps the public experience focused on decisions customers need to make now: service level, pickup timing, tracking, and support.",
+      "A good delivery partner reduces uncertainty. The logistics team keeps the public experience focused on decisions customers need to make now: service level, pickup timing, tracking, and support.",
     primaryCta: {
       label: "Contact support",
       href: "/contact",
-      ariaLabel: "Contact Atlas Courier support",
+      ariaLabel: "Contact logistics support",
     },
     secondaryCta: {
       label: "Get a Quote",
@@ -266,11 +266,11 @@ const aboutPageFallback: AboutPageContent = {
     },
   },
   seo: {
-    title: "About Atlas Courier",
+    title: "About the logistics company",
     description:
-      "Learn how Atlas Courier helps customers move important shipments with clear tracking, dependable pickup windows, and practical courier support.",
+      "Learn how the logistics team helps customers move important shipments with clear tracking, dependable pickup windows, and practical courier support.",
     keywords: [
-      "about Atlas Courier",
+      "about the logistics company",
       "courier company",
       "delivery operations",
       "business courier support",
@@ -325,13 +325,13 @@ const faqPageFallback: FAQPageContent = {
     cta: {
       label: "Contact support",
       href: "/contact",
-      ariaLabel: "Contact Atlas Courier support",
+      ariaLabel: "Contact logistics support",
     },
   },
   seo: {
     title: "Courier FAQ",
     description:
-      "Find answers about Atlas Courier pickups, tracking, quotes, customs details, business shipping, and customer support.",
+      "Find answers about the logistics company pickups, tracking, quotes, customs details, business shipping, and customer support.",
     keywords: [
       "courier FAQ",
       "delivery questions",
@@ -474,7 +474,7 @@ function buildContactFallback(settings: SettingRow[]): ContactInfoContent {
     eyebrow: "Contact",
     title: "Talk to courier support before the shipment stalls.",
     description:
-      "Reach Atlas Courier for pickup planning, tracking questions, delivery exceptions, quote support, and account conversations.",
+      "Reach the logistics team for pickup planning, tracking questions, delivery exceptions, quote support, and account conversations.",
     email: readString(companyContact.email, company.email),
     phone: readString(companyContact.phone, company.phone),
     operatingHours: readString(supportHours.label, company.operatingHours),

@@ -28,7 +28,7 @@ export function UsersTable({ users }: UsersTableProps) {
     const normalizedQuery = query.trim().toLowerCase();
 
     return users.filter((user) =>
-      [user.id, user.fullName ?? "", user.phone ?? "", user.role]
+      [user.fullName ?? "", user.phone ?? "", user.role]
         .join(" ")
         .toLowerCase()
         .includes(normalizedQuery),
@@ -39,7 +39,7 @@ export function UsersTable({ users }: UsersTableProps) {
     return (
       <AdminEmptyState
         title="No users found"
-        description="Supabase Auth profile rows will appear here as customers and staff sign up."
+        description="Customer and staff accounts will appear here after sign-up or admin creation."
       />
     );
   }
@@ -50,7 +50,7 @@ export function UsersTable({ users }: UsersTableProps) {
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         className={inputClassName}
-        placeholder="Search user name, phone, id, or role"
+        placeholder="Search name, phone, or access level"
       />
       <div className="overflow-hidden rounded-[24px] border border-slate-200 bg-white shadow-sm">
         <div className="overflow-x-auto">
@@ -72,7 +72,6 @@ export function UsersTable({ users }: UsersTableProps) {
                     <p className="font-semibold text-[#2b1d16]">
                       {user.fullName ?? "Unnamed user"}
                     </p>
-                    <p className="mt-1 text-xs text-slate-500">{user.id}</p>
                   </td>
                   <td className="px-4 py-4 text-sm text-slate-700">
                     {user.phone ?? "Not set"}

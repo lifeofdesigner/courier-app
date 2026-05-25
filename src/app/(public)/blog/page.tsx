@@ -7,7 +7,7 @@ import { createPageMetadata, getOrganizationJsonLd } from "@/lib/seo";
 export const metadata: Metadata = createPageMetadata({
   title: "Courier Insights",
   description:
-    "Read practical courier articles from Atlas Courier on business shipping, tracking, same-day delivery, customs preparation, and shipment planning.",
+    "Read practical courier, cargo, and freight articles on business shipping, tracking, delivery planning, customs preparation, and shipment readiness.",
   path: "/blog",
   keywords: [
     "courier blog",

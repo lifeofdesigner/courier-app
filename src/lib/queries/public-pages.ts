@@ -1,6 +1,8 @@
 import { cache } from "react";
 
 import { company, socialLinks } from "@/constants/site";
+import { applySiteNameTemplate } from "@/lib/brand-template";
+import { createSupabaseServiceRoleClient } from "@/lib/supabase/service-role";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import type { CmsImage } from "@/types/cms";
 
@@ -17,6 +19,7 @@ export type PublicPageSettings = {
     siteName: string;
     logo: CmsImage | null;
     favicon: CmsImage | null;
+    updatedAt: string | null;
   };
   companyContact: {
     phone: string;
@@ -41,6 +44,7 @@ const fallbackSettings: PublicPageSettings = {
     siteName: company.name,
     logo: null,
     favicon: null,
+    updatedAt: null,
   },
   companyContact: {
     phone: company.phone,
@@ -117,6 +121,7 @@ function mergeSettings(rows: SiteSettingQueryRow[]): PublicPageSettings {
       );
       settings.siteIdentity.logo = readImage(row.value.logo);
       settings.siteIdentity.favicon = readImage(row.value.favicon);
+      settings.siteIdentity.updatedAt = row.updated_at;
     }
 
     if (row.key === "support_hours") {
@@ -146,13 +151,19 @@ function mergeSettings(rows: SiteSettingQueryRow[]): PublicPageSettings {
     }
   }
 
-  return settings;
+  return applySiteNameTemplate(settings, settings.siteIdentity.siteName);
 }
 
 export const getPublicPageSettings = cache(
   async (): Promise<PublicPageSettings> => {
     try {
-      const supabase = await createSupabaseServerClient();
+      let supabase;
+
+      try {
+        supabase = createSupabaseServiceRoleClient();
+      } catch {
+        supabase = await createSupabaseServerClient();
+      }
 
       if (!supabase) {
         return fallbackSettings;

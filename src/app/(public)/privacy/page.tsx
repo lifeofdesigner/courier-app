@@ -1,22 +1,23 @@
 import type { Metadata } from "next";
 
 import { LegalContent, SeoJsonLd } from "@/components/marketing";
-import { company } from "@/constants/site";
+import { getPublicPageSettings } from "@/lib/queries/public-pages";
 import { createPageMetadata, getOrganizationJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Privacy Policy",
   description:
-    "Review how Atlas Courier describes customer information, account details, booking data, communications, and privacy contact options.",
+    "Review how customer information, account details, booking data, communications, and privacy contact options may be handled.",
   path: "/privacy",
 });
 
-const sections = [
+function buildSections(siteName: string, email: string) {
+  return [
   {
     title: "Overview",
     paragraphs: [
-      "This privacy policy explains, at a general level, how Atlas Courier handles information connected to website visits, quote requests, bookings, customer accounts, support conversations, and shipment tracking.",
-      "This page is written as production-ready website content, but it should still be reviewed by qualified counsel before launch in a specific jurisdiction.",
+      `${siteName} may handle information connected to website visits, quote requests, bookings, customer accounts, support conversations, and shipment tracking.`,
+      "This page gives customers a practical privacy summary. It should be reviewed by qualified counsel before launch in a specific jurisdiction.",
     ],
   },
   {
@@ -43,7 +44,7 @@ const sections = [
   {
     title: "Communications",
     paragraphs: [
-      "When you contact Atlas Courier, we may use your contact details and message content to respond to your request and coordinate service support.",
+      `When you contact ${siteName}, we may use your contact details and message content to respond to your request and coordinate service support.`,
       "Future email notification features may use service providers, but this phase does not implement an outbound email provider.",
     ],
   },
@@ -57,21 +58,27 @@ const sections = [
   {
     title: "Privacy questions",
     paragraphs: [
-      `For privacy questions, contact ${company.name} at ${company.email}. Include enough detail for the team to identify the account, shipment, or request you are asking about.`,
+      `For privacy questions, contact ${siteName} at ${email}. Include enough detail for the team to identify the account, shipment, or request you are asking about.`,
     ],
   },
-] as const;
+  ];
+}
 
-export default function PrivacyPolicyPage() {
+export default async function PrivacyPolicyPage() {
+  const settings = await getPublicPageSettings();
+  const siteName = settings.siteIdentity.siteName;
+  const email = settings.companyContact.email;
+  const sections = buildSections(siteName, email);
+
   return (
     <>
       <SeoJsonLd data={getOrganizationJsonLd()} />
       <LegalContent
         eyebrow="Privacy Policy"
         title="Privacy information for customers and shippers."
-        description="A clear summary of the information Atlas Courier may handle while providing quotes, bookings, shipment tracking, account access, and support."
+        description={`${siteName} provides this customer-facing summary for quote, booking, shipment tracking, account access, and support information.`}
         lastUpdated="April 21, 2026"
-        sections={[...sections]}
+        sections={sections}
       />
     </>
   );

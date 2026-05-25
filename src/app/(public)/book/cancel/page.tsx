@@ -16,7 +16,7 @@ import {
 export const metadata: Metadata = createPageMetadata({
   title: "Shipment Payment Not Completed",
   description:
-    "Resume or review an Atlas Courier air, road, or freight booking payment after Stripe Checkout was canceled.",
+    "Resume or review an air, road, or freight booking payment after checkout was canceled.",
   path: "/book/cancel",
 });
 
@@ -81,7 +81,7 @@ export default async function BookingCancelPage({
             <p className="mt-4 text-base leading-8 text-slate-600">
               {modeCopy
                 ? modeCopy.paymentCancelLead
-                : "Your booking is still saved, but Stripe has not confirmed payment. You can safely resume Checkout when you are ready."}
+                : "Your booking is still saved, but payment has not been confirmed. You can safely resume payment when you are ready."}
             </p>
 
             {payment ? (

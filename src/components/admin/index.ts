@@ -18,7 +18,6 @@ export * from "./cms-preview-card";
 export * from "./cms-publish-bar";
 export * from "./cms-repeatable-list";
 export * from "./cms-section-header";
-export * from "./cms-section-form";
 export * from "./cms-sidebar";
 export * from "./cms-text-field";
 export * from "./cms-textarea-field";

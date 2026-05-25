@@ -576,7 +576,7 @@ export async function createOrderAfterSuccessfulPaymentIfMissing({
       label: "Shipment Created",
       description:
         "Payment was confirmed and the shipment is ready for courier handling.",
-      location_name: "Atlas Courier operations",
+      location_name: "Operations team",
       event_time: labelGeneratedAt,
     }),
   ]);

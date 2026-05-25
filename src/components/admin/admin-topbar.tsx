@@ -60,7 +60,7 @@ export function AdminTopbar({ adminName }: AdminTopbarProps) {
           </span>
           <span className="hidden leading-tight sm:block">
             <span className="block text-sm font-bold">{company.name}</span>
-            <span className="block text-xs text-white/60">Operations Console</span>
+            <span className="block text-xs text-white/60">Admin workspace</span>
           </span>
         </Link>
 
@@ -94,7 +94,7 @@ export function AdminTopbar({ adminName }: AdminTopbarProps) {
 
         <div className="hidden shrink-0 items-center gap-3 lg:flex">
           <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
-            <p className="text-xs font-semibold text-white/55">Admin session</p>
+            <p className="text-xs font-semibold text-white/55">Signed in</p>
             <p className="max-w-44 truncate text-sm font-bold text-white">
               {adminName ?? "Admin"}
             </p>

@@ -5,7 +5,7 @@ export const homepageFallbackContent = {
     eyebrow: "Courier services built for clarity",
     title: "Ship with confidence from pickup to proof of delivery.",
     description:
-      "Atlas Courier helps businesses and households move urgent parcels with clear pickup windows, careful handling, and delivery updates that keep everyone aligned.",
+      "Move urgent parcels, cargo, and freight with clear pickup windows, careful handling, and delivery updates that keep everyone aligned.",
     primaryCta: {
       label: "Get a Quote",
       href: "/quote",
@@ -19,6 +19,11 @@ export const homepageFallbackContent = {
     motion: {
       scrollEffect: "fade-up",
       textEffect: "rise",
+    },
+    typography: {
+      eyebrowSize: "medium",
+      titleSize: "medium",
+      descriptionSize: "medium",
     },
     stats: [
       {
@@ -294,7 +299,7 @@ export const homepageFallbackContent = {
     eyebrow: "Coverage and operations",
     title: "Built for local speed with regional reach.",
     description:
-      "Atlas Courier is prepared for pickups across dense city routes, nearby suburbs, and coordinated regional lanes, with content fields ready for precise coverage editing later.",
+      "Built for pickups across dense city routes, nearby suburbs, and coordinated regional lanes, with service language ready for courier, cargo, and freight movement.",
     regions: [
       "Metro pickup and delivery",
       "Suburban business routes",
@@ -336,7 +341,7 @@ export const homepageFallbackContent = {
     items: [
       {
         quote:
-          "Atlas Courier gives our team the delivery clarity we need without making customers chase updates.",
+          "The tracking flow gives our team the delivery clarity we need without making customers chase updates.",
         authorName: "Maya Chen",
         authorTitle: "Operations Manager",
         companyName: "Northline Retail Group",
@@ -392,7 +397,7 @@ export const homepageFallbackContent = {
     },
   },
   seo: {
-    title: "Atlas Courier | Reliable courier and delivery services",
+    title: "Reliable courier, cargo, and freight logistics",
     description:
       "Professional courier services for same-day pickup, scheduled delivery, shipment tracking, and business courier support.",
     keywords: [
@@ -402,9 +407,9 @@ export const homepageFallbackContent = {
       "business courier",
       "scheduled pickup",
     ],
-    openGraphTitle: "Atlas Courier | Reliable courier and delivery services",
+    openGraphTitle: "Reliable courier, cargo, and freight logistics",
     openGraphDescription:
-      "Ship urgent parcels with clear pickup windows, careful handling, and delivery updates from Atlas Courier.",
+      "Ship urgent parcels, cargo, and freight with clear pickup windows, careful handling, and delivery updates.",
     canonicalPath: "/",
   },
 } satisfies HomePageContent;

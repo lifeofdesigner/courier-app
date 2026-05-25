@@ -89,7 +89,7 @@ export async function createAdminUserAction(
     return {
       success: false,
       message:
-        "Supabase service-role configuration is required to create users.",
+        "User creation is not configured yet. Ask the site owner to finish the secure admin setup.",
       values: formDataToValues(formData),
     };
   }

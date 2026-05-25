@@ -5,24 +5,33 @@ import {
   ContactPanel,
   SeoJsonLd,
 } from "@/components/marketing";
+import { getContactInfoContent } from "@/lib/queries/public-cms-pages";
 import { getPublicPageSettings } from "@/lib/queries/public-pages";
-import { createPageMetadata, getOrganizationJsonLd } from "@/lib/seo";
+import { getOrganizationJsonLd } from "@/lib/seo";
 
-export const metadata: Metadata = createPageMetadata({
-  title: "Contact Atlas Courier",
-  description:
-    "Contact Atlas Courier for tracking questions, pickup coordination, quotes, delivery support, and courier operations assistance.",
-  path: "/contact",
-  keywords: [
-    "contact courier support",
-    "courier phone number",
-    "shipment support",
-    "pickup support",
-  ],
-});
+export async function generateMetadata(): Promise<Metadata> {
+  const content = await getContactInfoContent();
+
+  return {
+    title: "Contact",
+    description: content.description,
+    keywords: [
+      "contact logistics support",
+      "courier pickup support",
+      "cargo delivery help",
+      "freight shipment support",
+    ],
+    alternates: {
+      canonical: "/contact",
+    },
+  };
+}
 
 export default async function ContactPage() {
-  const settings = await getPublicPageSettings();
+  const [settings, content] = await Promise.all([
+    getPublicPageSettings(),
+    getContactInfoContent(),
+  ]);
 
   return (
     <main>
@@ -31,16 +40,13 @@ export default async function ContactPage() {
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
             <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
-              Contact
+              {content.eyebrow}
             </p>
             <h1 className="mt-3 font-heading text-4xl font-bold tracking-tight text-[#0B1C3A] lg:text-5xl">
-              Talk to courier support before the shipment stalls.
+              {content.title}
             </h1>
             <p className="mt-4 text-base leading-8 text-slate-600">
-              Reach Atlas Courier for pickup planning, tracking questions,
-              delivery exceptions, quote support, and account conversations.
-              We keep contact details easy to scan so customers can choose the
-              fastest support path.
+              {content.description}
             </p>
           </div>
 

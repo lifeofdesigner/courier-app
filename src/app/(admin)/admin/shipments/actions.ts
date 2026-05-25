@@ -535,7 +535,7 @@ export async function createShipmentAction(
       status: parsed.data.shipmentStatus,
       label: initialStatusMeta.label,
       description: initialStatusMeta.description,
-      location_name: "Atlas Courier operations",
+      location_name: "Operations team",
       event_time: now,
     });
 
@@ -708,7 +708,7 @@ export async function updateShipmentStatusOnlyAction(
   nextFormData.set("status", status);
   nextFormData.set("label", statusMeta.label);
   nextFormData.set("description", statusMeta.description);
-  nextFormData.set("locationName", "Atlas Courier operations");
+  nextFormData.set("locationName", "Operations team");
 
   return updateShipmentStatusAction(previousState, nextFormData);
 }

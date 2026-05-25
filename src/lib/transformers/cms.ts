@@ -56,6 +56,12 @@ const homepageMotionSchema = z.object({
   textEffect: z.enum(["none", "soft-fade", "rise", "focus"]).default("rise"),
 });
 
+const homepageHeroTypographySchema = z.object({
+  eyebrowSize: z.enum(["small", "medium", "large"]).default("medium"),
+  titleSize: z.enum(["small", "medium", "large"]).default("medium"),
+  descriptionSize: z.enum(["small", "medium", "large"]).default("medium"),
+});
+
 const featureHighlightSchema = z.object({
   title: z.string().min(1),
   description: z.string().min(1),
@@ -169,6 +175,7 @@ const homepageSectionSchemas = {
     image: cmsImageSchema.optional(),
     slides: z.array(heroSlideSchema).min(1).optional(),
     motion: homepageMotionSchema.optional(),
+    typography: homepageHeroTypographySchema.optional(),
   }),
   trackingPromo: z.object({
     eyebrow: z.string().min(1),

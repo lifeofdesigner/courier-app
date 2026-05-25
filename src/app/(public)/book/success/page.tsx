@@ -15,7 +15,7 @@ import {
 export const metadata: Metadata = createPageMetadata({
   title: "Shipment Payment Processing",
   description:
-    "Review the secure payment processing result for an Atlas Courier air, road, or freight booking.",
+    "Review the secure payment processing result for an air, road, or freight booking.",
   path: "/book/success",
 });
 
@@ -61,7 +61,7 @@ export default async function BookingSuccessPage({
   const toastMessage = payment
     ? isPaid
       ? `Your ${modeMeta?.label.toLowerCase() ?? "shipment"} payment was confirmed.`
-      : "Stripe returned successfully. Final payment confirmation is still being processed."
+      : "Payment returned successfully. Final confirmation is still being processed."
     : "No Checkout session was found in the URL.";
   const toastVariant = payment ? (isPaid ? "success" : "info") : "warning";
 
@@ -84,7 +84,7 @@ export default async function BookingSuccessPage({
             <p className="mt-4 text-base leading-8 text-slate-600">
               {modeCopy
                 ? modeCopy.paymentSuccessLead
-                : "Stripe redirects here after Checkout. Final fulfillment is handled by the verified webhook, so this page never creates duplicate orders or labels."}
+                : "Payment confirmation may take a short moment. Once confirmed, shipment records and labels are prepared safely."}
             </p>
 
             {payment ? (

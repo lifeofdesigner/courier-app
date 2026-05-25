@@ -26,7 +26,7 @@ export default async function ManageUsersPage() {
           { label: "Customers" },
         ]}
         title="Customers & Access"
-        description="Review profile records and update customer or admin roles with server-side authorization."
+        description="Review customer and staff accounts, update access levels, and create new users from one workspace."
         status={{ label: "Protected access", tone: "accent" }}
         primaryAction={{ label: "Create User", href: "/admin/users/create" }}
       />
@@ -64,7 +64,7 @@ export default async function ManageUsersPage() {
       <AdminSectionCard
         id="roles"
         title="Customer and staff records"
-        description="Admins cannot remove their own admin role in this phase."
+        description="Manage who can use the customer area and who can access admin tools."
       >
         <UsersTable users={users} />
       </AdminSectionCard>

@@ -8,8 +8,12 @@ import { formDataToValues } from "@/lib/forms/preserve";
 import type { AdminActionState } from "@/types/admin";
 
 const settingSchema = z.object({
-  key: z.string().trim().min(1, "Enter a setting key."),
-  payload: z.string().trim().min(2, "Enter a JSON value."),
+  formType: z.enum([
+    "companyContact",
+    "supportHours",
+    "socialLinks",
+    "footerNotice",
+  ]),
 });
 
 function getString(formData: FormData, key: string) {
@@ -18,21 +22,50 @@ function getString(formData: FormData, key: string) {
   return typeof value === "string" ? value : "";
 }
 
-function parseJsonPayload(payload: string) {
-  try {
-    return {
-      data: JSON.parse(payload) as unknown,
-      error: null,
-    };
-  } catch {
-    return {
-      data: null,
-      error: "Enter valid JSON.",
-    };
+function getOptionalString(formData: FormData, key: string) {
+  const value = getString(formData, key).trim();
+
+  return value.length > 0 ? value : "";
+}
+
+function getSettingPayload(formType: z.infer<typeof settingSchema>["formType"], formData: FormData) {
+  switch (formType) {
+    case "companyContact":
+      return {
+        key: "company_contact",
+        value: {
+          email: getString(formData, "email").trim(),
+          phone: getString(formData, "phone").trim(),
+          address: getString(formData, "address").trim(),
+        },
+      };
+    case "supportHours":
+      return {
+        key: "support_hours",
+        value: {
+          label: getString(formData, "label").trim(),
+        },
+      };
+    case "socialLinks":
+      return {
+        key: "social_links",
+        value: {
+          x: getOptionalString(formData, "x"),
+          facebook: getOptionalString(formData, "facebook"),
+          linkedin: getOptionalString(formData, "linkedin"),
+        },
+      };
+    case "footerNotice":
+      return {
+        key: "footer_notice",
+        value: {
+          text: getString(formData, "text").trim(),
+        },
+      };
   }
 }
 
-export async function upsertSiteSettingAction(
+export async function saveFriendlySiteSettingAction(
   _previousState: AdminActionState,
   formData: FormData,
 ): Promise<AdminActionState> {
@@ -50,38 +83,25 @@ export async function upsertSiteSettingAction(
   }
 
   const parsed = settingSchema.safeParse({
-    key: getString(formData, "key"),
-    payload: getString(formData, "payload"),
+    formType: getString(formData, "formType"),
   });
 
   if (!parsed.success) {
     return {
       success: false,
-      message: "Please review the highlighted fields.",
+      message: "This settings form could not be saved.",
       fieldErrors: parsed.error.flatten().fieldErrors,
-      values: formDataToValues(formData),
-    };
-  }
-
-  const payload = parseJsonPayload(parsed.data.payload);
-
-  if (payload.error) {
-    return {
-      success: false,
-      message: payload.error,
-      fieldErrors: {
-        payload: [payload.error],
-      },
       values: formDataToValues(formData),
     };
   }
 
   try {
     const { supabase, profile } = adminContext;
+    const payload = getSettingPayload(parsed.data.formType, formData);
     const { error } = await supabase.from("site_settings").upsert(
       {
-        key: parsed.data.key,
-        value: payload.data,
+        key: payload.key,
+        value: payload.value,
         updated_by: profile.id,
         updated_at: new Date().toISOString(),
       },
@@ -108,13 +128,12 @@ export async function upsertSiteSettingAction(
 
     return {
       success: true,
-      message: "Site setting saved.",
+      message: "Settings saved.",
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
-      message:
-        error instanceof Error ? error.message : "Site setting could not be saved.",
+      message: "Settings could not be saved.",
       values: formDataToValues(formData),
     };
   }

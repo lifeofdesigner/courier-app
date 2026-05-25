@@ -1,4 +1,4 @@
-# Atlas Courier MVP
+# Configurable Courier App MVP
 
 Production-style courier company web app MVP built with Next.js App Router,
 TypeScript, Tailwind CSS, and Supabase-ready project structure.

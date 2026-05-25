@@ -22,7 +22,7 @@ export function SeoCmsForm({ section }: SeoCmsFormProps) {
       <CmsSectionHeader
         eyebrow="SEO"
         title="Homepage search and sharing"
-        description="Edit the metadata used by the homepage without exposing JSON."
+        description="Edit the search title, description, keywords, and social sharing image with plain fields."
         published={section.published}
       />
       <div className="mt-8 space-y-8">

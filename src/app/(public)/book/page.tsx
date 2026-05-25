@@ -8,7 +8,7 @@ import { createPageMetadata } from "@/lib/seo";
 export const metadata: Metadata = createPageMetadata({
   title: "Book an Air, Road, or Freight Shipment",
   description:
-    "Book an Atlas Courier air, road, or freight shipment with mode-aware service selection, pickup details, payment, and shipment handoff.",
+    "Book an air, road, or freight shipment with service selection, pickup details, cargo information, payment, and delivery handoff.",
   path: "/book",
   keywords: [
     "book courier pickup",
@@ -44,8 +44,8 @@ export default async function BookPickupPage({
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600">
               Submit a mode-aware booking request with matching service type,
-              pickup, delivery, cargo details, and secure Stripe Checkout after
-              the request is saved.
+              pickup, delivery, cargo details, and payment steps after the
+              shipment request is saved.
             </p>
           </div>
 

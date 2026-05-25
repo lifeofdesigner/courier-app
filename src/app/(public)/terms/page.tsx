@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
 
 import { LegalContent, SeoJsonLd } from "@/components/marketing";
-import { company } from "@/constants/site";
+import { getPublicPageSettings } from "@/lib/queries/public-pages";
 import { createPageMetadata, getOrganizationJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Terms of Service",
   description:
-    "Review general Atlas Courier service terms covering quotes, bookings, customer responsibilities, shipment restrictions, liability, and support.",
+    "Review general service terms covering quotes, bookings, customer responsibilities, shipment restrictions, liability, and support.",
   path: "/terms",
 });
 
-const sections = [
+function buildSections(siteName: string, email: string) {
+  return [
   {
     title: "Using the service",
     paragraphs: [
-      "These terms describe general expectations for using Atlas Courier website tools, requesting quotes, booking pickups, tracking shipments, and contacting support.",
+      `These terms describe general expectations for using ${siteName} website tools, requesting quotes, booking pickups, tracking shipments, and contacting support.`,
       "They are intended as practical template terms for a courier website and should be reviewed by qualified counsel before production launch in a specific jurisdiction.",
     ],
   },
@@ -43,7 +44,7 @@ const sections = [
     title: "Prohibited and restricted shipments",
     paragraphs: [
       "Some goods may be prohibited, restricted, or require additional review before transport. This can include hazardous materials, illegal goods, controlled substances, cash equivalents, perishables, live goods, and items requiring special permits.",
-      "Atlas Courier may refuse, pause, or cancel a shipment if the shipment appears unsafe, unlawful, misdeclared, or unsuitable for the selected service.",
+      `${siteName} may refuse, pause, or cancel a shipment if the shipment appears unsafe, unlawful, misdeclared, or unsuitable for the selected service.`,
     ],
   },
   {
@@ -63,21 +64,27 @@ const sections = [
   {
     title: "Support",
     paragraphs: [
-      `For service questions, shipment issues, or account support, contact ${company.name} at ${company.email}. Include your tracking number, quote reference, or booking details where available.`,
+      `For service questions, shipment issues, or account support, contact ${siteName} at ${email}. Include your tracking number, quote reference, or booking details where available.`,
     ],
   },
-] as const;
+  ];
+}
 
-export default function TermsOfServicePage() {
+export default async function TermsOfServicePage() {
+  const settings = await getPublicPageSettings();
+  const siteName = settings.siteIdentity.siteName;
+  const email = settings.companyContact.email;
+  const sections = buildSections(siteName, email);
+
   return (
     <>
       <SeoJsonLd data={getOrganizationJsonLd()} />
       <LegalContent
         eyebrow="Terms of Service"
         title="Service terms for courier customers."
-        description="General terms for using Atlas Courier website tools, requesting quotes, booking pickups, and coordinating shipments."
+        description={`General terms for using ${siteName} website tools, requesting quotes, booking pickups, and coordinating shipments.`}
         lastUpdated="April 21, 2026"
-        sections={[...sections]}
+        sections={sections}
       />
     </>
   );

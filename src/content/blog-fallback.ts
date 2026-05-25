@@ -14,7 +14,7 @@ export const blogFallbackPosts = [
     seoTitle: "Building a reliable business shipping rhythm",
     seoDescription:
       "Learn how pickup windows, shipment preparation, and communication routines help businesses keep courier deliveries predictable.",
-    authorName: "Atlas Courier Operations",
+    authorName: "Logistics Operations Team",
     contentHtml: `
       <p>Reliable courier work starts before a driver reaches reception. The strongest shipping routines give operations teams enough information to plan capacity, avoid missed handoffs, and keep recipients informed.</p>
       <h2>Start with a consistent pickup window</h2>
@@ -39,7 +39,7 @@ export const blogFallbackPosts = [
     seoTitle: "What clear courier tracking milestones should tell customers",
     seoDescription:
       "Understand the courier tracking milestones that reduce support questions and improve delivery confidence.",
-    authorName: "Atlas Courier Support",
+    authorName: "Customer Support Team",
     contentHtml: `
       <p>Good tracking does more than say a parcel is moving. It gives customers enough context to understand the delivery stage and decide whether they need to act.</p>
       <h2>Pickup confirmed</h2>
@@ -65,7 +65,7 @@ export const blogFallbackPosts = [
     seoTitle: "Customs documents for international courier shipments",
     seoDescription:
       "Prepare descriptions, values, and supporting paperwork before international courier pickup to reduce customs delays.",
-    authorName: "Atlas Courier Operations",
+    authorName: "Logistics Operations Team",
     contentHtml: `
       <p>Cross-border delivery depends on more than transport speed. Customs teams need clear, accurate information before they can release a shipment into the destination country.</p>
       <h2>Use accurate goods descriptions</h2>
@@ -90,7 +90,7 @@ export const blogFallbackPosts = [
     seoTitle: "How to prepare for same-day courier delivery",
     seoDescription:
       "Prepare pickup details, access instructions, and recipient availability before booking a same-day courier.",
-    authorName: "Atlas Courier Dispatch",
+    authorName: "Dispatch Team",
     contentHtml: `
       <p>Same-day courier work is time-sensitive, but it should not feel chaotic. A few preparation steps can protect the pickup window and help dispatch choose the right route.</p>
       <h2>Confirm the parcel is ready</h2>
@@ -115,7 +115,7 @@ export const blogFallbackPosts = [
     seoTitle: "What affects a courier quote?",
     seoDescription:
       "Learn the main factors that affect courier quote estimates, from service urgency to package size and delivery requirements.",
-    authorName: "Atlas Courier Pricing Team",
+    authorName: "Pricing Team",
     contentHtml: `
       <p>A good courier quote should be easy to understand. The final estimate usually reflects a small set of practical delivery factors.</p>
       <h2>Service speed</h2>

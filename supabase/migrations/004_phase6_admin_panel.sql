@@ -179,7 +179,7 @@ $$;
 
 insert into public.site_settings (key, value)
 values
-  ('company_contact', '{"phone":"+1 (800) 555-0188","email":"support@atlascourier.com"}'::jsonb),
+  ('company_contact', '{"phone":"+1 (800) 555-0188","email":"support@example-logistics.com"}'::jsonb),
   ('support_hours', '{"label":"Monday-Friday, 8:00 AM-7:00 PM"}'::jsonb),
   ('social_links', '{"linkedin":"","x":"","facebook":""}'::jsonb),
   ('footer_notice', '{"text":"Professional courier support for clear handoffs and dependable delivery."}'::jsonb)

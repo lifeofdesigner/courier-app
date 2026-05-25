@@ -15,6 +15,7 @@ import type {
   HeroSectionContent,
   HeroSlideContent,
   HomepageEnhancementsContent,
+  HomepageHeroTextSize,
   HomepageModeCode,
   HomepageScrollEffect,
   HomepageTextEffect,
@@ -76,6 +77,15 @@ const textEffectOptions: {
   { label: "Soft fade", value: "soft-fade" },
   { label: "Rise", value: "rise" },
   { label: "Focus", value: "focus" },
+];
+
+const heroTextSizeOptions: {
+  label: string;
+  value: HomepageHeroTextSize;
+}[] = [
+  { label: "Small", value: "small" },
+  { label: "Medium", value: "medium" },
+  { label: "Large", value: "large" },
 ];
 
 const fallbackSlideImages = [
@@ -308,6 +318,35 @@ export function HomepageCmsForm({ sections }: HomepageCmsFormProps) {
             name="hero.description"
             defaultValue={hero.description}
           />
+          <fieldset className="rounded-[24px] border border-slate-200 bg-white p-4">
+            <legend className="px-2 text-sm font-semibold text-[#2b1d16]">
+              Hero text sizes
+            </legend>
+            <p className="mt-2 text-xs leading-5 text-slate-500">
+              Adjust the public hero text if a longer headline or subtitle
+              needs more room.
+            </p>
+            <div className="mt-4 grid gap-5 md:grid-cols-3">
+              <CmsSelectField
+                label="Eyebrow size"
+                name="hero.typography.eyebrowSize"
+                defaultValue={hero.typography?.eyebrowSize ?? "medium"}
+                options={heroTextSizeOptions}
+              />
+              <CmsSelectField
+                label="Headline size"
+                name="hero.typography.titleSize"
+                defaultValue={hero.typography?.titleSize ?? "medium"}
+                options={heroTextSizeOptions}
+              />
+              <CmsSelectField
+                label="Subtitle size"
+                name="hero.typography.descriptionSize"
+                defaultValue={hero.typography?.descriptionSize ?? "medium"}
+                options={heroTextSizeOptions}
+              />
+            </div>
+          </fieldset>
           <div className="grid gap-5 xl:grid-cols-2">
             <CmsLinkField label="Primary button" name="hero.primaryCta" defaultValue={hero.primaryCta} />
             <CmsLinkField label="Secondary button" name="hero.secondaryCta" defaultValue={hero.secondaryCta} />

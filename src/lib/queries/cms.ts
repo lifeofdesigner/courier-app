@@ -1,6 +1,9 @@
 import { cache } from "react";
 
 import { homepageFallbackContent } from "@/content/homepage-fallback";
+import { applySiteNameTemplate } from "@/lib/brand-template";
+import { getPublicPageSettings } from "@/lib/queries/public-pages";
+import { createSupabaseServiceRoleClient } from "@/lib/supabase/service-role";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { mergeHomepageContentRows } from "@/lib/transformers/cms";
 import type {
@@ -30,10 +33,20 @@ export const HOMEPAGE_CONTENT_KEYS = [
 // Each value is the full JSON payload for that homepage section.
 export const getHomePageContent = cache(async (): Promise<HomePageContent> => {
   try {
-    const supabase = await createSupabaseServerClient();
+    const settings = await getPublicPageSettings();
+    let supabase;
+
+    try {
+      supabase = createSupabaseServiceRoleClient();
+    } catch {
+      supabase = await createSupabaseServerClient();
+    }
 
     if (!supabase) {
-      return homepageFallbackContent;
+      return applySiteNameTemplate(
+        homepageFallbackContent,
+        settings.siteIdentity.siteName,
+      );
     }
 
     const { data, error } = await supabase
@@ -45,7 +58,10 @@ export const getHomePageContent = cache(async (): Promise<HomePageContent> => {
       .order("updated_at", { ascending: true });
 
     if (error || !data || data.length === 0) {
-      return homepageFallbackContent;
+      return applySiteNameTemplate(
+        homepageFallbackContent,
+        settings.siteIdentity.siteName,
+      );
     }
 
     const rows: CmsContentRow[] = data.map((row) => ({
@@ -56,7 +72,10 @@ export const getHomePageContent = cache(async (): Promise<HomePageContent> => {
       updated_at: typeof row.updated_at === "string" ? row.updated_at : null,
     }));
 
-    return mergeHomepageContentRows(rows, homepageFallbackContent);
+    return applySiteNameTemplate(
+      mergeHomepageContentRows(rows, homepageFallbackContent),
+      settings.siteIdentity.siteName,
+    );
   } catch {
     return homepageFallbackContent;
   }

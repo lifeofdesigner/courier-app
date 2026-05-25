@@ -11,10 +11,12 @@ import { useEffect, useMemo, useState } from "react";
 
 import { Container } from "@/components/layout/container";
 import { CmsIcon } from "@/components/marketing/cms-icon";
+import { cn } from "@/lib/utils";
 import type {
   CmsImage,
   HeroSectionContent,
   HeroSlideContent,
+  HomepageHeroTypographySettings,
 } from "@/types/cms";
 
 export type HomeHeroProps = {
@@ -43,6 +45,30 @@ const fallbackImages: CmsImage[] = [
     alt: "Warehouse team preparing packages for dispatch",
   },
 ];
+
+const defaultTypography: HomepageHeroTypographySettings = {
+  eyebrowSize: "medium",
+  titleSize: "medium",
+  descriptionSize: "medium",
+};
+
+const eyebrowSizeClasses = {
+  small: "text-xs",
+  medium: "text-sm",
+  large: "text-base",
+} satisfies Record<HomepageHeroTypographySettings["eyebrowSize"], string>;
+
+const titleSizeClasses = {
+  small: "text-3xl sm:text-4xl lg:text-5xl",
+  medium: "text-4xl sm:text-5xl lg:text-5xl xl:text-6xl",
+  large: "text-4xl sm:text-5xl lg:text-6xl xl:text-7xl",
+} satisfies Record<HomepageHeroTypographySettings["titleSize"], string>;
+
+const descriptionSizeClasses = {
+  small: "text-sm leading-7 sm:text-base",
+  medium: "text-base leading-8 sm:text-lg",
+  large: "text-lg leading-8 sm:text-xl",
+} satisfies Record<HomepageHeroTypographySettings["descriptionSize"], string>;
 
 function resolveHeroSlide({
   content,
@@ -105,6 +131,7 @@ export function HomeHero({ content }: HomeHeroProps) {
   const slides = useMemo(() => buildSlides(content), [content]);
   const [activeIndex, setActiveIndex] = useState(0);
   const activeSlide = slides[activeIndex] ?? slides[0];
+  const typography = content.typography ?? defaultTypography;
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -141,16 +168,31 @@ export function HomeHero({ content }: HomeHeroProps) {
 
       <Container className="relative z-10 flex min-h-[calc(100vh-7.5rem)] flex-col justify-center py-16 lg:py-20">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(320px,0.55fr)] lg:items-end">
-          <div className="max-w-4xl">
-            <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#FF6B2B]">
+          <div className="max-w-3xl">
+            <p
+              className={cn(
+                "font-bold uppercase tracking-[0.18em] text-[#FF6B2B]",
+                eyebrowSizeClasses[typography.eyebrowSize],
+              )}
+            >
               {activeSlide.eyebrow}
             </p>
-            <h1 className="mt-5 max-w-4xl font-heading text-4xl font-extrabold leading-[1.05] text-white sm:text-5xl lg:text-6xl xl:text-7xl">
+            <h1
+              className={cn(
+                "mt-5 max-w-3xl text-balance font-heading font-extrabold leading-[1.05] text-white",
+                titleSizeClasses[typography.titleSize],
+              )}
+            >
               {activeSlide.title}
             </h1>
             <div className="mt-7 flex max-w-2xl gap-4">
               <span className="mt-3 hidden h-px w-24 bg-white/45 sm:block" />
-              <p className="text-base font-semibold leading-8 text-slate-100 sm:text-lg">
+              <p
+                className={cn(
+                  "font-semibold text-slate-100",
+                  descriptionSizeClasses[typography.descriptionSize],
+                )}
+              >
                 {activeSlide.description}
               </p>
             </div>

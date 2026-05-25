@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed:cms": "node scripts/seed-real-cms-content.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",

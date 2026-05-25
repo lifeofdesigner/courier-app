@@ -37,7 +37,7 @@ function toDetail(row: BlogPostRow): BlogPostDetail {
     ...toSummary(row),
     contentHtml:
       row.content_html ??
-      "<p>This article is being prepared by the Atlas Courier team.</p>",
+      "<p>This article is being prepared by the logistics team.</p>",
     seoTitle: row.seo_title ?? null,
     seoDescription: row.seo_description ?? null,
     authorName: row.author_name ?? null,
