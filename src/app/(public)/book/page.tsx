@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
 import { BookingForm } from "@/components/booking";
 import { Container } from "@/components/layout";
 import { hasSupabasePublicEnv } from "@/lib/env";
 import { createPageMetadata } from "@/lib/seo";
+import { createSupabaseServerClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = createPageMetadata({
   title: "Book an Air, Road, or Freight Shipment",
@@ -26,10 +28,53 @@ type BookPickupPageProps = {
   }>;
 };
 
+function buildBookNextPath(params: Awaited<BookPickupPageProps["searchParams"]>) {
+  const query = new URLSearchParams();
+
+  if (params.quoteId) {
+    query.set("quoteId", params.quoteId);
+  }
+
+  if (params.transportMode) {
+    query.set("transportMode", params.transportMode);
+  }
+
+  if (params.serviceType) {
+    query.set("serviceType", params.serviceType);
+  }
+
+  const queryString = query.toString();
+
+  return queryString ? `/book?${queryString}` : "/book";
+}
+
+function buildLoginRedirect(nextPath: string) {
+  const query = new URLSearchParams({
+    next: nextPath,
+    message: "Sign in before booking a shipment.",
+  });
+
+  return `/login?${query.toString()}`;
+}
+
 export default async function BookPickupPage({
   searchParams,
 }: BookPickupPageProps) {
   const params = await searchParams;
+  const nextPath = buildBookNextPath(params);
+  const supabase = await createSupabaseServerClient();
+
+  if (!supabase) {
+    redirect(buildLoginRedirect(nextPath));
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect(buildLoginRedirect(nextPath));
+  }
 
   return (
     <main>

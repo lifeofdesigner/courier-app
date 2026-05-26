@@ -1,5 +1,6 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { sendBookingEmail } from "@/lib/email/send-booking-email";
@@ -107,6 +108,30 @@ export async function createBookingAction(
   _previousState: BookingActionState,
   formData: FormData,
 ): Promise<BookingActionState> {
+  const supabase = await createSupabaseServerClient();
+
+  if (!supabase) {
+    return {
+      success: false,
+      message:
+        "Supabase is not configured yet. Add the public Supabase environment variables before submitting bookings.",
+      values: formDataToValues(formData),
+    };
+  }
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    const query = new URLSearchParams({
+      next: "/book",
+      message: "Sign in before booking a shipment.",
+    });
+
+    redirect(`/login?${query.toString()}`);
+  }
+
   const parsed = bookingSchema.safeParse({
     quoteId: getString(formData, "quoteId"),
     transportMode: getString(formData, "transportMode"),
@@ -158,21 +183,7 @@ export async function createBookingAction(
     };
   }
 
-  const supabase = await createSupabaseServerClient();
-
-  if (!supabase) {
-    return {
-      success: false,
-      message:
-        "Supabase is not configured yet. Add the public Supabase environment variables before submitting bookings.",
-      values: formDataToValues(formData),
-    };
-  }
-
   try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
     const transportMode = normalizeTransportMode(parsed.data.transportMode);
     const serviceType = normalizeModeAwareServiceType(parsed.data.serviceType, {
       mode: transportMode,
@@ -184,7 +195,7 @@ export async function createBookingAction(
     };
     const booking = await insertBookingRequest({
       input: bookingInput,
-      userId: user?.id ?? null,
+      userId: user.id,
     });
     await sendBookingEmail(booking);
     const serviceMeta = getModeAwareServiceMeta(serviceType, {

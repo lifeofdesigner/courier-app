@@ -191,7 +191,7 @@ export async function insertBookingRequest({
   userId,
 }: {
   input: BookingFormInput;
-  userId: string | null;
+  userId: string;
 }): Promise<BookingRecord> {
   const supabase = await createSupabaseServerClient();
 
