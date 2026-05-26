@@ -4,7 +4,6 @@ import { Printer } from "lucide-react";
 import Link from "next/link";
 
 import { TrackingStatusBadge } from "@/components/tracking/tracking-status-badge";
-import { company } from "@/constants/site";
 import {
   formatModeAwareServiceType,
   getShipmentStatusMeta,
@@ -16,6 +15,8 @@ import {
 export type TrackingPrintCopyProps = {
   shipment: ShipmentRecord;
   events: TrackingEventItem[];
+  siteName: string;
+  companyAddress: string;
 };
 
 function formatDate(value: string | null) {
@@ -69,6 +70,8 @@ function DetailItem({
 export function TrackingPrintCopy({
   shipment,
   events,
+  siteName,
+  companyAddress,
 }: TrackingPrintCopyProps) {
   const transportMode = getTransportModeMeta(shipment.transportMode);
   const statusMeta = getShipmentStatusMeta(shipment.status, {
@@ -109,13 +112,13 @@ export function TrackingPrintCopy({
         <header className="flex flex-col gap-5 border-b-2 border-slate-900 pb-5 sm:flex-row sm:items-start sm:justify-between">
           <div>
             <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#FF6B2B]">
-              {company.name}
+              {siteName}
             </p>
             <h1 className="mt-2 text-3xl font-bold tracking-tight text-[#0B1C3A]">
               Tracking Copy
             </h1>
             <p className="mt-2 text-sm leading-6 text-slate-600">
-              {company.address}
+              {companyAddress}
             </p>
           </div>
           <div className="text-left sm:text-right">
@@ -234,7 +237,7 @@ export function TrackingPrintCopy({
           <p>
             This copy reflects the shipment information available at the time it
             was generated. For live updates, track {shipment.trackingNumber} on
-            {` ${company.name}`}.
+            {` ${siteName}`}.
           </p>
         </footer>
       </section>

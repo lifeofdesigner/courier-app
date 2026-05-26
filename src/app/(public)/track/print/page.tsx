@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { TrackingPrintCopy } from "@/components/tracking";
+import { getPublicPageSettings } from "@/lib/queries/public-pages";
 import { getPublicTrackingResult } from "@/lib/queries/tracking";
 
 export const dynamic = "force-dynamic";
@@ -32,9 +33,10 @@ export default async function TrackPrintPage({
   const trackingNumber = normalizeTrackingParam(
     params.tracking ?? params.trackingNumber,
   );
-  const result = trackingNumber
-    ? await getPublicTrackingResult(trackingNumber)
-    : null;
+  const [result, settings] = await Promise.all([
+    trackingNumber ? getPublicTrackingResult(trackingNumber) : null,
+    getPublicPageSettings(),
+  ]);
 
   if (!trackingNumber || result?.notFound || !result?.shipment) {
     return (
@@ -61,7 +63,12 @@ export default async function TrackPrintPage({
 
   return (
     <main className="bg-slate-100 py-8 print:bg-white print:py-0">
-      <TrackingPrintCopy shipment={result.shipment} events={result.events} />
+      <TrackingPrintCopy
+        shipment={result.shipment}
+        events={result.events}
+        siteName={settings.siteIdentity.siteName}
+        companyAddress={settings.companyContact.address}
+      />
     </main>
   );
 }
