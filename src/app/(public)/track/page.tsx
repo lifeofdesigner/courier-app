@@ -7,7 +7,7 @@ import {
   TrackingSearchForm,
   TrackingTimeline,
 } from "@/components/tracking";
-import { applySiteNameTemplate } from "@/lib/brand-template";
+import { applySiteNameToTrackingEvents } from "@/lib/brand-template";
 import { getPublicPageSettings } from "@/lib/queries/public-pages";
 import { getPublicTrackingResult } from "@/lib/queries/tracking";
 import { createPageMetadata } from "@/lib/seo";
@@ -43,7 +43,10 @@ export default async function TrackShipmentPage({
     trackingNumber ? getPublicTrackingResult(trackingNumber) : null,
   ]);
   const trackingEvents = result?.events
-    ? applySiteNameTemplate(result.events, settings.siteIdentity.siteName)
+    ? applySiteNameToTrackingEvents(
+        result.events,
+        settings.siteIdentity.siteName,
+      )
     : [];
 
   return (

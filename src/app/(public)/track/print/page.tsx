@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import { TrackingPrintCopy } from "@/components/tracking";
-import { applySiteNameTemplate } from "@/lib/brand-template";
+import { applySiteNameToTrackingEvents } from "@/lib/brand-template";
 import { getPublicPageSettings } from "@/lib/queries/public-pages";
 import { getPublicTrackingResult } from "@/lib/queries/tracking";
 
@@ -66,7 +66,7 @@ export default async function TrackPrintPage({
     <main className="bg-slate-100 py-8 print:bg-white print:py-0">
       <TrackingPrintCopy
         shipment={result.shipment}
-        events={applySiteNameTemplate(
+        events={applySiteNameToTrackingEvents(
           result.events,
           settings.siteIdentity.siteName,
         )}
