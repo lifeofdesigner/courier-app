@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 
 import { AuthShell, LoginForm } from "@/components/auth";
 
@@ -38,14 +37,6 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       eyebrow="Customer access"
       title="Sign in to manage shipments."
       description="Access your quotes, pickup requests, and shipment activity from one secure customer dashboard."
-      footer={
-        <p className="text-center text-sm text-slate-600">
-          Operations team?{" "}
-          <Link href="/admin/login" className="font-semibold text-primary">
-            Use admin sign in
-          </Link>
-        </p>
-      }
     >
       <LoginForm
         nextPath={safeNextPath(params.next)}
