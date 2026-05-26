@@ -7,6 +7,8 @@ import {
   TrackingSearchForm,
   TrackingTimeline,
 } from "@/components/tracking";
+import { applySiteNameTemplate } from "@/lib/brand-template";
+import { getPublicPageSettings } from "@/lib/queries/public-pages";
 import { getPublicTrackingResult } from "@/lib/queries/tracking";
 import { createPageMetadata } from "@/lib/seo";
 
@@ -36,9 +38,13 @@ export default async function TrackShipmentPage({
   const trackingNumber = normalizeTrackingParam(
     params.tracking ?? params.trackingNumber,
   );
-  const result = trackingNumber
-    ? await getPublicTrackingResult(trackingNumber)
-    : null;
+  const [settings, result] = await Promise.all([
+    getPublicPageSettings(),
+    trackingNumber ? getPublicTrackingResult(trackingNumber) : null,
+  ]);
+  const trackingEvents = result?.events
+    ? applySiteNameTemplate(result.events, settings.siteIdentity.siteName)
+    : [];
 
   return (
     <main>
@@ -76,7 +82,7 @@ export default async function TrackShipmentPage({
               <div className="grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
                 <TrackingResultCard shipment={result.shipment} />
                 <TrackingTimeline
-                  events={result.events}
+                  events={trackingEvents}
                   transportMode={result.shipment.transportMode}
                 />
               </div>
