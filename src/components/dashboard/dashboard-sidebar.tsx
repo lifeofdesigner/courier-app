@@ -27,7 +27,7 @@ export function DashboardSidebar() {
   return (
     <aside className="rounded-[28px] border border-slate-200 bg-white p-5 shadow-sm">
       <div>
-        <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+        <p className="text-sm font-bold uppercase tracking-wide text-primary">
           Workspace
         </p>
         <p className="mt-2 text-sm leading-6 text-slate-600">
@@ -46,8 +46,8 @@ export function DashboardSidebar() {
                   href={item.href}
                   className={`flex items-center gap-3 rounded-2xl px-3 py-3 text-sm font-semibold transition ${
                     isActive
-                      ? "bg-[#0B1C3A] text-white"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-[#0B1C3A]"
+                      ? "bg-navy text-white"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-navy"
                   }`}
                 >
                   {Icon ? <Icon aria-hidden="true" className="h-4 w-4" /> : null}

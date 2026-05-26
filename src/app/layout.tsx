@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
 import { Inter, Plus_Jakarta_Sans } from "next/font/google";
 
 import { FooterCta, SiteFooter, SiteHeader } from "@/components/layout";
@@ -28,6 +29,19 @@ function withVersion(url: string, version: string | null) {
   const separator = url.includes("?") ? "&" : "?";
 
   return `${url}${separator}v=${encodeURIComponent(version)}`;
+}
+
+function createThemeStyle(
+  colors: Awaited<ReturnType<typeof getPublicPageSettings>>["themeColors"],
+): CSSProperties {
+  return {
+    "--primary": colors.primary,
+    "--navy": colors.navy,
+    "--background": colors.background,
+    "--text": colors.text,
+    "--muted": colors.muted,
+    "--border": colors.border,
+  } as CSSProperties;
 }
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -105,17 +119,22 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getPublicPageSettings();
+
   return (
     <html
       lang="en"
       className={`${inter.variable} ${plusJakartaSans.variable} h-full scroll-smooth`}
     >
-      <body className="min-h-full bg-background text-text antialiased">
+      <body
+        className="min-h-full bg-background text-text antialiased"
+        style={createThemeStyle(settings.themeColors)}
+      >
         <ToastProvider>
           <div className="flex min-h-screen flex-col">
             <SiteHeader />

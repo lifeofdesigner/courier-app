@@ -15,10 +15,10 @@ const initialState: AuthActionState = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15";
 
 const primaryButtonClassName =
-  "inline-flex h-12 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex h-12 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60";
 
 export function AdminLoginForm() {
   const [state, formAction, isPending] = useActionState(
@@ -37,7 +37,7 @@ export function AdminLoginForm() {
       <div className="space-y-2">
         <label
           htmlFor="admin-email"
-          className="block text-sm font-semibold text-[#0B1C3A]"
+          className="block text-sm font-semibold text-navy"
         >
           Admin email
         </label>
@@ -56,7 +56,7 @@ export function AdminLoginForm() {
       <div className="space-y-2">
         <label
           htmlFor="admin-password"
-          className="block text-sm font-semibold text-[#0B1C3A]"
+          className="block text-sm font-semibold text-navy"
         >
           Password
         </label>
@@ -81,10 +81,10 @@ export function AdminLoginForm() {
         {isPending ? "Checking access..." : "Sign in to admin"}
       </button>
       <div className="flex flex-col gap-2 text-sm text-slate-600 sm:flex-row sm:justify-between">
-        <Link href="/forgot-password" className="font-semibold text-[#FF6B2B]">
+        <Link href="/forgot-password" className="font-semibold text-primary">
           Forgot password?
         </Link>
-        <Link href="/login" className="font-semibold text-[#FF6B2B]">
+        <Link href="/login" className="font-semibold text-primary">
           Customer sign in
         </Link>
       </div>

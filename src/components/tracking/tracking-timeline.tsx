@@ -28,7 +28,7 @@ export function TrackingTimeline({
 }: TrackingTimelineProps) {
   return (
     <div className="rounded-[28px] border border-slate-200 bg-slate-50/60 p-6">
-      <h2 className="text-xl font-bold tracking-tight text-[#0B1C3A]">
+      <h2 className="text-xl font-bold tracking-tight text-navy">
         Tracking timeline
       </h2>
       <div className="mt-6 space-y-5">
@@ -40,13 +40,13 @@ export function TrackingTimeline({
 
             return (
               <div key={event.id} className="flex gap-4">
-                <span className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-[#FF6B2B] ring-1 ring-slate-200">
+                <span className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-primary ring-1 ring-slate-200">
                   <CheckCircle2 aria-hidden="true" className="h-5 w-5" />
                 </span>
                 <div className="min-w-0 flex-1 rounded-2xl border border-slate-200 bg-white p-4">
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
-                      <p className="font-semibold text-[#0B1C3A]">
+                      <p className="font-semibold text-navy">
                         {statusMeta.label}
                       </p>
                       <p className="mt-1 text-sm text-slate-600">
@@ -64,7 +64,7 @@ export function TrackingTimeline({
                     </p>
                   ) : null}
                   {event.locationName ? (
-                    <p className="mt-2 text-sm font-semibold text-[#0B1C3A]">
+                    <p className="mt-2 text-sm font-semibold text-navy">
                       {event.locationName}
                     </p>
                   ) : null}

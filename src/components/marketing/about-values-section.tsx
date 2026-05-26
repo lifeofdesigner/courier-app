@@ -20,10 +20,10 @@ export function AboutValuesSection({
   return (
     <section>
       <div className="max-w-3xl">
-        <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+        <p className="text-sm font-bold uppercase tracking-wide text-primary">
           How we operate
         </p>
-        <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#0B1C3A]">
+        <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-navy">
           {title}
         </h2>
         <p className="mt-4 text-base leading-8 text-slate-600">
@@ -39,8 +39,8 @@ export function AboutValuesSection({
               key={value.title}
               className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm"
             >
-              <Icon aria-hidden="true" className="h-6 w-6 text-[#FF6B2B]" />
-              <h3 className="mt-5 font-heading text-xl font-bold tracking-tight text-[#0B1C3A]">
+              <Icon aria-hidden="true" className="h-6 w-6 text-primary" />
+              <h3 className="mt-5 font-heading text-xl font-bold tracking-tight text-navy">
                 {value.title}
               </h3>
               <p className="mt-3 text-sm leading-7 text-slate-600">

@@ -1,5 +1,6 @@
 import { BookingConfirmationEmail } from "@/components/email";
 import { getSiteUrl } from "@/lib/env";
+import { getPublicPageSettings } from "@/lib/queries/public-pages";
 import {
   getResendFromEmail,
   getResendServerClient,
@@ -23,6 +24,7 @@ export async function sendBookingEmail(booking: BookingRecord) {
   }
 
   const transportMode = getTransportModeMeta(booking.transportMode);
+  const settings = await getPublicPageSettings();
   const modeCopy = getTransportModePublicCopy(booking.transportMode);
   const serviceType = formatModeAwareServiceType(
     booking.serviceType,
@@ -46,6 +48,8 @@ export async function sendBookingEmail(booking: BookingRecord) {
         amountDue: booking.amountDue,
         currency: booking.currency,
         paymentUrl: `${getSiteUrl()}/book/cancel?bookingId=${booking.id}`,
+        siteName: settings.siteIdentity.siteName,
+        themeColors: settings.themeColors,
       }),
     });
 

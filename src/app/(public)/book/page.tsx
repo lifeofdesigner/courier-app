@@ -81,10 +81,10 @@ export default async function BookPickupPage({
       <section className="py-16 lg:py-20">
         <Container>
           <div>
-            <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+            <p className="text-sm font-bold uppercase tracking-wide text-primary">
               Book pickup
             </p>
-            <h1 className="mt-3 font-heading text-4xl font-bold tracking-tight text-[#0B1C3A] lg:text-5xl">
+            <h1 className="mt-3 font-heading text-4xl font-bold tracking-tight text-navy lg:text-5xl">
               Book the right air, road, or freight movement.
             </h1>
             <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600">

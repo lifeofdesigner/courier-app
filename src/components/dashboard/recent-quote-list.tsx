@@ -41,7 +41,7 @@ export function RecentQuoteList({ quotes }: RecentQuoteListProps) {
           className="flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
         >
           <div>
-            <p className="font-semibold text-[#0B1C3A]">
+            <p className="font-semibold text-navy">
               {quote.originCity}, {quote.originCountry} to{" "}
               {quote.destinationCity}, {quote.destinationCountry}
             </p>
@@ -51,12 +51,12 @@ export function RecentQuoteList({ quotes }: RecentQuoteListProps) {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <span className="text-sm font-bold text-[#0B1C3A]">
+            <span className="text-sm font-bold text-navy">
               {formatMoney(quote.total, quote.currency)}
             </span>
             <Link
               href={`/book?quoteId=${quote.id}`}
-              className="inline-flex h-9 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50"
+              className="inline-flex h-9 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-navy transition hover:border-slate-300 hover:bg-slate-50"
             >
               Book
             </Link>

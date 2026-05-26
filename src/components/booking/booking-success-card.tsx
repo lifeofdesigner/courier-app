@@ -31,8 +31,8 @@ export function BookingSuccessCard({ booking }: BookingSuccessCardProps) {
         as {booking.status}. Payment is required before the {modeMeta.label.toLowerCase()}{" "}
         shipment order and label are created.
       </p>
-      <div className="mt-5 rounded-[24px] border border-[#0B1C3A]/10 bg-[#0B1C3A] p-6 text-white shadow-sm">
-        <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+      <div className="mt-5 rounded-[24px] border border-navy/10 bg-navy p-6 text-white shadow-sm">
+        <p className="text-sm font-bold uppercase tracking-wide text-primary">
           {modeCopy.paymentSummaryTitle}
         </p>
         <p className="mt-3 text-3xl font-bold tracking-tight">

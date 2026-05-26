@@ -13,6 +13,7 @@ const settingSchema = z.object({
     "supportHours",
     "socialLinks",
     "footerNotice",
+    "themeColors",
   ]),
 });
 
@@ -26,6 +27,12 @@ function getOptionalString(formData: FormData, key: string) {
   const value = getString(formData, key).trim();
 
   return value.length > 0 ? value : "";
+}
+
+function getHexColor(formData: FormData, key: string) {
+  const value = getString(formData, key).trim();
+
+  return /^#[0-9a-f]{6}$/i.test(value) ? value : "";
 }
 
 function getSettingPayload(formType: z.infer<typeof settingSchema>["formType"], formData: FormData) {
@@ -60,6 +67,18 @@ function getSettingPayload(formType: z.infer<typeof settingSchema>["formType"], 
         key: "footer_notice",
         value: {
           text: getString(formData, "text").trim(),
+        },
+      };
+    case "themeColors":
+      return {
+        key: "theme_colors",
+        value: {
+          primary: getHexColor(formData, "primary"),
+          navy: getHexColor(formData, "navy"),
+          background: getHexColor(formData, "background"),
+          text: getHexColor(formData, "text"),
+          muted: getHexColor(formData, "muted"),
+          border: getHexColor(formData, "border"),
         },
       };
   }

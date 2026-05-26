@@ -36,10 +36,10 @@ export default async function BlogPage() {
       <section className="py-16 lg:py-20">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl">
-            <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+            <p className="text-sm font-bold uppercase tracking-wide text-primary">
               Latest articles
             </p>
-            <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#0B1C3A]">
+            <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-navy">
               Guidance for shippers, operators, and support teams.
             </h2>
           </div>

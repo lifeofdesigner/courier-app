@@ -74,7 +74,7 @@ const variantStyles: Record<
     icon: Info,
     title: "Update",
     className: "border-slate-200 bg-white text-slate-950",
-    iconClassName: "text-[#0B1C3A]",
+    iconClassName: "text-navy",
   },
 };
 

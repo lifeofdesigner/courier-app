@@ -15,7 +15,7 @@ export function FAQList({ groups }: FAQListProps) {
     <div className="space-y-8">
       {groups.map((group) => (
         <section key={group.title}>
-          <h2 className="font-heading text-3xl font-bold tracking-tight text-[#0B1C3A]">
+          <h2 className="font-heading text-3xl font-bold tracking-tight text-navy">
             {group.title}
           </h2>
           <div className="mt-5 space-y-4">
@@ -24,9 +24,9 @@ export function FAQList({ groups }: FAQListProps) {
                 key={faq.question}
                 className="group rounded-[24px] border border-slate-200 bg-white shadow-sm"
               >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-6 text-base font-bold text-[#0B1C3A]">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-6 text-base font-bold text-navy">
                   {faq.question}
-                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-50 text-[#FF6B2B] transition group-open:rotate-45">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-slate-50 text-primary transition group-open:rotate-45">
                     +
                   </span>
                 </summary>

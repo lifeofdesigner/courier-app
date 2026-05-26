@@ -19,10 +19,10 @@ export function BlogHero({
     <section className="border-b border-slate-200 bg-white py-16 lg:py-20">
       <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl">
-          <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+          <p className="text-sm font-bold uppercase tracking-wide text-primary">
             {eyebrow}
           </p>
-          <h1 className="mt-3 font-heading text-4xl font-bold tracking-tight text-[#0B1C3A] lg:text-5xl">
+          <h1 className="mt-3 font-heading text-4xl font-bold tracking-tight text-navy lg:text-5xl">
             {title}
           </h1>
           {description ? (

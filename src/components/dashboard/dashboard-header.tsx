@@ -21,11 +21,11 @@ export function DashboardHeader({
       <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div>
           {userName ? (
-            <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+            <p className="text-sm font-bold uppercase tracking-wide text-primary">
               Signed in as {userName}
             </p>
           ) : null}
-          <h1 className="mt-2 font-heading text-3xl font-bold tracking-tight text-[#0B1C3A] sm:text-4xl">
+          <h1 className="mt-2 font-heading text-3xl font-bold tracking-tight text-navy sm:text-4xl">
             {title}
           </h1>
           <p className="mt-2 max-w-2xl text-sm leading-7 text-slate-600 sm:text-base">
@@ -35,7 +35,7 @@ export function DashboardHeader({
         {primaryAction ? (
           <Link
             href={primaryAction.href}
-            className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+            className="inline-flex h-11 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20"
           >
             {primaryAction.label}
           </Link>

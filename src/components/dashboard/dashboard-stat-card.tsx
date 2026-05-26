@@ -18,12 +18,12 @@ export function DashboardStatCard({
       <div className="flex items-start justify-between gap-4">
         <p className="text-sm font-medium text-slate-500">{label}</p>
         {icon ? (
-          <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-[#FF6B2B]/10 text-[#FF6B2B]">
+          <span className="flex h-9 w-9 items-center justify-center rounded-2xl bg-primary/10 text-primary">
             {icon}
           </span>
         ) : null}
       </div>
-      <p className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#0B1C3A]">
+      <p className="mt-3 font-heading text-3xl font-bold tracking-tight text-navy">
         {value}
       </p>
       {description ? (

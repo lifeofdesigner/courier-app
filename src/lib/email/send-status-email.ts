@@ -1,5 +1,6 @@
 import { TrackingStatusEmail } from "@/components/email";
 import { getSiteUrl } from "@/lib/env";
+import { getPublicPageSettings } from "@/lib/queries/public-pages";
 import {
   getResendFromEmail,
   getResendServerClient,
@@ -91,6 +92,7 @@ export async function sendStatusEmail({
     typedBooking.sender_email,
     typedBooking.recipient_email,
   ].filter(Boolean) as string[];
+  const settings = await getPublicPageSettings();
 
   try {
     await resend.emails.send({
@@ -105,6 +107,8 @@ export async function sendStatusEmail({
         description,
         transportMode: typedOrder.transport_mode,
         trackingUrl: `${getSiteUrl()}/track?tracking=${typedOrder.tracking_number}`,
+        siteName: settings.siteIdentity.siteName,
+        themeColors: settings.themeColors,
       }),
     });
 

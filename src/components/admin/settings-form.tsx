@@ -1,8 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import type { ReactNode } from "react";
-import { Mail, Share2, Clock3, FileText } from "lucide-react";
+import { Mail, Share2, Clock3, FileText, Palette } from "lucide-react";
 
 import { saveFriendlySiteSettingAction } from "@/app/(admin)/admin/settings/actions";
 import { useActionToast } from "@/lib/forms/use-action-toast";
@@ -27,6 +27,15 @@ export type SocialLinksSettings = {
 
 export type FooterNoticeSettings = {
   text: string;
+};
+
+export type ThemeColorsSettings = {
+  primary: string;
+  navy: string;
+  background: string;
+  text: string;
+  muted: string;
+  border: string;
 };
 
 const initialState: AdminActionState = {
@@ -82,6 +91,46 @@ function TextInput({
         placeholder={placeholder}
         className={inputClassName}
       />
+    </div>
+  );
+}
+
+function ColorInput({
+  label,
+  name,
+  defaultValue,
+}: {
+  label: string;
+  name: string;
+  defaultValue: string;
+}) {
+  const [value, setValue] = useState(defaultValue);
+  const colorValue = /^#[0-9a-f]{6}$/i.test(value) ? value : defaultValue;
+
+  return (
+    <div className="space-y-2">
+      <label
+        htmlFor={name}
+        className="block text-sm font-semibold text-[#2b1d16]"
+      >
+        {label}
+      </label>
+      <div className="flex gap-3">
+        <input
+          id={name}
+          type="color"
+          value={colorValue}
+          onChange={(event) => setValue(event.target.value)}
+          className="h-12 w-14 shrink-0 rounded-2xl border border-slate-200 bg-white p-1"
+        />
+        <input
+          name={name}
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          pattern="^#[0-9A-Fa-f]{6}$"
+          className={inputClassName}
+        />
+      </div>
     </div>
   );
 }
@@ -278,6 +327,48 @@ export function FooterNoticeSettingsForm({
           className={`${textareaClassName} mt-2`}
         />
       </div>
+    </SettingsCard>
+  );
+}
+
+export function ThemeColorsSettingsForm({
+  settings,
+}: {
+  settings: ThemeColorsSettings;
+}) {
+  return (
+    <SettingsCard
+      formType="themeColors"
+      title="Theme colors"
+      description="Brand colors applied across the public website for reusable client installs."
+      icon={<Palette aria-hidden="true" className="h-5 w-5" />}
+    >
+      <ColorInput
+        label="Primary accent"
+        name="primary"
+        defaultValue={settings.primary}
+      />
+      <ColorInput
+        label="Dark brand"
+        name="navy"
+        defaultValue={settings.navy}
+      />
+      <ColorInput
+        label="Page background"
+        name="background"
+        defaultValue={settings.background}
+      />
+      <ColorInput label="Body text" name="text" defaultValue={settings.text} />
+      <ColorInput
+        label="Muted text"
+        name="muted"
+        defaultValue={settings.muted}
+      />
+      <ColorInput
+        label="Border color"
+        name="border"
+        defaultValue={settings.border}
+      />
     </SettingsCard>
   );
 }

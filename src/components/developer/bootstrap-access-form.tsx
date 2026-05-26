@@ -12,10 +12,10 @@ const initialState: BootstrapAccessActionState = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15";
 
 const primaryButtonClassName =
-  "inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex h-11 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60";
 
 export function BootstrapAccessForm() {
   const [state, formAction, isPending] = useActionState(
@@ -33,7 +33,7 @@ export function BootstrapAccessForm() {
       className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8"
     >
       <div>
-        <h2 className="font-heading text-2xl font-bold tracking-tight text-[#0B1C3A]">
+        <h2 className="font-heading text-2xl font-bold tracking-tight text-navy">
           Verify bootstrap access
         </h2>
         <p className="mt-2 text-sm leading-7 text-slate-600">
@@ -52,7 +52,7 @@ export function BootstrapAccessForm() {
         <div className="space-y-2">
           <label
             htmlFor="bootstrap-secret"
-            className="block text-sm font-semibold text-[#0B1C3A]"
+            className="block text-sm font-semibold text-navy"
           >
             Bootstrap secret
           </label>

@@ -20,7 +20,7 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
     <article className="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
       <Link href={`/blog/${post.slug}`} className="block h-full">
         <div
-          className="flex min-h-48 items-end bg-[#0B1C3A] p-6 text-white"
+          className="flex min-h-48 items-end bg-navy p-6 text-white"
           style={
             post.coverImageUrl
               ? {
@@ -38,7 +38,7 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
               </span>
             ) : null}
             {isFeatured ? (
-              <p className="mt-4 text-sm font-semibold text-[#FFB38E]">
+              <p className="mt-4 text-sm font-semibold text-primary/80">
                 Featured article
               </p>
             ) : null}
@@ -51,8 +51,8 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
           <h2
             className={
               isFeatured
-                ? "mt-3 font-heading text-3xl font-bold tracking-tight text-[#0B1C3A]"
-                : "mt-3 font-heading text-xl font-bold tracking-tight text-[#0B1C3A]"
+                ? "mt-3 font-heading text-3xl font-bold tracking-tight text-navy"
+                : "mt-3 font-heading text-xl font-bold tracking-tight text-navy"
             }
           >
             {post.title}
@@ -60,7 +60,7 @@ export function BlogCard({ post, isFeatured = false }: BlogCardProps) {
           <p className="mt-3 text-sm leading-7 text-slate-600">
             {post.excerpt}
           </p>
-          <span className="mt-5 inline-flex text-sm font-semibold text-[#FF6B2B]">
+          <span className="mt-5 inline-flex text-sm font-semibold text-primary">
             Read article
           </span>
         </div>

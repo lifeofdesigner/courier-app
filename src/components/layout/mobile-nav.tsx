@@ -20,13 +20,13 @@ const mobileLinkClasses =
   "flex items-center justify-between rounded-xl px-3 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 hover:text-navy focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary";
 
 const secondaryActionButtonClasses =
-  "inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200";
+  "inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-navy transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200";
 
 const navyAccountButtonClasses =
-  "inline-flex h-11 items-center justify-center rounded-2xl bg-[#0B1C3A] px-5 text-sm font-semibold text-white transition hover:bg-[#08142c] focus:outline-none focus:ring-4 focus:ring-[#0B1C3A]/20";
+  "inline-flex h-11 items-center justify-center rounded-2xl bg-navy px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-navy/20";
 
 const primaryOrangeButtonClasses =
-  "inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20";
+  "inline-flex h-11 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20";
 
 type MobileNavProps = {
   accountAction: NavItem;
@@ -101,7 +101,7 @@ export function MobileNav({ accountAction }: MobileNavProps) {
               href={accountAction.href}
               onClick={() => setIsOpen(false)}
               className={cn(navyAccountButtonClasses, "w-full")}
-              activeClassName="ring-4 ring-[#0B1C3A]/20"
+              activeClassName="ring-4 ring-navy/20"
             >
               <CircleUserRound aria-hidden="true" className="mr-2 h-4 w-4" />
               {accountAction.label}

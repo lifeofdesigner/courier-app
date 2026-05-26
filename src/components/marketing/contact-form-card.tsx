@@ -10,10 +10,10 @@ type ContactFormCardProps = {
 export function ContactFormCard({ settings }: ContactFormCardProps) {
   return (
     <section className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
-      <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+      <p className="text-sm font-bold uppercase tracking-wide text-primary">
         Contact request
       </p>
-      <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#0B1C3A]">
+      <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-navy">
         Send shipment details to support.
       </h2>
       <p className="mt-4 text-base leading-8 text-slate-600">
@@ -48,7 +48,7 @@ export function ContactFormCard({ settings }: ContactFormCardProps) {
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <a
             href={`mailto:${settings.companyContact.email}`}
-            className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+            className="inline-flex h-12 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20"
           >
             <Mail aria-hidden="true" className="mr-2 h-4 w-4" />
             Email support

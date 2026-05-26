@@ -15,7 +15,7 @@ const initialState: DashboardActionState = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15";
 
 function FieldError({ errors }: { errors?: string[] }) {
   return errors?.[0] ? (
@@ -36,7 +36,7 @@ function TextInput({
 }) {
   return (
     <div className="space-y-2">
-      <label htmlFor={name} className="block text-sm font-semibold text-[#0B1C3A]">
+      <label htmlFor={name} className="block text-sm font-semibold text-navy">
         {label}
       </label>
       <input id={name} name={name} type={type} className={inputClassName} />
@@ -63,7 +63,7 @@ export function AddressForm() {
       className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"
     >
       <div>
-        <h2 className="text-xl font-bold tracking-tight text-[#0B1C3A]">
+        <h2 className="text-xl font-bold tracking-tight text-navy">
           Add saved address
         </h2>
         <p className="mt-2 text-sm leading-7 text-slate-600">
@@ -117,7 +117,7 @@ export function AddressForm() {
       <button
         type="submit"
         disabled={isPending}
-        className="mt-6 inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+        className="mt-6 inline-flex h-11 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20"
       >
         {isPending ? "Saving..." : "Save address"}
       </button>

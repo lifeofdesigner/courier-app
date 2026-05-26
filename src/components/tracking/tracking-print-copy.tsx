@@ -94,14 +94,14 @@ export function TrackingPrintCopy({
       <div className="mb-5 flex flex-wrap justify-end gap-3 print:hidden">
         <Link
           href={`/track?tracking=${encodeURIComponent(shipment.trackingNumber)}`}
-          className="inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
+          className="inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-navy transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
         >
           Back to tracking
         </Link>
         <button
           type="button"
           onClick={() => window.print()}
-          className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+          className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-primary px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20"
         >
           <Printer aria-hidden="true" className="h-4 w-4" />
           Download / print copy
@@ -111,10 +111,10 @@ export function TrackingPrintCopy({
       <section className="rounded-[24px] border-2 border-slate-900 bg-white p-6 print:rounded-none">
         <header className="flex flex-col gap-5 border-b-2 border-slate-900 pb-5 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#FF6B2B]">
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">
               {siteName}
             </p>
-            <h1 className="mt-2 text-3xl font-bold tracking-tight text-[#0B1C3A]">
+            <h1 className="mt-2 text-3xl font-bold tracking-tight text-navy">
               Tracking Copy
             </h1>
             <p className="mt-2 text-sm leading-6 text-slate-600">
@@ -125,7 +125,7 @@ export function TrackingPrintCopy({
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
               Tracking number
             </p>
-            <p className="mt-2 text-2xl font-bold tracking-[0.1em] text-[#0B1C3A]">
+            <p className="mt-2 text-2xl font-bold tracking-[0.1em] text-navy">
               {shipment.trackingNumber}
             </p>
             <div className="mt-3">
@@ -139,7 +139,7 @@ export function TrackingPrintCopy({
 
         <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_0.8fr]">
           <div>
-            <h2 className="text-lg font-bold tracking-tight text-[#0B1C3A]">
+            <h2 className="text-lg font-bold tracking-tight text-navy">
               Shipment details
             </h2>
             <dl className="mt-3 grid gap-x-6 sm:grid-cols-2">
@@ -171,7 +171,7 @@ export function TrackingPrintCopy({
           </div>
 
           <aside className="rounded-2xl border border-slate-200 p-5">
-            <h2 className="text-lg font-bold tracking-tight text-[#0B1C3A]">
+            <h2 className="text-lg font-bold tracking-tight text-navy">
               Copy information
             </h2>
             <dl className="mt-3">
@@ -187,7 +187,7 @@ export function TrackingPrintCopy({
         </div>
 
         <section className="mt-8">
-          <h2 className="text-lg font-bold tracking-tight text-[#0B1C3A]">
+          <h2 className="text-lg font-bold tracking-tight text-navy">
             Tracking timeline
           </h2>
           {events.length > 0 ? (
@@ -204,7 +204,7 @@ export function TrackingPrintCopy({
                   >
                     <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                       <div>
-                        <p className="font-bold text-[#0B1C3A]">
+                        <p className="font-bold text-navy">
                           {event.label || eventStatus.label}
                         </p>
                         {event.description ? (

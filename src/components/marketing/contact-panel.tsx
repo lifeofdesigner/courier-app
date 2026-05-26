@@ -16,10 +16,10 @@ function phoneHref(phone: string) {
 export function ContactPanel({ settings }: ContactPanelProps) {
   return (
     <aside className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
-      <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+      <p className="text-sm font-bold uppercase tracking-wide text-primary">
         Operations support
       </p>
-      <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#0B1C3A]">
+      <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-navy">
         Reach a team that understands courier timing.
       </h2>
       <p className="mt-4 text-base leading-8 text-slate-600">
@@ -32,9 +32,9 @@ export function ContactPanel({ settings }: ContactPanelProps) {
           href={phoneHref(settings.companyContact.phone)}
           className="flex gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300 hover:bg-slate-50"
         >
-          <Phone aria-hidden="true" className="mt-1 h-5 w-5 text-[#FF6B2B]" />
+          <Phone aria-hidden="true" className="mt-1 h-5 w-5 text-primary" />
           <span>
-            <strong className="block text-[#0B1C3A]">Phone</strong>
+            <strong className="block text-navy">Phone</strong>
             {settings.companyContact.phone}
           </span>
         </a>
@@ -42,23 +42,23 @@ export function ContactPanel({ settings }: ContactPanelProps) {
           href={`mailto:${settings.companyContact.email}`}
           className="flex gap-3 rounded-2xl border border-slate-200 p-4 transition hover:border-slate-300 hover:bg-slate-50"
         >
-          <Mail aria-hidden="true" className="mt-1 h-5 w-5 text-[#FF6B2B]" />
+          <Mail aria-hidden="true" className="mt-1 h-5 w-5 text-primary" />
           <span>
-            <strong className="block text-[#0B1C3A]">Email</strong>
+            <strong className="block text-navy">Email</strong>
             {settings.companyContact.email}
           </span>
         </a>
         <p className="flex gap-3 rounded-2xl border border-slate-200 p-4">
-          <Clock3 aria-hidden="true" className="mt-1 h-5 w-5 text-[#FF6B2B]" />
+          <Clock3 aria-hidden="true" className="mt-1 h-5 w-5 text-primary" />
           <span>
-            <strong className="block text-[#0B1C3A]">Hours</strong>
+            <strong className="block text-navy">Hours</strong>
             {settings.supportHours.label}
           </span>
         </p>
         <p className="flex gap-3 rounded-2xl border border-slate-200 p-4">
-          <MapPin aria-hidden="true" className="mt-1 h-5 w-5 text-[#FF6B2B]" />
+          <MapPin aria-hidden="true" className="mt-1 h-5 w-5 text-primary" />
           <span>
-            <strong className="block text-[#0B1C3A]">Office</strong>
+            <strong className="block text-navy">Office</strong>
             {settings.companyContact.address}
           </span>
         </p>
@@ -67,7 +67,7 @@ export function ContactPanel({ settings }: ContactPanelProps) {
       <p className="mt-6 flex gap-3 rounded-2xl bg-slate-50 p-4 text-sm leading-7 text-slate-600">
         <ShieldCheck
           aria-hidden="true"
-          className="mt-1 h-5 w-5 shrink-0 text-[#FF6B2B]"
+          className="mt-1 h-5 w-5 shrink-0 text-primary"
         />
         {settings.footerNotice.text}
       </p>

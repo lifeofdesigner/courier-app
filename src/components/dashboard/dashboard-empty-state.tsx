@@ -17,10 +17,10 @@ export function DashboardEmptyState({
 }: DashboardEmptyStateProps) {
   return (
     <div className="rounded-[28px] border border-dashed border-slate-300 bg-slate-50/60 p-8 text-center">
-      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-[#FF6B2B] shadow-sm">
+      <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-primary shadow-sm">
         <Inbox aria-hidden="true" className="h-6 w-6" />
       </div>
-      <h3 className="mt-4 text-lg font-bold tracking-tight text-[#0B1C3A]">
+      <h3 className="mt-4 text-lg font-bold tracking-tight text-navy">
         {title}
       </h3>
       <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-slate-600">
@@ -29,7 +29,7 @@ export function DashboardEmptyState({
       {action ? (
         <Link
           href={action.href}
-          className="mt-5 inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+          className="mt-5 inline-flex h-11 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20"
         >
           {action.label}
         </Link>

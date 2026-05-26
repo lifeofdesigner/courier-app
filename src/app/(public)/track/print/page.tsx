@@ -44,7 +44,7 @@ export default async function TrackPrintPage({
       <main className="bg-slate-50 py-16">
         <div className="mx-auto max-w-3xl px-6">
           <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
-            <h1 className="text-3xl font-bold tracking-tight text-[#0B1C3A]">
+            <h1 className="text-3xl font-bold tracking-tight text-navy">
               Tracking copy not available
             </h1>
             <p className="mt-4 text-base leading-8 text-slate-600">
@@ -52,7 +52,7 @@ export default async function TrackPrintPage({
             </p>
             <Link
               href="/track"
-              className="mt-6 inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+              className="mt-6 inline-flex h-11 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20"
             >
               Track shipment
             </Link>

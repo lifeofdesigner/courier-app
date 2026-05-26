@@ -15,12 +15,14 @@ import {
   FooterNoticeSettingsForm,
   SocialLinksSettingsForm,
   SupportHoursSettingsForm,
+  ThemeColorsSettingsForm,
   type CompanyContactSettings,
   type FooterNoticeSettings,
   type SocialLinksSettings,
   type SupportHoursSettings,
+  type ThemeColorsSettings,
 } from "@/components/admin";
-import { company, socialLinks } from "@/constants/site";
+import { brandColors, company, socialLinks } from "@/constants/site";
 import { getLaunchEnvStatus } from "@/lib/env";
 import { getAdminSiteSettings } from "@/lib/queries/admin-settings";
 import type { SiteSettingRow } from "@/types/admin";
@@ -34,6 +36,7 @@ const requiredSettingKeys = [
   "support_hours",
   "social_links",
   "footer_notice",
+  "theme_colors",
 ];
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -42,6 +45,12 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 function readString(value: unknown, fallback: string) {
   return typeof value === "string" ? value : fallback;
+}
+
+function readHexColor(value: unknown, fallback: string) {
+  return typeof value === "string" && /^#[0-9a-f]{6}$/i.test(value)
+    ? value
+    : fallback;
 }
 
 function getSettingRecord(settings: SiteSettingRow[], key: string) {
@@ -55,6 +64,7 @@ function getFriendlySettings(settings: SiteSettingRow[]) {
   const supportHours = getSettingRecord(settings, "support_hours");
   const social = getSettingRecord(settings, "social_links");
   const footerNotice = getSettingRecord(settings, "footer_notice");
+  const themeColors = getSettingRecord(settings, "theme_colors");
 
   return {
     companyContact: {
@@ -73,6 +83,17 @@ function getFriendlySettings(settings: SiteSettingRow[]) {
     footerNotice: {
       text: readString(footerNotice.text, company.trustStatement),
     } satisfies FooterNoticeSettings,
+    themeColors: {
+      primary: readHexColor(themeColors.primary, brandColors.primary),
+      navy: readHexColor(themeColors.navy, brandColors.navy),
+      background: readHexColor(
+        themeColors.background,
+        brandColors.background,
+      ),
+      text: readHexColor(themeColors.text, brandColors.text),
+      muted: readHexColor(themeColors.muted, brandColors.muted),
+      border: readHexColor(themeColors.border, brandColors.border),
+    } satisfies ThemeColorsSettings,
   };
 }
 
@@ -135,6 +156,7 @@ export default async function AdminSettingsPage() {
           <SupportHoursSettingsForm settings={friendlySettings.supportHours} />
           <SocialLinksSettingsForm settings={friendlySettings.socialLinks} />
           <FooterNoticeSettingsForm settings={friendlySettings.footerNotice} />
+          <ThemeColorsSettingsForm settings={friendlySettings.themeColors} />
         </div>
       </AdminSectionCard>
 

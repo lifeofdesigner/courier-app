@@ -12,7 +12,7 @@ export function HomepageWorkflow({ content }: HomepageWorkflowProps) {
   }
 
   return (
-    <section className="overflow-hidden bg-[#071328] py-16 text-white sm:py-20">
+    <section className="overflow-hidden bg-navy py-16 text-white sm:py-20">
       <Container className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
         <div>
           <p className="text-sm font-bold uppercase tracking-[0.16em] text-primary">
@@ -59,7 +59,7 @@ export function HomepageWorkflow({ content }: HomepageWorkflowProps) {
               style={{ backgroundImage: `url(${content.image.src})` }}
             />
           ) : null}
-          <div className="absolute inset-0 bg-gradient-to-t from-[#071328] via-[#071328]/35 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-navy via-navy/35 to-transparent" />
           <div className="absolute left-6 top-6 border border-white/15 bg-white/95 px-5 py-4 text-navy shadow-xl">
             <p className="text-xs font-bold uppercase tracking-[0.14em] text-primary">
               {content.badgeLabel}
@@ -68,7 +68,7 @@ export function HomepageWorkflow({ content }: HomepageWorkflowProps) {
               {content.badgeValue}
             </p>
           </div>
-          <div className="absolute inset-x-6 bottom-6 border border-white/15 bg-[#071328]/85 p-5 backdrop-blur">
+          <div className="absolute inset-x-6 bottom-6 border border-white/15 bg-navy/85 p-5 backdrop-blur">
             <p className="text-sm font-bold uppercase tracking-[0.16em] text-primary">
               Connected workflow
             </p>

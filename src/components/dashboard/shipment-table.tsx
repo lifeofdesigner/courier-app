@@ -18,7 +18,7 @@ export type ShipmentTableProps = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15";
 
 function formatDate(value: string | null) {
   if (!value) {
@@ -119,7 +119,7 @@ export function ShipmentTable({ shipments }: ShipmentTableProps) {
                     <td className="px-4 py-4 text-sm text-slate-700">
                       <Link
                         href={`/track?tracking=${shipment.trackingNumber}`}
-                        className="font-semibold text-[#0B1C3A] transition hover:text-[#FF6B2B]"
+                        className="font-semibold text-navy transition hover:text-primary"
                       >
                         {shipment.trackingNumber}
                       </Link>
@@ -153,7 +153,7 @@ export function ShipmentTable({ shipments }: ShipmentTableProps) {
                       {shipment.labelUrl ? (
                         <Link
                           href={shipment.labelUrl}
-                          className="inline-flex h-9 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-[#0B1C3A] transition hover:bg-slate-50"
+                          className="inline-flex h-9 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-navy transition hover:bg-slate-50"
                         >
                           Print
                         </Link>

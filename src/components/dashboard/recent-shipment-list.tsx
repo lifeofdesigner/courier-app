@@ -41,7 +41,7 @@ export function RecentShipmentList({ shipments }: RecentShipmentListProps) {
           <div>
             <Link
               href={`/track?tracking=${shipment.trackingNumber}`}
-              className="font-semibold text-[#0B1C3A] transition hover:text-[#FF6B2B]"
+              className="font-semibold text-navy transition hover:text-primary"
             >
               {shipment.trackingNumber}
             </Link>

@@ -107,16 +107,16 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
               <div>
-                <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+                <p className="text-sm font-bold uppercase tracking-wide text-primary">
                   Related reading
                 </p>
-                <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#0B1C3A]">
+                <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-navy">
                   More courier guidance
                 </h2>
               </div>
               <Link
                 href="/blog"
-                className="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
+                className="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-navy transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
               >
                 View all articles
               </Link>

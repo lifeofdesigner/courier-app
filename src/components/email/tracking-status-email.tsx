@@ -1,4 +1,3 @@
-import { company } from "@/constants/site";
 import { getShipmentStatusMeta } from "@/types/shipment";
 
 export type TrackingStatusEmailProps = {
@@ -9,6 +8,12 @@ export type TrackingStatusEmailProps = {
   description?: string | null;
   transportMode?: string | null;
   trackingUrl: string;
+  siteName: string;
+  themeColors: {
+    primary: string;
+    navy: string;
+    text: string;
+  };
 };
 
 export function TrackingStatusEmail({
@@ -19,12 +24,14 @@ export function TrackingStatusEmail({
   description,
   transportMode,
   trackingUrl,
+  siteName,
+  themeColors,
 }: TrackingStatusEmailProps) {
   const statusMeta = getShipmentStatusMeta(status, { mode: transportMode });
 
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", color: "#0F172A" }}>
-      <h1 style={{ color: "#0B1C3A" }}>Shipment status updated</h1>
+    <div style={{ fontFamily: "Arial, sans-serif", color: themeColors.text }}>
+      <h1 style={{ color: themeColors.navy }}>Shipment status updated</h1>
       <p>Hello,</p>
       <p>
         The shipment for {recipientName} is now marked as{" "}
@@ -36,11 +43,14 @@ export function TrackingStatusEmail({
       {description ? <p>{description}</p> : null}
       <p>Tracking number: {trackingNumber}</p>
       <p>
-        <a href={trackingUrl} style={{ color: "#FF6B2B", fontWeight: 700 }}>
+        <a
+          href={trackingUrl}
+          style={{ color: themeColors.primary, fontWeight: 700 }}
+        >
           View tracking
         </a>
       </p>
-      <p>{company.name}</p>
+      <p>{siteName}</p>
     </div>
   );
 }

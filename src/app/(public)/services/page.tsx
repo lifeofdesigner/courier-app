@@ -64,10 +64,10 @@ export default async function ServicesPage() {
       <section className="py-16 lg:py-20">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
-            <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+            <p className="text-sm font-bold uppercase tracking-wide text-primary">
               {content.hero.eyebrow}
             </p>
-            <h1 className="mt-3 font-heading text-4xl font-bold tracking-tight text-[#0B1C3A] lg:text-5xl">
+            <h1 className="mt-3 font-heading text-4xl font-bold tracking-tight text-navy lg:text-5xl">
               {content.hero.title}
             </h1>
             <p className="mt-4 text-base leading-8 text-slate-600">
@@ -77,14 +77,14 @@ export default async function ServicesPage() {
               <Link
                 href={content.hero.primaryCta.href}
                 aria-label={content.hero.primaryCta.ariaLabel}
-                className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+                className="inline-flex h-12 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20"
               >
                 {content.hero.primaryCta.label}
               </Link>
               <Link
                 href={content.hero.secondaryCta.href}
                 aria-label={content.hero.secondaryCta.ariaLabel}
-                className="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
+                className="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-navy transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
               >
                 {content.hero.secondaryCta.label}
               </Link>
@@ -110,10 +110,10 @@ export default async function ServicesPage() {
 
           <section className="mt-12">
             <div className="max-w-3xl">
-              <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+              <p className="text-sm font-bold uppercase tracking-wide text-primary">
                 Service support
               </p>
-              <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#0B1C3A]">
+              <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-navy">
                 Details that reduce delivery friction.
               </h2>
               <p className="mt-4 text-base leading-8 text-slate-600">
@@ -134,9 +134,9 @@ export default async function ServicesPage() {
                   >
                     <Icon
                       aria-hidden="true"
-                      className="h-6 w-6 text-[#FF6B2B]"
+                      className="h-6 w-6 text-primary"
                     />
-                    <h3 className="mt-5 font-heading text-xl font-bold tracking-tight text-[#0B1C3A]">
+                    <h3 className="mt-5 font-heading text-xl font-bold tracking-tight text-navy">
                       {item.title}
                     </h3>
                     <p className="mt-3 text-sm leading-7 text-slate-600">

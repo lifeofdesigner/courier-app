@@ -59,8 +59,8 @@ export function ModeQuoteCta({ content }: ModeQuoteCtaProps) {
                     onClick={() => setSelectedMode(mode.mode)}
                     className={`border p-4 text-left transition ${
                       isSelected
-                        ? "border-primary bg-orange-50 ring-2 ring-primary/10"
-                        : "border-border bg-white hover:border-primary hover:bg-orange-50"
+                        ? "border-primary bg-primary/10 ring-2 ring-primary/10"
+                        : "border-border bg-white hover:border-primary hover:bg-primary/10"
                     }`}
                   >
                     <span className="flex h-10 w-10 items-center justify-center bg-primary/10 text-primary">
@@ -86,7 +86,7 @@ export function ModeQuoteCta({ content }: ModeQuoteCtaProps) {
               </p>
               <Link
                 href={selected.href}
-                className="mt-5 inline-flex h-11 items-center justify-center gap-2 bg-primary px-5 text-sm font-bold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-primary/20"
+                className="mt-5 inline-flex h-11 items-center justify-center gap-2 bg-primary px-5 text-sm font-bold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20"
               >
                 Start this quote
                 <ArrowRight aria-hidden="true" className="h-4 w-4" />

@@ -36,8 +36,8 @@ export function QuoteSummaryCard({
   const bookHref = `/book?quoteId=${quote.id}&transportMode=${quote.transportMode}&serviceType=${quote.serviceType}`;
 
   return (
-    <div className="rounded-[24px] border border-[#0B1C3A]/10 bg-[#0B1C3A] p-6 text-white shadow-sm">
-      <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+    <div className="rounded-[24px] border border-navy/10 bg-navy p-6 text-white shadow-sm">
+      <p className="text-sm font-bold uppercase tracking-wide text-primary">
         {modeCopy.quoteTitle}
       </p>
       <p className="mt-4 text-4xl font-bold tracking-tight">
@@ -94,7 +94,7 @@ export function QuoteSummaryCard({
       </dl>
       <Link
         href={bookHref}
-        className="mt-5 inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+        className="mt-5 inline-flex h-11 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20"
       >
         Book this {transportMode.label.toLowerCase()} service
       </Link>

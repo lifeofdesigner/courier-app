@@ -1,6 +1,7 @@
 import { PaymentConfirmationEmail } from "@/components/email";
 import { getSiteUrl } from "@/lib/env";
 import type { PaymentFulfillmentResult } from "@/lib/queries/payments";
+import { getPublicPageSettings } from "@/lib/queries/public-pages";
 import {
   getResendFromEmail,
   getResendServerClient,
@@ -24,6 +25,7 @@ export async function sendPaymentEmail(result: PaymentFulfillmentResult) {
   const labelUrl = result.order.labelUrl
     ? `${getSiteUrl()}${result.order.labelUrl}`
     : null;
+  const settings = await getPublicPageSettings();
 
   try {
     await resend.emails.send({
@@ -38,6 +40,8 @@ export async function sendPaymentEmail(result: PaymentFulfillmentResult) {
         currency: result.booking.currency,
         trackingNumber: result.order.trackingNumber,
         labelUrl,
+        siteName: settings.siteIdentity.siteName,
+        themeColors: settings.themeColors,
       }),
     });
 

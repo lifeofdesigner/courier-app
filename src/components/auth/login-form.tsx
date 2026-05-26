@@ -15,10 +15,10 @@ const initialState: AuthActionState = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15";
 
 const primaryButtonClassName =
-  "inline-flex h-12 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex h-12 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60";
 
 export type LoginFormProps = {
   nextPath?: string;
@@ -41,7 +41,7 @@ export function LoginForm({ nextPath = "/dashboard", message }: LoginFormProps) 
       <AuthMessage state={state.message ? state : null} message={message} />
       <input type="hidden" name="next" value={nextPath} />
       <div className="space-y-2">
-        <label htmlFor="email" className="block text-sm font-semibold text-[#0B1C3A]">
+        <label htmlFor="email" className="block text-sm font-semibold text-navy">
           Email
         </label>
         <input
@@ -59,7 +59,7 @@ export function LoginForm({ nextPath = "/dashboard", message }: LoginFormProps) 
       <div className="space-y-2">
         <label
           htmlFor="password"
-          className="block text-sm font-semibold text-[#0B1C3A]"
+          className="block text-sm font-semibold text-navy"
         >
           Password
         </label>
@@ -80,10 +80,10 @@ export function LoginForm({ nextPath = "/dashboard", message }: LoginFormProps) 
         {isPending ? "Signing in..." : "Sign in"}
       </button>
       <div className="flex flex-col gap-2 text-sm text-slate-600 sm:flex-row sm:justify-between">
-        <Link href="/forgot-password" className="font-semibold text-[#FF6B2B]">
+        <Link href="/forgot-password" className="font-semibold text-primary">
           Forgot password?
         </Link>
-        <Link href="/sign-up" className="font-semibold text-[#FF6B2B]">
+        <Link href="/sign-up" className="font-semibold text-primary">
           Create an account
         </Link>
       </div>

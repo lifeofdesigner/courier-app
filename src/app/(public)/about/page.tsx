@@ -64,10 +64,10 @@ export default async function AboutPage() {
       <section className="py-16 lg:py-20">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-4xl">
-            <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+            <p className="text-sm font-bold uppercase tracking-wide text-primary">
               {content.hero.eyebrow}
             </p>
-            <h1 className="mt-3 font-heading text-4xl font-bold tracking-tight text-[#0B1C3A] lg:text-5xl">
+            <h1 className="mt-3 font-heading text-4xl font-bold tracking-tight text-navy lg:text-5xl">
               {content.hero.title}
             </h1>
             <p className="mt-4 text-base leading-8 text-slate-600">
@@ -98,10 +98,10 @@ export default async function AboutPage() {
           <section className="mt-12 rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
             <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
               <div>
-                <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+                <p className="text-sm font-bold uppercase tracking-wide text-primary">
                   {content.cta.eyebrow}
                 </p>
-                <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-[#0B1C3A]">
+                <h2 className="mt-3 font-heading text-3xl font-bold tracking-tight text-navy">
                   {content.cta.title}
                 </h2>
                 {content.cta.description ? (
@@ -113,7 +113,7 @@ export default async function AboutPage() {
                   <Link
                     href={content.cta.primaryCta.href}
                     aria-label={content.cta.primaryCta.ariaLabel}
-                    className="inline-flex h-12 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+                    className="inline-flex h-12 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20"
                   >
                     {content.cta.primaryCta.label}
                   </Link>
@@ -121,7 +121,7 @@ export default async function AboutPage() {
                     <Link
                       href={content.cta.secondaryCta.href}
                       aria-label={content.cta.secondaryCta.ariaLabel}
-                      className="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
+                      className="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-navy transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
                     >
                       {content.cta.secondaryCta.label}
                     </Link>
@@ -136,7 +136,7 @@ export default async function AboutPage() {
                   >
                     <BadgeCheck
                       aria-hidden="true"
-                      className="mt-1 h-5 w-5 shrink-0 text-[#FF6B2B]"
+                      className="mt-1 h-5 w-5 shrink-0 text-primary"
                     />
                     <span>{reason}</span>
                   </li>

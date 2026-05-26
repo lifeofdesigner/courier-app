@@ -42,7 +42,7 @@ export function RecentBookingList({ bookings }: RecentBookingListProps) {
           className="flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
         >
           <div>
-            <p className="font-semibold text-[#0B1C3A]">
+            <p className="font-semibold text-navy">
               {booking.serviceType} pickup
             </p>
             <p className="mt-1 text-sm leading-6 text-slate-600">
@@ -62,12 +62,12 @@ export function RecentBookingList({ bookings }: RecentBookingListProps) {
               <CheckoutButton
                 bookingId={booking.id}
                 label="Pay"
-                className="inline-flex h-9 items-center justify-center gap-2 rounded-xl bg-[#FF6B2B] px-3 text-xs font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex h-9 items-center justify-center gap-2 rounded-xl bg-primary px-3 text-xs font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60"
               />
             ) : (
               <Link
                 href={`/label/${booking.id}`}
-                className="inline-flex h-9 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-[#0B1C3A] transition hover:bg-slate-50"
+                className="inline-flex h-9 items-center justify-center rounded-xl border border-slate-200 bg-white px-3 text-xs font-semibold text-navy transition hover:bg-slate-50"
               >
                 Label
               </Link>
@@ -78,7 +78,7 @@ export function RecentBookingList({ bookings }: RecentBookingListProps) {
       <div className="pt-4">
         <Link
           href="/book"
-          className="inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
+          className="inline-flex h-11 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-navy transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
         >
           New pickup request
         </Link>

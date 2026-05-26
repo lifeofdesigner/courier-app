@@ -150,7 +150,7 @@ export function HomeHero({ content }: HomeHeroProps) {
   }
 
   return (
-    <section className="relative isolate overflow-hidden bg-[#06142b] text-white">
+    <section className="relative isolate overflow-hidden bg-navy text-white">
       <div className="absolute inset-0">
         {slides.map((slide, index) => (
           <div
@@ -162,8 +162,8 @@ export function HomeHero({ content }: HomeHeroProps) {
             style={{ backgroundImage: `url(${slide.image.src})` }}
           />
         ))}
-        <div className="absolute inset-0 bg-[#06142b]/70" />
-        <div className="absolute inset-y-0 left-0 w-full bg-[#06142b]/85 lg:w-[52%]" />
+        <div className="absolute inset-0 bg-navy/70" />
+        <div className="absolute inset-y-0 left-0 w-full bg-navy/85 lg:w-[52%]" />
       </div>
 
       <Container className="relative z-10 flex min-h-[calc(100vh-7.5rem)] flex-col justify-center py-16 lg:py-20">
@@ -171,7 +171,7 @@ export function HomeHero({ content }: HomeHeroProps) {
           <div className="max-w-3xl">
             <p
               className={cn(
-                "font-bold uppercase tracking-[0.18em] text-[#FF6B2B]",
+                "font-bold uppercase tracking-[0.18em] text-primary",
                 eyebrowSizeClasses[typography.eyebrowSize],
               )}
             >
@@ -201,7 +201,7 @@ export function HomeHero({ content }: HomeHeroProps) {
               <Link
                 href={content.primaryCta.href}
                 aria-label={content.primaryCta.ariaLabel}
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-[#FF6B2B] px-6 text-sm font-bold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/25"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-primary px-6 text-sm font-bold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/25"
               >
                 {content.primaryCta.label}
                 <MoveRight aria-hidden="true" className="h-4 w-4" />
@@ -219,7 +219,7 @@ export function HomeHero({ content }: HomeHeroProps) {
               <button
                 type="button"
                 onClick={goToPreviousSlide}
-                className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[#FF6B2B] text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/25"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/25"
                 aria-label="Show previous hero slide"
               >
                 <ArrowLeft aria-hidden="true" className="h-5 w-5" />
@@ -227,7 +227,7 @@ export function HomeHero({ content }: HomeHeroProps) {
               <button
                 type="button"
                 onClick={goToNextSlide}
-                className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[#FF6B2B] text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/25"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-primary text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/25"
                 aria-label="Show next hero slide"
               >
                 <ArrowRight aria-hidden="true" className="h-5 w-5" />
@@ -240,7 +240,7 @@ export function HomeHero({ content }: HomeHeroProps) {
                     onClick={() => setActiveIndex(index)}
                     className={`h-2.5 rounded-full transition-all ${
                       index === activeIndex
-                        ? "w-8 bg-[#FF6B2B]"
+                        ? "w-8 bg-primary"
                         : "w-2.5 bg-white/45 hover:bg-white/70"
                     }`}
                     aria-label={`Show hero slide ${index + 1}`}
@@ -250,10 +250,10 @@ export function HomeHero({ content }: HomeHeroProps) {
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-white/15 bg-white/95 p-5 text-[#0B1C3A] shadow-2xl shadow-black/25 backdrop-blur">
+          <div className="rounded-[28px] border border-white/15 bg-white/95 p-5 text-navy shadow-2xl shadow-black/25 backdrop-blur">
             <div className="flex items-start justify-between gap-4 border-b border-slate-200 pb-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#FF6B2B]">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
                   {content.visual.eyebrow}
                 </p>
                 <p className="mt-2 font-heading text-lg font-bold">
@@ -271,7 +271,7 @@ export function HomeHero({ content }: HomeHeroProps) {
             <div className="space-y-4 pt-5">
               {content.visual.items.map((event) => (
                 <div key={`${event.title}-${event.meta}`} className="flex gap-3">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-orange-50 text-[#FF6B2B]">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary">
                     <CmsIcon name={event.icon} className="h-5 w-5" />
                   </span>
                   <div className="min-w-0 flex-1">

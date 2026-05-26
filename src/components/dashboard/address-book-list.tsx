@@ -26,14 +26,14 @@ export function AddressBookList({ addresses }: AddressBookListProps) {
         >
           <div className="flex items-start justify-between gap-4">
             <div>
-              <h3 className="font-bold text-[#0B1C3A]">
+              <h3 className="font-bold text-navy">
                 {address.label ?? address.contactName}
               </h3>
               <p className="mt-1 text-sm capitalize text-slate-500">
                 {address.addressType}
               </p>
             </div>
-            <span className="rounded-full bg-[#FF6B2B]/10 px-3 py-1 text-xs font-semibold text-[#FF6B2B]">
+            <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
               Saved
             </span>
           </div>
@@ -41,7 +41,7 @@ export function AddressBookList({ addresses }: AddressBookListProps) {
             <p className="flex gap-3">
               <MapPin
                 aria-hidden="true"
-                className="mt-1 h-4 w-4 shrink-0 text-[#FF6B2B]"
+                className="mt-1 h-4 w-4 shrink-0 text-primary"
               />
               <span>
                 {address.line1}
@@ -58,7 +58,7 @@ export function AddressBookList({ addresses }: AddressBookListProps) {
               <p className="flex gap-3">
                 <Building2
                   aria-hidden="true"
-                  className="mt-1 h-4 w-4 shrink-0 text-[#FF6B2B]"
+                  className="mt-1 h-4 w-4 shrink-0 text-primary"
                 />
                 <span>{address.companyName}</span>
               </p>
@@ -67,7 +67,7 @@ export function AddressBookList({ addresses }: AddressBookListProps) {
               <p className="flex gap-3">
                 <Phone
                   aria-hidden="true"
-                  className="mt-1 h-4 w-4 shrink-0 text-[#FF6B2B]"
+                  className="mt-1 h-4 w-4 shrink-0 text-primary"
                 />
                 <span>{address.phone}</span>
               </p>
@@ -76,7 +76,7 @@ export function AddressBookList({ addresses }: AddressBookListProps) {
               <p className="flex gap-3">
                 <Mail
                   aria-hidden="true"
-                  className="mt-1 h-4 w-4 shrink-0 text-[#FF6B2B]"
+                  className="mt-1 h-4 w-4 shrink-0 text-primary"
                 />
                 <span>{address.email}</span>
               </p>

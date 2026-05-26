@@ -1,5 +1,3 @@
-import { company } from "@/constants/site";
-
 export type BookingConfirmationEmailProps = {
   bookingId: string;
   senderName: string;
@@ -12,6 +10,12 @@ export type BookingConfirmationEmailProps = {
   amountDue: number;
   currency: string;
   paymentUrl?: string;
+  siteName: string;
+  themeColors: {
+    primary: string;
+    navy: string;
+    text: string;
+  };
 };
 
 function formatMoney(value: number, currency: string) {
@@ -41,10 +45,12 @@ export function BookingConfirmationEmail({
   amountDue,
   currency,
   paymentUrl,
+  siteName,
+  themeColors,
 }: BookingConfirmationEmailProps) {
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", color: "#0F172A" }}>
-      <h1 style={{ color: "#0B1C3A" }}>{heading}</h1>
+    <div style={{ fontFamily: "Arial, sans-serif", color: themeColors.text }}>
+      <h1 style={{ color: themeColors.navy }}>{heading}</h1>
       <p>Hello {senderName},</p>
       <p>
         We received your {transportMode.toLowerCase()}{" "}
@@ -65,12 +71,15 @@ export function BookingConfirmationEmail({
       </p>
       {paymentUrl ? (
         <p>
-          <a href={paymentUrl} style={{ color: "#FF6B2B", fontWeight: 700 }}>
+          <a
+            href={paymentUrl}
+            style={{ color: themeColors.primary, fontWeight: 700 }}
+          >
             Continue to payment
           </a>
         </p>
       ) : null}
-      <p>Thank you for choosing {company.name}.</p>
+      <p>Thank you for choosing {siteName}.</p>
     </div>
   );
 }

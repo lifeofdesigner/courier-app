@@ -41,7 +41,7 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
       footer={
         <p className="text-center text-sm text-slate-600">
           Operations team?{" "}
-          <Link href="/admin/login" className="font-semibold text-[#FF6B2B]">
+          <Link href="/admin/login" className="font-semibold text-primary">
             Use admin sign in
           </Link>
         </p>

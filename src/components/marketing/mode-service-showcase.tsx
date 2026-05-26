@@ -41,8 +41,8 @@ export function ModeServiceShowcase({ content }: ModeServiceShowcaseProps) {
                 className="relative min-h-56 bg-cover bg-center"
                 style={{
                   backgroundImage: item.image
-                    ? `linear-gradient(180deg, rgba(11, 28, 58, 0.05), rgba(11, 28, 58, 0.86)), url(${item.image.src})`
-                    : "linear-gradient(135deg, #0B1C3A, #1f3b64)",
+                    ? `linear-gradient(180deg, color-mix(in srgb, var(--navy) 5%, transparent), color-mix(in srgb, var(--navy) 86%, transparent)), url(${item.image.src})`
+                    : "linear-gradient(135deg, var(--navy), color-mix(in srgb, var(--navy) 82%, white))",
                 }}
               >
                 <div className="absolute left-5 top-5 inline-flex items-center gap-2 rounded-full bg-white/95 px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] text-navy">

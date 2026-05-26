@@ -35,22 +35,22 @@ const formSectionClassName =
   "rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm";
 
 const inputClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15";
 
 const textareaClassName =
-  "min-h-28 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "min-h-28 w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-900 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15";
 
 const selectClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15";
 
 const primaryButtonClassName =
-  "inline-flex h-11 items-center justify-center rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20 disabled:cursor-not-allowed disabled:opacity-60";
+  "inline-flex h-11 items-center justify-center rounded-2xl bg-primary px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20 disabled:cursor-not-allowed disabled:opacity-60";
 
 const modeOptionClassName =
-  "rounded-[20px] border border-slate-200 bg-white p-4 text-left transition hover:border-[#FF6B2B] hover:bg-orange-50";
+  "rounded-[20px] border border-slate-200 bg-white p-4 text-left transition hover:border-primary hover:bg-primary/10";
 
 const selectedModeOptionClassName =
-  "border-[#FF6B2B] bg-orange-50 ring-2 ring-[#FF6B2B]/10";
+  "border-primary bg-primary/10 ring-2 ring-primary/10";
 
 export type BookingFormProps = {
   isConfigured: boolean;
@@ -93,7 +93,7 @@ function FormSection({
 }) {
   return (
     <section className={formSectionClassName}>
-      <h2 className="text-xl font-bold tracking-tight text-[#0B1C3A]">
+      <h2 className="text-xl font-bold tracking-tight text-navy">
         {title}
       </h2>
       {description ? (
@@ -121,7 +121,7 @@ function TextInput({
 }) {
   return (
     <div className="space-y-2">
-      <label htmlFor={name} className="block text-sm font-semibold text-[#0B1C3A]">
+      <label htmlFor={name} className="block text-sm font-semibold text-navy">
         {label}
       </label>
       <input
@@ -277,7 +277,7 @@ export function BookingForm({
                       isSelected ? selectedModeOptionClassName : ""
                     }`}
                   >
-                    <span className="block text-sm font-bold text-[#0B1C3A]">
+                    <span className="block text-sm font-bold text-navy">
                       {mode.label}
                     </span>
                     <span className="mt-2 block text-xs leading-5 text-slate-600">
@@ -292,7 +292,7 @@ export function BookingForm({
           <div className="space-y-2">
             <label
               htmlFor="serviceType"
-              className="block text-sm font-semibold text-[#0B1C3A]"
+              className="block text-sm font-semibold text-navy"
             >
               {modeMeta.label} service type
             </label>
@@ -314,7 +314,7 @@ export function BookingForm({
             <FieldError errors={state.fieldErrors?.serviceType} />
           </div>
           <div className="rounded-2xl bg-slate-50 p-4 text-sm leading-7 text-slate-600">
-            <p className="font-semibold text-[#0B1C3A]">{serviceMeta.label}</p>
+            <p className="font-semibold text-navy">{serviceMeta.label}</p>
             <p className="mt-1">{serviceMeta.description}</p>
           </div>
         </FormSection>
@@ -371,7 +371,7 @@ export function BookingForm({
           <div className="space-y-2">
             <label
               htmlFor="pickupWindow"
-              className="block text-sm font-semibold text-[#0B1C3A]"
+              className="block text-sm font-semibold text-navy"
             >
               Pickup window
             </label>
@@ -395,7 +395,7 @@ export function BookingForm({
           <div className="space-y-2 md:col-span-2">
             <label
               htmlFor="specialInstructions"
-              className="block text-sm font-semibold text-[#0B1C3A]"
+              className="block text-sm font-semibold text-navy"
             >
               Special instructions
             </label>

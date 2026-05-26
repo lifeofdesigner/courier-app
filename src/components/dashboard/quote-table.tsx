@@ -11,7 +11,7 @@ export type QuoteTableProps = {
 };
 
 const inputClassName =
-  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-[#FF6B2B] focus:ring-4 focus:ring-[#FF6B2B]/15";
+  "h-12 w-full rounded-2xl border border-slate-200 bg-white px-4 text-sm text-slate-900 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/15";
 
 function formatMoney(value: number, currency: string) {
   return new Intl.NumberFormat("en", {
@@ -97,7 +97,7 @@ export function QuoteTable({ quotes }: QuoteTableProps) {
                       {quote.originCity}, {quote.originCountry} to{" "}
                       {quote.destinationCity}, {quote.destinationCountry}
                     </td>
-                    <td className="px-4 py-4 text-sm font-semibold text-[#0B1C3A]">
+                    <td className="px-4 py-4 text-sm font-semibold text-navy">
                       {formatMoney(quote.total, quote.currency)}
                     </td>
                     <td className="px-4 py-4 text-sm text-slate-700">
@@ -111,7 +111,7 @@ export function QuoteTable({ quotes }: QuoteTableProps) {
                     <td className="px-4 py-4 text-sm text-slate-700">
                       <Link
                         href={`/book?quoteId=${quote.id}`}
-                        className="inline-flex h-9 items-center justify-center rounded-xl bg-[#FF6B2B] px-3 text-xs font-semibold text-white transition hover:bg-[#e85f22]"
+                        className="inline-flex h-9 items-center justify-center rounded-xl bg-primary px-3 text-xs font-semibold text-white transition hover:brightness-95"
                       >
                         Book this shipment
                       </Link>

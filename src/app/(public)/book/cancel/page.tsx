@@ -75,7 +75,7 @@ export default async function BookingCancelPage({
         <Container>
           <div className="mx-auto max-w-2xl rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm lg:p-8">
             <AlertTriangle aria-hidden="true" className="h-10 w-10 text-amber-500" />
-            <h1 className="mt-5 font-heading text-3xl font-bold tracking-tight text-[#0B1C3A]">
+            <h1 className="mt-5 font-heading text-3xl font-bold tracking-tight text-navy">
               Payment was not completed.
             </h1>
             <p className="mt-4 text-base leading-8 text-slate-600">
@@ -85,8 +85,8 @@ export default async function BookingCancelPage({
             </p>
 
             {payment ? (
-              <div className="mt-6 rounded-[24px] border border-[#0B1C3A]/10 bg-[#0B1C3A] p-6 text-white shadow-sm">
-                <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+              <div className="mt-6 rounded-[24px] border border-navy/10 bg-navy p-6 text-white shadow-sm">
+                <p className="text-sm font-bold uppercase tracking-wide text-primary">
                   {modeCopy?.paymentSummaryTitle ?? "Payment summary"}
                 </p>
                 <div className="mt-4 grid gap-4 text-sm text-slate-200 sm:grid-cols-2">
@@ -140,7 +140,7 @@ export default async function BookingCancelPage({
             <div className="mt-6 flex flex-wrap gap-3">
               <Link
                 href="/book"
-                className="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-[#0B1C3A] transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
+                className="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-200 bg-white px-5 text-sm font-semibold text-navy transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-slate-200"
               >
                 Back to booking
               </Link>

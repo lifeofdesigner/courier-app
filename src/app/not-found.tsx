@@ -29,10 +29,10 @@ export default function NotFound() {
     <main>
       <section className="py-16 lg:py-20">
         <div className="mx-auto w-full max-w-3xl px-4 text-center sm:px-6 lg:px-8">
-          <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+          <p className="text-sm font-bold uppercase tracking-wide text-primary">
             404
           </p>
-          <h1 className="mt-3 font-heading text-4xl font-bold tracking-tight text-[#0B1C3A] lg:text-5xl">
+          <h1 className="mt-3 font-heading text-4xl font-bold tracking-tight text-navy lg:text-5xl">
             This delivery route does not exist.
           </h1>
           <p className="mt-4 text-base leading-8 text-slate-600">
@@ -52,9 +52,9 @@ export default function NotFound() {
                 >
                   <Icon
                     aria-hidden="true"
-                    className="h-5 w-5 text-[#FF6B2B]"
+                    className="h-5 w-5 text-primary"
                   />
-                  <span className="mt-4 block font-heading text-lg font-bold tracking-tight text-[#0B1C3A]">
+                  <span className="mt-4 block font-heading text-lg font-bold tracking-tight text-navy">
                     {item.label}
                   </span>
                 </Link>

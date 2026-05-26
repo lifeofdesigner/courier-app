@@ -40,7 +40,7 @@ function AddressBlock({
       <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
         {title}
       </p>
-      <p className="mt-3 text-lg font-bold text-[#0B1C3A]">{name}</p>
+      <p className="mt-3 text-lg font-bold text-navy">{name}</p>
       <p className="mt-1 text-sm text-slate-700">{address.contactName}</p>
       {phone ? <p className="mt-1 text-sm text-slate-700">{phone}</p> : null}
       <p className="mt-3 text-sm leading-6 text-slate-700">
@@ -71,7 +71,7 @@ export function ShippingLabel({ label }: ShippingLabelProps) {
         <button
           type="button"
           onClick={() => window.print()}
-          className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-[#FF6B2B] px-5 text-sm font-semibold text-white transition hover:bg-[#e85f22] focus:outline-none focus:ring-4 focus:ring-[#FF6B2B]/20"
+          className="inline-flex h-12 items-center justify-center gap-2 rounded-2xl bg-primary px-5 text-sm font-semibold text-white transition hover:brightness-95 focus:outline-none focus:ring-4 focus:ring-primary/20"
         >
           <Printer aria-hidden="true" className="h-4 w-4" />
           Print label
@@ -81,10 +81,10 @@ export function ShippingLabel({ label }: ShippingLabelProps) {
       <section className="rounded-[24px] border-2 border-slate-900 bg-white p-6">
         <div className="flex flex-col gap-4 border-b-2 border-slate-900 pb-5 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.18em] text-[#FF6B2B]">
+            <p className="text-sm font-bold uppercase tracking-[0.18em] text-primary">
               {label.companyName}
             </p>
-            <h1 className="mt-2 font-heading text-3xl font-bold tracking-tight text-[#0B1C3A]">
+            <h1 className="mt-2 font-heading text-3xl font-bold tracking-tight text-navy">
               Shipping Label
             </h1>
           </div>
@@ -92,7 +92,7 @@ export function ShippingLabel({ label }: ShippingLabelProps) {
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-slate-500">
               Tracking
             </p>
-            <p className="mt-2 font-heading text-3xl font-bold tracking-[0.12em] text-[#0B1C3A]">
+            <p className="mt-2 font-heading text-3xl font-bold tracking-[0.12em] text-navy">
               {label.trackingNumber}
             </p>
           </div>
@@ -115,11 +115,11 @@ export function ShippingLabel({ label }: ShippingLabelProps) {
 
         <div className="mt-6 grid gap-3 border-y-2 border-slate-900 py-4 text-sm sm:grid-cols-3">
           <div>
-            <p className="font-bold text-[#0B1C3A]">Transport mode</p>
+            <p className="font-bold text-navy">Transport mode</p>
             <p className="mt-1 text-slate-700">{transportMode.label}</p>
           </div>
           <div>
-            <p className="font-bold text-[#0B1C3A]">Service</p>
+            <p className="font-bold text-navy">Service</p>
             <p className="mt-1 text-slate-700">
               {formatModeAwareServiceType(
                 label.serviceType,
@@ -128,29 +128,29 @@ export function ShippingLabel({ label }: ShippingLabelProps) {
             </p>
           </div>
           <div>
-            <p className="font-bold text-[#0B1C3A]">Package</p>
+            <p className="font-bold text-navy">Package</p>
             <p className="mt-1 text-slate-700">
               {label.packageType ?? "Parcel"} - {label.weightKg} kg
             </p>
           </div>
           <div>
-            <p className="font-bold text-[#0B1C3A]">Payment</p>
+            <p className="font-bold text-navy">Payment</p>
             <p className="mt-1 text-slate-700">
               {label.paymentStatus.replaceAll("_", " ")}
             </p>
           </div>
           <div>
-            <p className="font-bold text-[#0B1C3A]">Booking date</p>
+            <p className="font-bold text-navy">Booking date</p>
             <p className="mt-1 text-slate-700">{formatDate(label.createdAt)}</p>
           </div>
           <div>
-            <p className="font-bold text-[#0B1C3A]">Label date</p>
+            <p className="font-bold text-navy">Label date</p>
             <p className="mt-1 text-slate-700">
               {formatDate(label.labelGeneratedAt)}
             </p>
           </div>
           <div>
-            <p className="font-bold text-[#0B1C3A]">Reference</p>
+            <p className="font-bold text-navy">Reference</p>
             <p className="mt-1 text-slate-700">
               {label.referenceCode ?? label.bookingId}
             </p>
@@ -158,7 +158,7 @@ export function ShippingLabel({ label }: ShippingLabelProps) {
         </div>
 
         <div className="mt-6 flex min-h-24 items-center justify-center border-2 border-dashed border-slate-900 px-4 text-center">
-          <p className="font-heading text-2xl font-bold tracking-[0.18em] text-[#0B1C3A]">
+          <p className="font-heading text-2xl font-bold tracking-[0.18em] text-navy">
             {label.trackingNumber}
           </p>
         </div>

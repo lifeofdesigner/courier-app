@@ -1,5 +1,3 @@
-import { company } from "@/constants/site";
-
 export type PaymentConfirmationEmailProps = {
   bookingId: string;
   senderName: string;
@@ -8,6 +6,12 @@ export type PaymentConfirmationEmailProps = {
   currency: string;
   trackingNumber?: string | null;
   labelUrl?: string | null;
+  siteName: string;
+  themeColors: {
+    primary: string;
+    navy: string;
+    text: string;
+  };
 };
 
 function formatMoney(value: number, currency: string) {
@@ -25,10 +29,12 @@ export function PaymentConfirmationEmail({
   currency,
   trackingNumber,
   labelUrl,
+  siteName,
+  themeColors,
 }: PaymentConfirmationEmailProps) {
   return (
-    <div style={{ fontFamily: "Arial, sans-serif", color: "#0F172A" }}>
-      <h1 style={{ color: "#0B1C3A" }}>Payment confirmed</h1>
+    <div style={{ fontFamily: "Arial, sans-serif", color: themeColors.text }}>
+      <h1 style={{ color: themeColors.navy }}>Payment confirmed</h1>
       <p>Hello {senderName},</p>
       <p>
         Your payment for booking <strong>{bookingId}</strong> has been
@@ -41,14 +47,17 @@ export function PaymentConfirmationEmail({
       {labelUrl ? (
         <p>
           Your printable shipping label is ready:{" "}
-          <a href={labelUrl} style={{ color: "#FF6B2B", fontWeight: 700 }}>
+          <a
+            href={labelUrl}
+            style={{ color: themeColors.primary, fontWeight: 700 }}
+          >
             open label
           </a>
         </p>
       ) : null}
       <p>
         You can track the shipment once operations begins scanning it through
-        the {company.name} network.
+        the {siteName} network.
       </p>
     </div>
   );

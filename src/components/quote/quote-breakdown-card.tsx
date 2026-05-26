@@ -24,14 +24,14 @@ export function QuoteBreakdownCard({ breakdown }: QuoteBreakdownCardProps) {
 
   return (
     <div className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm">
-      <h2 className="text-xl font-bold tracking-tight text-[#0B1C3A]">
+      <h2 className="text-xl font-bold tracking-tight text-navy">
         Price breakdown
       </h2>
       <dl className="mt-5 divide-y divide-slate-100">
         {rows.map(([label, value]) => (
           <div key={label} className="flex justify-between gap-4 py-3 text-sm">
             <dt className="text-slate-600">{label}</dt>
-            <dd className="text-right font-semibold text-[#0B1C3A]">
+            <dd className="text-right font-semibold text-navy">
               {value}
             </dd>
           </div>

@@ -22,10 +22,10 @@ export function ServiceDetailGrid({ services }: ServiceDetailGridProps) {
             key={service.title}
             className="rounded-[24px] border border-slate-200 bg-white p-6 shadow-sm"
           >
-            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#FF6B2B]/10 text-[#FF6B2B]">
+            <span className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
               <Icon aria-hidden="true" className="h-5 w-5" />
             </span>
-            <h2 className="mt-5 font-heading text-xl font-bold tracking-tight text-[#0B1C3A]">
+            <h2 className="mt-5 font-heading text-xl font-bold tracking-tight text-navy">
               {service.title}
             </h2>
             <p className="mt-3 text-sm leading-7 text-slate-600">
@@ -37,7 +37,7 @@ export function ServiceDetailGrid({ services }: ServiceDetailGridProps) {
                   key={bullet}
                   className="flex gap-3 text-sm leading-6 text-slate-600"
                 >
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#FF6B2B]" />
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
                   <span>{bullet}</span>
                 </li>
               ))}

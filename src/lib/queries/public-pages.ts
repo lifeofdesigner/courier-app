@@ -1,6 +1,6 @@
 import { cache } from "react";
 
-import { company, socialLinks } from "@/constants/site";
+import { brandColors, company, socialLinks } from "@/constants/site";
 import { applySiteNameTemplate } from "@/lib/brand-template";
 import { createSupabaseServiceRoleClient } from "@/lib/supabase/service-role";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
@@ -37,6 +37,14 @@ export type PublicPageSettings = {
   footerNotice: {
     text: string;
   };
+  themeColors: {
+    primary: string;
+    navy: string;
+    background: string;
+    text: string;
+    muted: string;
+    border: string;
+  };
 };
 
 const fallbackSettings: PublicPageSettings = {
@@ -58,6 +66,14 @@ const fallbackSettings: PublicPageSettings = {
   footerNotice: {
     text: company.trustStatement,
   },
+  themeColors: {
+    primary: brandColors.primary,
+    navy: brandColors.navy,
+    background: brandColors.background,
+    text: brandColors.text,
+    muted: brandColors.muted,
+    border: brandColors.border,
+  },
 };
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -68,6 +84,12 @@ function readString(value: unknown, fallback: string) {
   return typeof value === "string" && value.trim().length > 0
     ? value
     : fallback;
+}
+
+function readHexColor(value: unknown, fallback: string) {
+  const color = typeof value === "string" ? value.trim() : "";
+
+  return /^#[0-9a-f]{6}$/i.test(color) ? color : fallback;
 }
 
 function readImage(value: unknown): CmsImage | null {
@@ -149,6 +171,33 @@ function mergeSettings(rows: SiteSettingQueryRow[]): PublicPageSettings {
         settings.footerNotice.text,
       );
     }
+
+    if (row.key === "theme_colors") {
+      settings.themeColors.primary = readHexColor(
+        row.value.primary,
+        settings.themeColors.primary,
+      );
+      settings.themeColors.navy = readHexColor(
+        row.value.navy,
+        settings.themeColors.navy,
+      );
+      settings.themeColors.background = readHexColor(
+        row.value.background,
+        settings.themeColors.background,
+      );
+      settings.themeColors.text = readHexColor(
+        row.value.text,
+        settings.themeColors.text,
+      );
+      settings.themeColors.muted = readHexColor(
+        row.value.muted,
+        settings.themeColors.muted,
+      );
+      settings.themeColors.border = readHexColor(
+        row.value.border,
+        settings.themeColors.border,
+      );
+    }
   }
 
   return applySiteNameTemplate(settings, settings.siteIdentity.siteName);
@@ -178,6 +227,7 @@ export const getPublicPageSettings = cache(
           "support_hours",
           "social_links",
           "footer_notice",
+          "theme_colors",
         ]);
 
       if (error || !data) {

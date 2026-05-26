@@ -23,8 +23,8 @@ export function BookingSummaryCard({
   });
 
   return (
-    <aside className="rounded-[24px] border border-[#0B1C3A]/10 bg-[#0B1C3A] p-6 text-white shadow-sm">
-      <p className="text-sm font-bold uppercase tracking-wide text-[#FF6B2B]">
+    <aside className="rounded-[24px] border border-navy/10 bg-navy p-6 text-white shadow-sm">
+      <p className="text-sm font-bold uppercase tracking-wide text-primary">
         Booking summary
       </p>
       <h2 className="mt-3 text-2xl font-bold tracking-tight">
