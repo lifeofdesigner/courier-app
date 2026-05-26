@@ -167,8 +167,8 @@ export function HomeHero({ content }: HomeHeroProps) {
       </div>
 
       <Container className="relative z-10 flex min-h-[calc(100vh-7.5rem)] flex-col justify-center py-16 lg:py-20">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(320px,0.55fr)] lg:items-end">
-          <div className="max-w-3xl">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,0.8fr)_minmax(340px,0.6fr)] lg:items-end">
+          <div className="max-w-[43rem]">
             <p
               className={cn(
                 "font-bold uppercase tracking-[0.18em] text-primary",
@@ -179,13 +179,13 @@ export function HomeHero({ content }: HomeHeroProps) {
             </p>
             <h1
               className={cn(
-                "mt-5 max-w-3xl text-balance font-heading font-extrabold leading-[1.05] text-white",
+                "mt-5 max-w-[43rem] text-balance font-heading font-extrabold leading-[1.05] text-white",
                 titleSizeClasses[typography.titleSize],
               )}
             >
               {activeSlide.title}
             </h1>
-            <div className="mt-7 flex max-w-2xl gap-4">
+            <div className="mt-7 flex max-w-[39rem] gap-4">
               <span className="mt-3 hidden h-px w-24 bg-white/45 sm:block" />
               <p
                 className={cn(
@@ -250,7 +250,7 @@ export function HomeHero({ content }: HomeHeroProps) {
             </div>
           </div>
 
-          <div className="rounded-[28px] border border-white/15 bg-white/95 p-5 text-navy shadow-2xl shadow-black/25 backdrop-blur">
+          <div className="w-full max-w-[34rem] justify-self-end rounded-[28px] border border-white/15 bg-white/95 p-5 text-navy shadow-2xl shadow-black/25 backdrop-blur">
             <div className="flex items-start justify-between gap-4 border-b border-slate-200 pb-4">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-primary">
